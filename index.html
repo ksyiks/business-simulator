@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бизнес-симулятор — Мультиплеер</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Бизнес-симулятор</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -23,7 +22,6 @@
             padding: 30px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
         .login-screen input {
             width: 100%;
@@ -65,8 +63,7 @@
         .success { background: #28a745; }
         .danger { background: #dc3545; }
         
-        .event-box { background: #e9ecef; border-radius: 10px; padding: 15px; margin: 15px 0; text-align: center; font-weight: bold; }
-        .competitor-warning { background: #fff3cd; border-radius: 10px; padding: 8px; margin-top: 10px; text-align: center; }
+        .event-box { background: #e9ecef; border-radius: 10px; padding: 15px; margin: 15px 0; text-align: center; font-weight: bold; min-height: 70px; }
         .player-list { max-height: 300px; overflow-y: auto; }
         .player-item { background: #f8f9fa; border-radius: 10px; padding: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; }
         .history-list { max-height: 200px; overflow-y: auto; font-size: 12px; }
@@ -82,7 +79,7 @@
             <p>Введите ваше имя, чтобы начать</p>
             <input type="text" id="playerNameInput" placeholder="Имя игрока">
             <button onclick="login()">▶ НАЧАТЬ ИГРУ</button>
-            <p style="margin-top: 15px; font-size: 12px;">Таблица лидеров обновляется в реальном времени!</p>
+            <p style="margin-top: 15px; font-size: 12px;">Добавляйте друзей — таблица лидеров покажет, кто лучший!</p>
         </div>
         
         <div id="gameInterface" style="display: none;">
@@ -115,8 +112,7 @@
                         <div class="stat-card"><div class="stat-label">⚠️ РИСК</div><div class="stat-value" id="risk">50<small>%</small></div></div>
                     </div>
                     
-                    <div class="competitor-warning" id="competitorWarning">🤖 ИИ-конкурент рядом с вами</div>
-                    <div class="event-box" id="eventMessage">🎲 Нажмите "Завершить месяц"</div>
+                    <div class="event-box" id="eventMessage">🎲 Нажмите "Завершить месяц", чтобы начать игру</div>
                     
                     <div class="buttons">
                         <button onclick="makeMove('hire')">👥 НАЙМ</button>
@@ -134,26 +130,35 @@
                 </div>
                 
                 <div class="right-column">
-                    <div class="leaderboard"><h3>🏆 ТАБЛИЦА ЛИДЕРОВ</h3><div id="playerList" class="player-list">Загрузка...</div></div>
-                    <div class="history-log"><h4>📜 ИСТОРИЯ</h4><div id="historyList" class="history-list"></div></div>
+                    <div class="leaderboard">
+                        <h3>🏆 ТАБЛИЦА ЛИДЕРОВ</h3>
+                        <div id="playerList" class="player-list"></div>
+                        <div style="margin-top: 10px;">
+                            <input type="text" id="newPlayerName" placeholder="Имя друга" style="width: 70%; padding: 5px;">
+                            <button onclick="addFriend()">➕ ДОБАВИТЬ</button>
+                        </div>
+                    </div>
+                    <div class="history-log">
+                        <h4>📜 ИСТОРИЯ ХОДОВ</h4>
+                        <div id="historyList" class="history-list"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==============================================
-        // 🔥 ВАШИ КЛЮЧИ ИЗ SUPABASE (Settings → API Keys)
-        // ==============================================
-        const SUPABASE_URL = 'https://vhylyimcgxhrjqjhkovz.supabase.co'
-        const SUPABASE_ANON_KEY = 'sb_publishable_1hbL40auidOS6b8_nn5GAw__AnsGanP';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        let currentPlayerId = null;
         let currentPlayerName = null;
-        let currentPlayerData = null;
-        let allPlayers = {};
+        let currentPlayerData = {
+            capital: 50,
+            rubles: 2500000,
+            team: 50,
+            marketing: 50,
+            month: 0,
+            credit_amount: 0,
+            credit_deadline: 0
+        };
+        let allPlayers = [];
         let history = [];
         
         const events = [
@@ -162,8 +167,44 @@
             { text: "👥 Конкуренты переманили сотрудников", cap: 0, team: -20, market: -5 },
             { text: "📉 Скандал в СМИ", cap: -15, team: 0, market: -25 },
             { text: "🏆 Премия 'Лучший стартап года'", cap: 20, team: 15, market: 30 },
-            { text: "⚖️ Налоговая проверка", cap: -20, team: -10, market: 0 }
+            { text: "⚖️ Налоговая проверка", cap: -20, team: -10, market: 0 },
+            { text: "🤝 Привлечение бизнес-ангела", cap: 40, team: 0, market: 0 },
+            { text: "😩 Выгорание команды", cap: 0, team: -15, market: -10 },
+            { text: "📈 Новый тренд", cap: 15, team: 0, market: 25 },
+            { text: "💡 Гениальная идея", cap: 0, team: 5, market: 20 },
+            { text: "📉 Экономический кризис", cap: -30, team: 0, market: -15 },
+            { text: "🤝 Крупный ритейлер", cap: 25, team: 0, market: 25 }
         ];
+        
+        function updateUI() {
+            document.getElementById('capital').innerHTML = currentPlayerData.capital + '<small>%</small>';
+            document.getElementById('team').innerHTML = currentPlayerData.team + '<small>%</small>';
+            document.getElementById('marketing').innerHTML = currentPlayerData.marketing + '<small>%</small>';
+            document.getElementById('month').innerHTML = currentPlayerData.month;
+            document.getElementById('rubles').innerHTML = currentPlayerData.rubles.toLocaleString() + ' ₽';
+            let risk = Math.round(100 - (currentPlayerData.capital + currentPlayerData.team + currentPlayerData.marketing) / 3);
+            if (risk < 0) risk = 0;
+            document.getElementById('risk').innerHTML = risk + '<small>%</small>';
+            document.getElementById('capitalBar').style.width = currentPlayerData.capital + '%';
+            document.getElementById('teamBar').style.width = currentPlayerData.team + '%';
+            document.getElementById('marketingBar').style.width = currentPlayerData.marketing + '%';
+        }
+        
+        function updateLeaderboard() {
+            let container = document.getElementById('playerList');
+            let sorted = [...allPlayers].sort((a,b) => b.capital - a.capital);
+            if (sorted.length === 0) {
+                container.innerHTML = '<div class="player-item">➕ Добавьте друзей</div>';
+                return;
+            }
+            container.innerHTML = sorted.map(p => `<div class="player-item"><span><b>${p.name}</b> ${p.name === currentPlayerName ? '(Я)' : ''}</span><span>💰 ${p.capital}% | 📅 ${p.month}</span></div>`).join('');
+        }
+        
+        function addToHistory(text) {
+            history.unshift(`📅 Месяц ${currentPlayerData.month}: ${text}`);
+            if (history.length > 15) history.pop();
+            document.getElementById('historyList').innerHTML = history.map(h => `<div class="history-item">${h}</div>`).join('');
+        }
         
         function applyAction(cost, effect) {
             if (currentPlayerData.rubles < cost) { addToHistory(`❌ Не хватает ${cost.toLocaleString()} ₽`); return false; }
@@ -172,12 +213,23 @@
             if (effect.team) currentPlayerData.team = Math.min(currentPlayerData.team + effect.team, 100);
             if (effect.market) currentPlayerData.marketing = Math.min(currentPlayerData.marketing + effect.market, 100);
             updateUI();
-            savePlayerData();
+            updatePlayerInLeaderboard();
             return true;
         }
         
-        async function makeMove(action) {
-            if (!currentPlayerData) return;
+        function updatePlayerInLeaderboard() {
+            let player = allPlayers.find(p => p.name === currentPlayerName);
+            if (player) {
+                player.capital = currentPlayerData.capital;
+                player.team = currentPlayerData.team;
+                player.marketing = currentPlayerData.marketing;
+                player.month = currentPlayerData.month;
+            }
+            updateLeaderboard();
+        }
+        
+        function makeMove(action) {
+            if (!currentPlayerName) return;
             switch(action) {
                 case 'hire': applyAction(200000, { team: 15 }); addToHistory("👥 Найм сотрудников: команда +15%"); break;
                 case 'advertise': applyAction(150000, { market: 15 }); addToHistory("📢 Реклама: маркетинг +15%"); break;
@@ -202,7 +254,8 @@
                 currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
                 addToHistory(`😔 Инвестор отказал, репутация -10%`);
             }
-            updateUI(); savePlayerData();
+            updateUI();
+            updatePlayerInLeaderboard();
         }
         
         function takeCredit() {
@@ -211,7 +264,8 @@
             currentPlayerData.credit_deadline = currentPlayerData.month + 3;
             currentPlayerData.rubles += 500000;
             addToHistory(`💳 Кредит 500 000 ₽. Вернуть нужно 600 000 ₽ до ${currentPlayerData.credit_deadline} месяца`);
-            updateUI(); savePlayerData();
+            updateUI();
+            updatePlayerInLeaderboard();
         }
         
         function repayCredit() {
@@ -220,12 +274,17 @@
             currentPlayerData.rubles -= currentPlayerData.credit_amount;
             currentPlayerData.credit_amount = 0;
             addToHistory("✅ Кредит погашен");
-            updateUI(); savePlayerData();
+            updateUI();
+            updatePlayerInLeaderboard();
         }
         
         function endMonth() {
             let cost = 50000 + currentPlayerData.team * 2000 + currentPlayerData.marketing * 1500;
-            if (currentPlayerData.rubles < cost) { resetGame(); addToHistory("💀 БАНКРОТСТВО!"); return; }
+            if (currentPlayerData.rubles < cost) { 
+                addToHistory("💀 БАНКРОТСТВО! Не хватило на расходы");
+                resetGame();
+                return; 
+            }
             currentPlayerData.rubles -= cost;
             let e = events[Math.floor(Math.random() * events.length)];
             currentPlayerData.capital = Math.min(Math.max(currentPlayerData.capital + e.cap, 0), 100);
@@ -234,104 +293,77 @@
             addToHistory(`${e.text} (💰 ${e.cap}%, 👥 ${e.team}%, 📢 ${e.market}%)`);
             document.getElementById('eventMessage').innerHTML = e.text;
             currentPlayerData.month++;
-            updateUI(); savePlayerData();
+            updateUI();
+            updatePlayerInLeaderboard();
+            
             if (currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80 && currentPlayerData.month >= 6) {
-                addToHistory("🏆 ПОБЕДА! ВЫХОД НА IPO!");
+                addToHistory("🏆 ПОБЕДА! ВЫХОД НА IPO! 🏆");
                 resetGame();
             }
-            if (currentPlayerData.capital <= 0) { addToHistory("💀 БАНКРОТСТВО"); resetGame(); }
+            if (currentPlayerData.capital <= 0) { 
+                addToHistory("💀 БАНКРОТСТВО");
+                resetGame();
+            }
         }
         
-        function updateUI() {
-            if (!currentPlayerData) return;
-            document.getElementById('capital').innerHTML = currentPlayerData.capital + '<small>%</small>';
-            document.getElementById('team').innerHTML = currentPlayerData.team + '<small>%</small>';
-            document.getElementById('marketing').innerHTML = currentPlayerData.marketing + '<small>%</small>';
-            document.getElementById('month').innerHTML = currentPlayerData.month;
-            document.getElementById('rubles').innerHTML = currentPlayerData.rubles.toLocaleString() + ' ₽';
-            let risk = Math.round(100 - (currentPlayerData.capital + currentPlayerData.team + currentPlayerData.marketing) / 3);
-            document.getElementById('risk').innerHTML = (risk < 0 ? 0 : risk) + '<small>%</small>';
-            document.getElementById('capitalBar').style.width = currentPlayerData.capital + '%';
-            document.getElementById('teamBar').style.width = currentPlayerData.team + '%';
-            document.getElementById('marketingBar').style.width = currentPlayerData.marketing + '%';
+        function resetGame() {
+            currentPlayerData = {
+                capital: 50,
+                rubles: 2500000,
+                team: 50,
+                marketing: 50,
+                month: 0,
+                credit_amount: 0,
+                credit_deadline: 0
+            };
+            updateUI();
+            updatePlayerInLeaderboard();
+            document.getElementById('eventMessage').innerHTML = "🎮 Игра перезапущена! Удачи в бизнесе!";
+            addToHistory("🔄 Новая игра");
         }
         
-        function addToHistory(text) {
-            history.unshift(`📅 Месяц ${currentPlayerData?.month || 0}: ${text}`);
-            if (history.length > 15) history.pop();
-            document.getElementById('historyList').innerHTML = history.map(h => `<div class="history-item">${h}</div>`).join('');
+        function addFriend() {
+            let input = document.getElementById('newPlayerName');
+            let name = input.value.trim();
+            if (!name) { alert("Введите имя друга!"); return; }
+            if (allPlayers.find(p => p.name === name)) { alert("Такой игрок уже есть!"); return; }
+            allPlayers.push({ name: name, capital: 50, team: 50, marketing: 50, month: 0 });
+            input.value = "";
+            updateLeaderboard();
+            addToHistory(`➕ Новый игрок: ${name}`);
         }
         
-        async function savePlayerData() {
-            if (!currentPlayerId || !currentPlayerData) return;
-            await supabase.from('players').upsert({
-                id: currentPlayerId,
-                name: currentPlayerName,
-                capital: currentPlayerData.capital,
-                rubles: currentPlayerData.rubles,
-                team: currentPlayerData.team,
-                marketing: currentPlayerData.marketing,
-                month: currentPlayerData.month,
-                credit_amount: currentPlayerData.credit_amount,
-                credit_deadline: currentPlayerData.credit_deadline,
-                updated_at: new Date()
-            });
-        }
-        
-        function updateLeaderboard(players) {
-            let container = document.getElementById('playerList');
-            let list = Object.values(players).sort((a,b) => b.capital - a.capital);
-            container.innerHTML = list.map(p => `<div class="player-item"><span><b>${p.name}</b> ${p.id === currentPlayerId ? '(Я)' : ''}</span><span>💰 ${p.capital}% | 📅 ${p.month}</span></div>`).join('');
-        }
-        
-        async function login() {
+        function login() {
             let name = document.getElementById('playerNameInput').value.trim();
-            if (!name) { alert("Введите имя!"); return; }
+            if (!name) { alert("Введите ваше имя!"); return; }
             currentPlayerName = name;
-            currentPlayerId = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
             
-            let { data: existing } = await supabase.from('players').select('*').eq('id', currentPlayerId);
-            if (existing && existing.length > 0) {
-                currentPlayerData = existing[0];
+            if (!allPlayers.find(p => p.name === name)) {
+                allPlayers.push({ name: name, capital: 50, team: 50, marketing: 50, month: 0 });
             } else {
-                currentPlayerData = { id: currentPlayerId, name: currentPlayerName, capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
-                await savePlayerData();
+                let existing = allPlayers.find(p => p.name === name);
+                currentPlayerData.capital = existing.capital;
+                currentPlayerData.team = existing.team;
+                currentPlayerData.marketing = existing.marketing;
+                currentPlayerData.month = existing.month;
             }
             
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('gameInterface').style.display = 'block';
             document.getElementById('currentPlayerNameDisplay').innerText = currentPlayerName;
             updateUI();
-            
-            supabase.channel('public:players')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'players' }, async () => {
-                    let { data } = await supabase.from('players').select('*');
-                    let playersMap = {};
-                    data.forEach(p => playersMap[p.id] = p);
-                    allPlayers = playersMap;
-                    updateLeaderboard(allPlayers);
-                    if (allPlayers[currentPlayerId]) currentPlayerData = allPlayers[currentPlayerId];
-                    updateUI();
-                })
-                .subscribe();
-                
-            let { data } = await supabase.from('players').select('*');
-            data.forEach(p => allPlayers[p.id] = p);
-            updateLeaderboard(allPlayers);
-        }
-        
-        function resetGame() {
-            currentPlayerData = { id: currentPlayerId, name: currentPlayerName, capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
-            savePlayerData();
-            updateUI();
-            addToHistory("🔄 Новая игра");
+            updateLeaderboard();
+            addToHistory(`✨ Добро пожаловать, ${name}!`);
         }
         
         function logout() {
             document.getElementById('gameInterface').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'block';
             document.getElementById('playerNameInput').value = '';
-            currentPlayerId = null;
+            currentPlayerName = null;
+            currentPlayerData = {
+                capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0
+            };
         }
     </script>
 </body>
