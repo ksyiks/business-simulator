@@ -135,71 +135,66 @@
             color: white;
         }
         
-        /* Общие стили для карточек */
-        .my-game, .leaderboard, .history-log, .chart-container, .mascot-box,
-        .advice-card, .tasks-card, .achievements-card, .duel-card {
+        .login-screen {
+            background: white;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .login-screen input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .login-screen button {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        .game-layout {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .my-game {
+            flex: 2.5;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .right-column {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .leaderboard,
+        .history-log,
+        .chart-container,
+        .mascot-box,
+        .advice-card,
+        .tasks-card,
+        .achievements-card,
+        .duel-card {
             background: white;
             border-radius: 20px;
             padding: 20px;
             transition: 0.3s;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        /* Стили для дуэли */
-        .duel-players {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .duel-player-card {
-            flex: 1;
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            border: 2px solid #ddd;
-            transition: 0.3s;
-        }
-        .duel-player-card.active {
-            border-color: #28a745;
-            background: #d4edda;
-            box-shadow: 0 0 15px rgba(40,167,69,0.3);
-        }
-        body.dark .duel-player-card.active {
-            background: #1a5a2e;
-            border-color: #28a745;
-        }
-        .duel-player-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .duel-player-stats {
-            font-size: 14px;
-            margin: 5px 0;
-        }
-        .duel-winner-badge {
-            margin-top: 10px;
-            font-size: 20px;
-        }
-        .duel-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-        .duel-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 15px 0;
-        }
-        .vs-badge {
-            font-size: 24px;
-            font-weight: bold;
-            color: #dc3545;
         }
         
         .stats-main {
@@ -446,6 +441,65 @@
             margin-top: 8px;
             cursor: pointer;
             text-decoration: underline;
+        }
+        
+        /* Стили для дуэли */
+        .duel-players {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .duel-player-card {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #ddd;
+            transition: 0.3s;
+        }
+        .duel-player-card.active {
+            border-color: #28a745;
+            background: #d4edda;
+            box-shadow: 0 0 15px rgba(40,167,69,0.3);
+        }
+        body.dark .duel-player-card.active {
+            background: #1a5a2e;
+            border-color: #28a745;
+        }
+        .duel-player-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .duel-player-stats {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .duel-winner-badge {
+            margin-top: 10px;
+            font-size: 20px;
+        }
+        .duel-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .duel-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        .vs-badge {
+            font-size: 24px;
+            font-weight: bold;
+            color: #dc3545;
+            display: flex;
+            align-items: center;
         }
         
         .help-modal, .game-modal {
@@ -706,8 +760,8 @@
                 
                 <div id="duelSetup" style="margin-bottom: 20px;">
                     <div class="duel-controls">
-                        <input type="text" id="duelPlayer1Name" placeholder="Имя игрока 1" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
-                        <input type="text" id="duelPlayer2Name" placeholder="Имя игрока 2" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                        <input type="text" id="duelPlayer1Name" placeholder="Имя игрока 1" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; flex:1;">
+                        <input type="text" id="duelPlayer2Name" placeholder="Имя игрока 2" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; flex:1;">
                         <button onclick="startDuel()" class="success">⚔️ НАЧАТЬ ДУЭЛЬ</button>
                     </div>
                 </div>
@@ -904,20 +958,7 @@
         let creditPaid = false;
         let playerAchievements = [];
         
-        // ==============================================
-        // ПЕРЕМЕННЫЕ ДЛЯ ДУЭЛИ
-        // ==============================================
-        let duelActive = false;
-        let duelPlayers = {
-            player1: { name: "", capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, finished: false, winner: false },
-            player2: { name: "", capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, finished: false, winner: false }
-        };
-        let currentTurn = 1; // 1 или 2
-        let duelHistory = [];
-        
-        // ==============================================
-        // ДОСТИЖЕНИЯ
-        // ==============================================
+        // Достижения
         const achievementsList = [
             { id: "unicorn", name: "Единорог", icon: "🦄", desc: "IPO с капиталом 100%", check: () => currentPlayerData.capital === 100 && gameEnded },
             { id: "speedrun", name: "Спидран", icon: "⚡", desc: "Победа за 6 месяцев", check: () => currentPlayerData.month <= 6 && gameEnded },
@@ -988,6 +1029,14 @@
         // ==============================================
         // ФУНКЦИИ ДУЭЛИ
         // ==============================================
+        let duelActive = false;
+        let duelPlayers = {
+            player1: { name: "", capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, finished: false, winner: false },
+            player2: { name: "", capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, finished: false, winner: false }
+        };
+        let currentTurn = 1;
+        let duelHistory = [];
+        
         function startDuel() {
             let p1Name = document.getElementById('duelPlayer1Name').value.trim();
             let p2Name = document.getElementById('duelPlayer2Name').value.trim();
@@ -1016,7 +1065,6 @@
             updateDuelUI();
             updateDuelHistory();
             
-            // Подсветка активного игрока
             document.getElementById('duelPlayer1Card').classList.add('active');
             document.getElementById('duelPlayer2Card').classList.remove('active');
         }
@@ -1032,7 +1080,6 @@
             document.getElementById('duelPlayer2Marketing').innerText = duelPlayers.player2.marketing;
             document.getElementById('duelPlayer2Month').innerText = duelPlayers.player2.month;
             
-            // Проверка победителя
             if (duelPlayers.player1.finished && duelPlayers.player2.finished) {
                 determineWinner();
             }
@@ -1067,7 +1114,6 @@
             
             let currentPlayerData = currentTurn === 1 ? duelPlayers.player1 : duelPlayers.player2;
             
-            // Проверка, не закончил ли игрок
             if (currentPlayerData.finished) {
                 addDuelHistory(`⚠️ ${currentPlayerData.name} уже завершил игру! Передайте ход.`);
                 return;
@@ -1127,7 +1173,6 @@
         }
         
         function duelEndMonth(player) {
-            // Проверка кредита
             if (player.credit_amount > 0 && player.month >= player.credit_deadline) {
                 player.rubles -= 100000;
                 player.marketing = Math.max(player.marketing - 15, 0);
@@ -1169,7 +1214,6 @@
             
             player.month++;
             
-            // Проверка победы (IPO)
             if (player.capital >= 80 && player.team >= 80 && player.marketing >= 80 && player.month >= 6) {
                 addDuelHistory(`🏆 ${player.name} достиг IPO! Игра завершена.`);
                 player.finished = true;
@@ -1188,16 +1232,13 @@
             let currentFinished = currentTurn === 1 ? duelPlayers.player1.finished : duelPlayers.player2.finished;
             
             if (currentFinished) {
-                // Если текущий игрок закончил, переключаем на другого
                 currentTurn = currentTurn === 1 ? 2 : 1;
                 let nextFinished = currentTurn === 1 ? duelPlayers.player1.finished : duelPlayers.player2.finished;
                 if (nextFinished) {
-                    // Оба закончили — определяем победителя
                     determineWinner();
                     return;
                 }
             } else {
-                // Обычный переключение хода
                 currentTurn = currentTurn === 1 ? 2 : 1;
             }
             
@@ -1205,7 +1246,6 @@
             let nextName = nextPlayer.name;
             document.getElementById('currentTurnName').innerText = nextName;
             
-            // Подсветка активного игрока
             if (currentTurn === 1) {
                 document.getElementById('duelPlayer1Card').classList.add('active');
                 document.getElementById('duelPlayer2Card').classList.remove('active');
@@ -1223,7 +1263,6 @@
             let winner = null;
             let winnerName = "";
             
-            // Сравнение по капиталу
             if (p1.capital > p2.capital) {
                 winner = 1;
                 winnerName = p1.name;
@@ -1231,7 +1270,6 @@
                 winner = 2;
                 winnerName = p2.name;
             } else {
-                // При равном капитале — кто меньше месяцев
                 if (p1.month < p2.month) {
                     winner = 1;
                     winnerName = p1.name;
@@ -1267,7 +1305,7 @@
         }
         
         // ==============================================
-        // ФУНКЦИИ ДЛЯ ОДИНОЧНОЙ ИГРЫ (сокращённые)
+        // ФУНКЦИИ ДЛЯ ОДИНОЧНОЙ ИГРЫ
         // ==============================================
         function updateUI() {
             document.getElementById('capitalValue').innerText = currentPlayerData.capital;
