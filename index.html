@@ -750,25 +750,6 @@
             "💡 Инвесторы любят компании с хорошей репутацией!"
         ];
 
-        function playSound(type) {
-            try {
-                let audio = new Audio();
-                if (type === 'win') {
-                    audio.src = 'https://www.soundjay.com/misc/sounds/fanfare-6.mp3';
-                    audio.volume = 0.3;
-                    audio.play().catch(e => {});
-                } else if (type === 'lose') {
-                    audio.src = 'https://www.soundjay.com/misc/sounds/fail-trombone-01.mp3';
-                    audio.volume = 0.3;
-                    audio.play().catch(e => {});
-                } else if (type === 'click') {
-                    audio.src = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3';
-                    audio.volume = 0.2;
-                    audio.play().catch(e => {});
-                }
-            } catch(e) {}
-        }
-
         // ==============================================
         // ПОМОЩЬ
         // ==============================================
@@ -778,6 +759,14 @@
 
         function closeHelpModal() {
             document.getElementById('helpModal').style.display = 'none';
+        }
+
+        // ==============================================
+        // ЗВУКИ (упрощённо, чтобы не ломало)
+        // ==============================================
+        function playSound(type) {
+            // Звуки отключены для стабильности, но можно вернуть
+            // Оставлено для совместимости с вызовами
         }
 
         // ==============================================
@@ -798,7 +787,7 @@
             document.getElementById('teamBar').style.width = currentPlayerData.team + '%';
             document.getElementById('marketingBar').style.width = currentPlayerData.marketing + '%';
 
-            // Обновляем шкалу Вы vs ИИ
+            // Шкала Вы vs ИИ
             let total = currentPlayerData.capital + competitor.capital;
             let playerPercent = total > 0 ? (currentPlayerData.capital / total) * 100 : 50;
             let aiPercent = total > 0 ? (competitor.capital / total) * 100 : 50;
@@ -858,6 +847,7 @@
 
         function initChart() {
             let ctx = document.getElementById('dynamicsChart').getContext('2d');
+            if (dynamicsChart) dynamicsChart.destroy();
             dynamicsChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -882,12 +872,14 @@
         function updateLeaderboard() {
             let container = document.getElementById('playerList');
             
-            // Создаём массив всех участников (игроки + ИИ)
             let allParticipants = [...allPlayers];
             
-            // Добавляем ИИ-конкурента, если его ещё нет
-            let aiExists = allParticipants.some(p => p.name === "🤖 СтартТех");
-            if (!aiExists) {
+            // Обновляем или добавляем ИИ-конкурента
+            let aiIndex = allParticipants.findIndex(p => p.name === "🤖 СтартТех");
+            if (aiIndex !== -1) {
+                allParticipants[aiIndex].capital = competitor.capital;
+                allParticipants[aiIndex].month = competitor.month;
+            } else {
                 allParticipants.push({
                     name: "🤖 СтартТех",
                     capital: competitor.capital,
@@ -896,13 +888,6 @@
                     month: competitor.month,
                     isAI: true
                 });
-            } else {
-                // Обновляем данные ИИ
-                let ai = allParticipants.find(p => p.name === "🤖 СтартТех");
-                ai.capital = competitor.capital;
-                ai.team = competitor.team;
-                ai.marketing = competitor.marketing;
-                ai.month = competitor.month;
             }
             
             let sorted = [...allParticipants].sort((a, b) => b.capital - a.capital);
@@ -972,7 +957,6 @@
             if (effect.market) currentPlayerData.marketing = Math.min(currentPlayerData.marketing + effect.market, 100);
             updateUI();
             updatePlayerInLeaderboard();
-            playSound('click');
             return true;
         }
 
@@ -1212,13 +1196,11 @@
                 modalContent.className = 'game-modal-content win';
                 modalTitle.innerHTML = '🏆 ПОБЕДА! 🏆';
                 modalMessage.innerHTML = `Вы успешно вывели компанию на IPO за ${currentPlayerData.month} месяцев!<br><br>Финальный капитал: ${currentPlayerData.capital}%<br><br>Отличная работа!`;
-                playSound('win');
                 addToHistory("🏆 ПОБЕДА! ВЫХОД НА IPO!");
             } else {
                 modalContent.className = 'game-modal-content lose';
                 modalTitle.innerHTML = '💀 БАНКРОТСТВО 💀';
                 modalMessage.innerHTML = `К сожалению, ваша компания обанкротилась.<br><br>Вы продержались ${currentPlayerData.month} месяцев.<br><br>Попробуйте ещё раз!`;
-                playSound('lose');
                 addToHistory("💀 БАНКРОТСТВО");
             }
 
@@ -1318,11 +1300,8 @@
             addToHistory("🔄 Новая игра");
 
             if (dynamicsChart) {
-                dynamicsChart.data.datasets[0].data = [50];
-                dynamicsChart.data.datasets[1].data = [50];
-                dynamicsChart.data.datasets[2].data = [50];
-                dynamicsChart.data.labels = ['М0'];
-                dynamicsChart.update();
+                dynamicsChart.destroy();
+                initChart();
             }
         }
 
