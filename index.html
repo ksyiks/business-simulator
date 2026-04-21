@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Бизнес-симулятор — ПИУ РАНХиГС</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -28,13 +29,15 @@
         body.dark .chart-container,
         body.dark .mascot-box,
         body.dark .advice-card,
-        body.dark .tasks-card {
+        body.dark .tasks-card,
+        body.dark .achievements-card {
             background: #0f3460;
             color: #e0e0e0;
         }
         
         body.dark .stat-card,
-        body.dark .player-item {
+        body.dark .player-item,
+        body.dark .achievement-item {
             background: #1a1a2e;
             color: #e0e0e0;
         }
@@ -49,7 +52,6 @@
             color: #ffd700;
         }
         
-        /* Навигация */
         .nav-bar {
             display: flex;
             justify-content: center;
@@ -184,7 +186,8 @@
         .chart-container,
         .mascot-box,
         .advice-card,
-        .tasks-card {
+        .tasks-card,
+        .achievements-card {
             background: white;
             border-radius: 20px;
             padding: 20px;
@@ -192,7 +195,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
-        /* Показатели — месяц и риск отдельно */
         .stats-main {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -388,7 +390,41 @@
             border-radius: 8px;
         }
         
-        /* Стили для заданий */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .achievement-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+        .achievement-item.unlocked {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+        body.dark .achievement-item.unlocked {
+            background: linear-gradient(135deg, #1a5a2e, #0f3a1e);
+        }
+        .achievement-icon { font-size: 48px; margin-bottom: 10px; }
+        .achievement-name { font-weight: bold; margin-bottom: 5px; }
+        .achievement-desc { font-size: 11px; color: #666; }
+        .achievement-status { margin-top: 8px; font-size: 12px; }
+        .achievement-status.locked { color: #dc3545; }
+        .achievement-status.unlocked { color: #28a745; }
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
         .task-item {
             background: #f8f9fa;
             border-radius: 15px;
@@ -396,13 +432,8 @@
             margin-bottom: 15px;
             border-left: 5px solid #667eea;
         }
-        body.dark .task-item {
-            background: #1a1a2e;
-        }
-        .task-question {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+        body.dark .task-item { background: #1a1a2e; }
+        .task-question { font-weight: bold; margin-bottom: 10px; }
         .task-answer {
             display: flex;
             gap: 10px;
@@ -416,10 +447,7 @@
             border-radius: 8px;
             width: 150px;
         }
-        .task-result {
-            margin-top: 8px;
-            font-size: 13px;
-        }
+        .task-result { margin-top: 8px; font-size: 13px; }
         .task-hint {
             font-size: 12px;
             color: #666;
@@ -511,7 +539,6 @@
     </style>
 </head>
 <body>
-    <!-- Модальные окна -->
     <div id="gameModal" class="game-modal">
         <div id="gameModalContent" class="game-modal-content">
             <h2 id="gameModalTitle">🏆 ПОБЕДА!</h2>
@@ -547,14 +574,13 @@
     </div>
 
     <div class="container">
-        <!-- Навигация -->
         <div class="nav-bar">
             <button class="nav-btn active" onclick="showPage('game')">🎮 ИГРА</button>
             <button class="nav-btn" onclick="showPage('advice')">💡 СОВЕТЫ</button>
             <button class="nav-btn" onclick="showPage('tasks')">📚 ЗАДАНИЯ</button>
+            <button class="nav-btn" onclick="showPage('achievements')">🏆 ДОСТИЖЕНИЯ</button>
         </div>
         
-        <!-- Страница 1: Игра -->
         <div id="gamePage" class="page active-page">
             <div id="loginScreen" class="login-screen">
                 <div class="mascot-emoji">🦊</div>
@@ -627,9 +653,7 @@
                             </div>
                         </div>
                         
-                        <div class="competitor-warning" id="competitorWarning">
-                            🤖 ИИ-конкурент "СтартТех" рядом с вами
-                        </div>
+                        <div class="competitor-warning" id="competitorWarning">🤖 ИИ-конкурент "СтартТех" рядом с вами</div>
                         
                         <div id="questBlock" style="display: none;" class="quest-box">
                             <strong>🎯 КВЕСТ!</strong>
@@ -680,22 +704,17 @@
             </div>
         </div>
         
-        <!-- Страница 2: Бизнес-советы -->
         <div id="advicePage" class="page">
             <div class="advice-card">
                 <h2>💡 БИЗНЕС-СОВЕТЫ</h2>
                 <div style="margin-top: 20px;">
                     <h3>📖 Цитата дня</h3>
-                    <div id="quoteOfTheDay" style="font-style: italic; font-size: 16px; padding: 15px; background: #f0f0f0; border-radius: 10px;">
-                        "Ваше время ограничено, не тратьте его, живя чужой жизнью." — Стив Джобс
-                    </div>
+                    <div id="quoteOfTheDay" style="font-style: italic; font-size: 16px; padding: 15px; background: #f0f0f0; border-radius: 10px;">"Ваше время ограничено, не тратьте его, живя чужой жизнью." — Стив Джобс</div>
                     <button onclick="refreshQuote()" style="margin-top: 10px;">🔄 Другая цитата</button>
                 </div>
                 <div style="margin-top: 20px;">
                     <h3>🔍 Интересный факт</h3>
-                    <div id="factOfTheDay" style="padding: 15px; background: #f0f0f0; border-radius: 10px;">
-                        90% стартапов закрываются в первые 3 года
-                    </div>
+                    <div id="factOfTheDay" style="padding: 15px; background: #f0f0f0; border-radius: 10px;">90% стартапов закрываются в первые 3 года</div>
                     <button onclick="refreshFact()" style="margin-top: 10px;">🔄 Другой факт</button>
                 </div>
                 <div style="margin-top: 20px;">
@@ -722,12 +741,10 @@
             </div>
         </div>
         
-        <!-- Страница 3: Задания -->
         <div id="tasksPage" class="page">
             <div class="tasks-card">
                 <h2>📚 БИЗНЕС-ЗАДАНИЯ</h2>
-                <p style="margin-bottom: 20px;">Решите задачи и проверьте свои знания в финансовой грамотности!</p>
-                
+                <p style="margin-bottom: 20px;">Решите задачи и проверьте свои знания!</p>
                 <div class="task-item">
                     <div class="task-question">📊 Задание 1: У вас есть 100 000 ₽. Вы купили товар за 60 000 ₽ и продали за 85 000 ₽. Какая у вас прибыль?</div>
                     <div class="task-answer">
@@ -737,7 +754,6 @@
                     <div id="task1Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(1)">💡 Подсказка</div>
                 </div>
-                
                 <div class="task-item">
                     <div class="task-question">💰 Задание 2: Вы взяли кредит 50 000 ₽ под 20% годовых. Сколько нужно вернуть через год?</div>
                     <div class="task-answer">
@@ -747,7 +763,6 @@
                     <div id="task2Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(2)">💡 Подсказка</div>
                 </div>
-                
                 <div class="task-item">
                     <div class="task-question">📈 Задание 3: Ваша выручка выросла с 200 000 ₽ до 300 000 ₽. На сколько процентов выросли продажи?</div>
                     <div class="task-answer">
@@ -757,7 +772,6 @@
                     <div id="task3Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(3)">💡 Подсказка</div>
                 </div>
-                
                 <div class="task-item">
                     <div class="task-question">👥 Задание 4: В вашей компании 10 сотрудников. Вы наняли ещё 5. На сколько процентов выросла команда?</div>
                     <div class="task-answer">
@@ -767,7 +781,6 @@
                     <div id="task4Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(4)">💡 Подсказка</div>
                 </div>
-                
                 <div class="task-item">
                     <div class="task-question">📊 Задание 5: Ваша реклама принесла 50 новых клиентов. Из них 40 стали постоянными. Какой процент клиентов остался?</div>
                     <div class="task-answer">
@@ -779,6 +792,17 @@
                 </div>
             </div>
         </div>
+        
+        <div id="achievementsPage" class="page">
+            <div class="achievements-card">
+                <h2>🏆 ДОСТИЖЕНИЯ</h2>
+                <div class="progress-stats">
+                    <span>🏅 Прогресс: <span id="achievementsCount">0</span>/<span id="achievementsTotal">8</span></span>
+                    <span>⭐ Лучший результат: <span id="bestCapital">0</span>%</span>
+                </div>
+                <div id="achievementsGrid" class="achievements-grid"></div>
+            </div>
+        </div>
     </div>
     
     <div class="footer">
@@ -787,86 +811,15 @@
 
     <script>
         // ==============================================
-        // ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
+        // 🔥 ВСТАВЬТЕ ВАШИ КЛЮЧИ ЗДЕСЬ
         // ==============================================
-        function showPage(page) {
-            document.getElementById('gamePage').classList.toggle('active-page', page === 'game');
-            document.getElementById('advicePage').classList.toggle('active-page', page === 'advice');
-            document.getElementById('tasksPage').classList.toggle('active-page', page === 'tasks');
-            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
-                btn.classList.toggle('active', (i === 0 && page === 'game') || (i === 1 && page === 'advice') || (i === 2 && page === 'tasks'));
-            });
-        }
+        const SUPABASE_URL = https://yzbtiuvkbquxtnjliljw.supabase.co/rest/v1/;
+        const SUPABASE_ANON_KEY =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YnRpdXZrYnF1eHRuamxpbGp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NzQ4NDYsImV4cCI6MjA5MjM1MDg0Nn0.hdPiViXfJcvh56pBqjhd3POGzSSzjSOMwNfgjIjMiU4;
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // ==============================================
-        // ЦИТАТЫ И ФАКТЫ
-        // ==============================================
-        const quotes = [
-            { text: "Ваше время ограничено, не тратьте его, живя чужой жизнью.", author: "Стив Джобс" },
-            { text: "Единственный способ делать великую работу — любить то, что вы делаете.", author: "Стив Джобс" },
-            { text: "Не бойтесь ошибаться — бойтесь повторять ошибки.", author: "Теодор Рузвельт" },
-            { text: "Бизнес — это искусство извлекать деньги из кармана другого человека.", author: "Лоуренс Питер" },
-            { text: "Самая большая опасность в кризис — это растерянность.", author: "Джон Кеннеди" }
-        ];
-        
-        const facts = [
-            "90% стартапов закрываются в первые 3 года",
-            "Самый богатый человек в истории — Манса Муса (400 млрд $)",
-            "Amazon начинался как книжный интернет-магазин",
-            "Instagram купили за 1 млрд $ всего через 2 года после запуска",
-            "McDonald's продаёт 75 гамбургеров в секунду"
-        ];
-        
-        function refreshQuote() {
-            let randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            document.getElementById('quoteOfTheDay').innerHTML = `"${randomQuote.text}" — ${randomQuote.author}`;
-        }
-        
-        function refreshFact() {
-            let randomFact = facts[Math.floor(Math.random() * facts.length)];
-            document.getElementById('factOfTheDay').innerHTML = randomFact;
-        }
-        
-        function calculateProfit() {
-            let revenue = parseFloat(document.getElementById('revenueInput').value) || 0;
-            let expense = parseFloat(document.getElementById('expenseInput').value) || 0;
-            let profit = revenue - expense;
-            document.getElementById('profitResult').innerHTML = `💰 Прибыль: ${profit.toLocaleString()} ₽`;
-        }
-        
-        // ==============================================
-        // ЗАДАНИЯ
-        // ==============================================
-        function checkTask(taskNum, correctAnswer) {
-            let input = document.getElementById(`task${taskNum}Answer`);
-            let userAnswer = parseFloat(input.value);
-            let resultDiv = document.getElementById(`task${taskNum}Result`);
-            
-            if (isNaN(userAnswer)) {
-                resultDiv.innerHTML = "❌ Введите число!";
-                resultDiv.style.color = "red";
-            } else if (userAnswer === correctAnswer) {
-                resultDiv.innerHTML = "✅ Правильно! Отличная работа!";
-                resultDiv.style.color = "green";
-            } else {
-                resultDiv.innerHTML = `❌ Неправильно. Правильный ответ: ${correctAnswer}`;
-                resultDiv.style.color = "red";
-            }
-        }
-        
-        function showHint(taskNum) {
-            let hints = {
-                1: "Прибыль = Выручка - Себестоимость",
-                2: "Сумма кредита + (Сумма кредита × 20%)",
-                3: "((Новое значение - Старое) / Старое) × 100%",
-                4: "(Новые сотрудники / Старые сотрудники) × 100%",
-                5: "(Постоянные клиенты / Все клиенты) × 100%"
-            };
-            alert(hints[taskNum]);
-        }
-        
-        // ==============================================
-        // ИГРОВЫЕ ПЕРЕМЕННЫЕ
+        // ПЕРЕМЕННЫЕ
         // ==============================================
         let currentPlayerName = null;
         let currentPlayerData = {
@@ -878,20 +831,16 @@
         let history = [];
         let activeQuest = null;
         let questStep = 0;
-        let unlockedAchievements = [];
         let gameEnded = false;
         let chartData = { capital: [50], team: [50], marketing: [50], months: [0] };
         let dynamicsChart = null;
-        let achievements = {
-            unicorn: { name: "🦄 ЕДИНОРОГ", desc: "IPO с капиталом 100%", unlocked: false },
-            speedrun: { name: "⚡ СПИДРАН", desc: "Победа за 6 месяцев", unlocked: false },
-            phoenix: { name: "🔥 ФЕНИКС", desc: "Выжить после падения ниже 10%", unlocked: false },
-            lucky: { name: "🍀 ВЕЗУНЧИК", desc: "3 положительных события подряд", unlocked: false },
-            king: { name: "👑 КОРОЛЬ", desc: "Победить 3 раза подряд", unlocked: false }
-        };
         let winCount = 0;
         let positiveEventStreak = 0;
         let survivedLow = false;
+        let investorCount = 0;
+        let firstInvestmentDone = false;
+        let creditPaid = false;
+        let playerAchievements = [];
         
         const events = [
             { text: "🚀 Виральный успех в TikTok!", cap: 30, team: 0, market: 20, positive: true },
@@ -923,15 +872,130 @@
             ] }
         };
         
-        const mascotTips = [
-            "💡 Инвестируй в разработку — это окупается!",
-            "💡 Следи за ИИ-конкурентом — он может обогнать!",
-            "💡 Кредит помогает, но нужно вовремя возвращать!",
-            "💡 Балансируй между командой, маркетингом и деньгами!"
+        const achievementsList = [
+            { id: "unicorn", name: "Единорог", icon: "🦄", desc: "IPO с капиталом 100%", check: () => currentPlayerData.capital === 100 && gameEnded && document.getElementById('gameModalTitle').innerText === "🏆 ПОБЕДА!" },
+            { id: "speedrun", name: "Спидран", icon: "⚡", desc: "Победа за 6 месяцев", check: () => currentPlayerData.month <= 6 && gameEnded },
+            { id: "phoenix", name: "Феникс", icon: "🔥", desc: "Выжить после падения ниже 10%", check: () => survivedLow },
+            { id: "lucky", name: "Везунчик", icon: "🍀", desc: "3 положительных события подряд", check: () => positiveEventStreak >= 3 },
+            { id: "king", name: "Король", icon: "👑", desc: "Победить 3 раза подряд", check: () => winCount >= 3 },
+            { id: "millionaire", name: "Миллионер", icon: "💰", desc: "Накопить 5 000 000 ₽", check: () => currentPlayerData.rubles >= 5000000 },
+            { id: "reliable", name: "Надёжный", icon: "🎲", desc: "Взять кредит и вовремя погасить", check: () => creditPaid },
+            { id: "investor", name: "Инвестор", icon: "📈", desc: "Привлечь инвестора 5 раз", check: () => investorCount >= 5 }
         ];
         
         // ==============================================
-        // ОСНОВНЫЕ ФУНКЦИИ ИГРЫ
+        // ДОСТИЖЕНИЯ (Supabase)
+        // ==============================================
+        async function loadAchievements(playerName) {
+            try {
+                const { data, error } = await supabase
+                    .from('player_achievements')
+                    .select('achievement_id')
+                    .eq('player_name', playerName);
+                if (error) throw error;
+                playerAchievements = data ? data.map(a => a.achievement_id) : [];
+                updateAchievementsUI();
+            } catch(e) { console.log('Ошибка загрузки достижений:', e); }
+        }
+        
+        async function unlockAchievement(achievementId) {
+            if (playerAchievements.includes(achievementId)) return;
+            try {
+                const { error } = await supabase
+                    .from('player_achievements')
+                    .insert({ player_name: currentPlayerName, achievement_id: achievementId });
+                if (error) throw error;
+                playerAchievements.push(achievementId);
+                updateAchievementsUI();
+                let ach = achievementsList.find(a => a.id === achievementId);
+                if (ach) {
+                    let toast = document.createElement('div');
+                    toast.className = 'achievement-toast';
+                    toast.innerHTML = `<span>🏆</span><div><strong>${ach.icon} ${ach.name}</strong><br>${ach.desc}</div>`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 4000);
+                    addToHistory(`🏆 ДОСТИЖЕНИЕ: ${ach.icon} ${ach.name}!`);
+                }
+            } catch(e) { console.log('Ошибка сохранения достижения:', e); }
+        }
+        
+        async function checkAllAchievements() {
+            for (let ach of achievementsList) {
+                if (!playerAchievements.includes(ach.id) && ach.check()) {
+                    await unlockAchievement(ach.id);
+                }
+            }
+            updateAchievementsUI();
+        }
+        
+        function updateAchievementsUI() {
+            let container = document.getElementById('achievementsGrid');
+            let unlockedCount = playerAchievements.length;
+            document.getElementById('achievementsCount').innerText = unlockedCount;
+            document.getElementById('achievementsTotal').innerText = achievementsList.length;
+            document.getElementById('bestCapital').innerText = Math.max(currentPlayerData.capital, parseInt(document.getElementById('bestCapital').innerText) || 0);
+            container.innerHTML = achievementsList.map(ach => `
+                <div class="achievement-item ${playerAchievements.includes(ach.id) ? 'unlocked' : ''}">
+                    <div class="achievement-icon">${ach.icon}</div>
+                    <div class="achievement-name">${ach.name}</div>
+                    <div class="achievement-desc">${ach.desc}</div>
+                    <div class="achievement-status ${playerAchievements.includes(ach.id) ? 'unlocked' : 'locked'}">
+                        ${playerAchievements.includes(ach.id) ? '✅ ПОЛУЧЕНО' : '❌ НЕ ПОЛУЧЕНО'}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // ==============================================
+        // ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
+        // ==============================================
+        function showPage(page) {
+            document.getElementById('gamePage').classList.toggle('active-page', page === 'game');
+            document.getElementById('advicePage').classList.toggle('active-page', page === 'advice');
+            document.getElementById('tasksPage').classList.toggle('active-page', page === 'tasks');
+            document.getElementById('achievementsPage').classList.toggle('active-page', page === 'achievements');
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', (i === 0 && page === 'game') || (i === 1 && page === 'advice') || (i === 2 && page === 'tasks') || (i === 3 && page === 'achievements'));
+            });
+        }
+        
+        // ==============================================
+        // ЦИТАТЫ, ФАКТЫ, ЗАДАНИЯ
+        // ==============================================
+        const quotes = [
+            { text: "Ваше время ограничено, не тратьте его, живя чужой жизнью.", author: "Стив Джобс" },
+            { text: "Единственный способ делать великую работу — любить то, что вы делаете.", author: "Стив Джобс" },
+            { text: "Не бойтесь ошибаться — бойтесь повторять ошибки.", author: "Теодор Рузвельт" }
+        ];
+        const facts = ["90% стартапов закрываются в первые 3 года", "Amazon начинался как книжный магазин", "Instagram купили за 1 млрд $ через 2 года"];
+        
+        function refreshQuote() {
+            let q = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quoteOfTheDay').innerHTML = `"${q.text}" — ${q.author}`;
+        }
+        function refreshFact() {
+            document.getElementById('factOfTheDay').innerHTML = facts[Math.floor(Math.random() * facts.length)];
+        }
+        function calculateProfit() {
+            let revenue = parseFloat(document.getElementById('revenueInput').value) || 0;
+            let expense = parseFloat(document.getElementById('expenseInput').value) || 0;
+            document.getElementById('profitResult').innerHTML = `💰 Прибыль: ${(revenue - expense).toLocaleString()} ₽`;
+        }
+        function checkTask(taskNum, correct) {
+            let input = document.getElementById(`task${taskNum}Answer`);
+            let user = parseFloat(input.value);
+            let resultDiv = document.getElementById(`task${taskNum}Result`);
+            if (isNaN(user)) resultDiv.innerHTML = "❌ Введите число!";
+            else if (user === correct) resultDiv.innerHTML = "✅ Правильно!";
+            else resultDiv.innerHTML = `❌ Неправильно. Ответ: ${correct}`;
+        }
+        function showHint(taskNum) {
+            let hints = {1: "Прибыль = Выручка - Себестоимость", 2: "50 000 + 50 000×20%", 3: "(300-200)/200×100%", 4: "(5/10)×100%", 5: "(40/50)×100%"};
+            alert(hints[taskNum]);
+        }
+        
+        // ==============================================
+        // ИГРОВЫЕ ФУНКЦИИ
         // ==============================================
         function showHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
         function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
@@ -948,36 +1012,29 @@
             document.getElementById('capitalBar').style.width = currentPlayerData.capital + '%';
             document.getElementById('teamBar').style.width = currentPlayerData.team + '%';
             document.getElementById('marketingBar').style.width = currentPlayerData.marketing + '%';
-            
             let total = currentPlayerData.capital + competitor.capital;
-            let playerPercent = total > 0 ? (currentPlayerData.capital / total) * 100 : 50;
-            let aiPercent = total > 0 ? (competitor.capital / total) * 100 : 50;
-            document.getElementById('vsFillPlayer').style.width = playerPercent + '%';
-            document.getElementById('vsFillAI').style.width = aiPercent + '%';
+            let pct = total > 0 ? (currentPlayerData.capital / total) * 100 : 50;
+            let aict = total > 0 ? (competitor.capital / total) * 100 : 50;
+            document.getElementById('vsFillPlayer').style.width = pct + '%';
+            document.getElementById('vsFillAI').style.width = aict + '%';
             document.getElementById('vsPlayerValue').innerText = currentPlayerData.capital + '%';
             document.getElementById('vsAIValue').innerText = competitor.capital + '%';
-            
-            let capitalMood = document.getElementById('capitalMood');
-            if (currentPlayerData.capital >= 80) capitalMood.innerHTML = '🤑';
-            else if (currentPlayerData.capital >= 60) capitalMood.innerHTML = '😊';
-            else if (currentPlayerData.capital >= 40) capitalMood.innerHTML = '😐';
-            else if (currentPlayerData.capital >= 20) capitalMood.innerHTML = '😟';
-            else capitalMood.innerHTML = '😭';
-            
-            let teamMood = document.getElementById('teamMood');
-            if (currentPlayerData.team >= 80) teamMood.innerHTML = '🔥🔥';
-            else if (currentPlayerData.team >= 60) teamMood.innerHTML = '😊👍';
-            else if (currentPlayerData.team >= 40) teamMood.innerHTML = '😐';
-            else if (currentPlayerData.team >= 20) teamMood.innerHTML = '😟';
-            else teamMood.innerHTML = '😭💀';
-            
-            let marketingMood = document.getElementById('marketingMood');
-            if (currentPlayerData.marketing >= 80) marketingMood.innerHTML = '🌟';
-            else if (currentPlayerData.marketing >= 60) marketingMood.innerHTML = '😊';
-            else if (currentPlayerData.marketing >= 40) marketingMood.innerHTML = '😐';
-            else if (currentPlayerData.marketing >= 20) marketingMood.innerHTML = '😟';
-            else marketingMood.innerHTML = '📉';
-            
+            let moods = { capital: document.getElementById('capitalMood'), team: document.getElementById('teamMood'), marketing: document.getElementById('marketingMood') };
+            if (currentPlayerData.capital >= 80) moods.capital.innerHTML = '🤑';
+            else if (currentPlayerData.capital >= 60) moods.capital.innerHTML = '😊';
+            else if (currentPlayerData.capital >= 40) moods.capital.innerHTML = '😐';
+            else if (currentPlayerData.capital >= 20) moods.capital.innerHTML = '😟';
+            else moods.capital.innerHTML = '😭';
+            if (currentPlayerData.team >= 80) moods.team.innerHTML = '🔥🔥';
+            else if (currentPlayerData.team >= 60) moods.team.innerHTML = '😊👍';
+            else if (currentPlayerData.team >= 40) moods.team.innerHTML = '😐';
+            else if (currentPlayerData.team >= 20) moods.team.innerHTML = '😟';
+            else moods.team.innerHTML = '😭💀';
+            if (currentPlayerData.marketing >= 80) moods.marketing.innerHTML = '🌟';
+            else if (currentPlayerData.marketing >= 60) moods.marketing.innerHTML = '😊';
+            else if (currentPlayerData.marketing >= 40) moods.marketing.innerHTML = '😐';
+            else if (currentPlayerData.marketing >= 20) moods.marketing.innerHTML = '😟';
+            else moods.marketing.innerHTML = '📉';
             updateChart();
         }
         
@@ -986,9 +1043,7 @@
             chartData.team.push(currentPlayerData.team);
             chartData.marketing.push(currentPlayerData.marketing);
             chartData.months.push(currentPlayerData.month);
-            if (chartData.months.length > 20) {
-                chartData.capital.shift(); chartData.team.shift(); chartData.marketing.shift(); chartData.months.shift();
-            }
+            if (chartData.months.length > 20) { chartData.capital.shift(); chartData.team.shift(); chartData.marketing.shift(); chartData.months.shift(); }
             if (dynamicsChart) {
                 dynamicsChart.data.datasets[0].data = [...chartData.capital];
                 dynamicsChart.data.datasets[1].data = [...chartData.team];
@@ -1014,26 +1069,22 @@
         
         function updateLeaderboard() {
             let container = document.getElementById('playerList');
-            let allParticipants = [...allPlayers];
-            let aiIndex = allParticipants.findIndex(p => p.name === "🤖 СтартТех");
-            if (aiIndex !== -1) {
-                allParticipants[aiIndex].capital = competitor.capital;
-                allParticipants[aiIndex].month = competitor.month;
-            } else {
-                allParticipants.push({ name: "🤖 СтартТех", capital: competitor.capital, month: competitor.month, isAI: true });
-            }
-            let sorted = [...allParticipants].sort((a, b) => b.capital - a.capital);
-            if (sorted.length === 0) { container.innerHTML = '<div class="player-item">➕ Добавьте друзей</div>'; return; }
-            container.innerHTML = sorted.map((p, idx) => {
-                let avatar = ''; let isAI = p.name === "🤖 СтартТех";
-                if (idx === 0 && !isAI) avatar = '👑';
+            let participants = [...allPlayers];
+            let aiExists = participants.some(p => p.name === "🤖 СтартТех");
+            if (!aiExists) participants.push({ name: "🤖 СтартТех", capital: competitor.capital, month: competitor.month, isAI: true });
+            else { let ai = participants.find(p => p.name === "🤖 СтартТех"); ai.capital = competitor.capital; ai.month = competitor.month; }
+            participants.sort((a,b) => b.capital - a.capital);
+            if (participants.length === 0) container.innerHTML = '<div class="player-item">➕ Добавьте друзей</div>';
+            else container.innerHTML = participants.map((p, idx) => {
+                let avatar = '';
+                if (idx === 0 && !p.isAI) avatar = '👑';
                 else if (p.capital >= 80) avatar = '🦄';
                 else if (p.capital >= 50) avatar = '🚀';
                 else if (p.capital <= 0) avatar = '💀';
                 else avatar = '📈';
-                let aiIcon = isAI ? '🤖 ' : '';
-                let youMark = (!isAI && p.name === currentPlayerName) ? ' (Я)' : '';
-                return `<div class="player-item ${isAI ? 'player-ai' : ''}"><div><span class="player-rank-avatar">${avatar}</span> ${aiIcon}<b>${p.name}</b>${youMark}</div><span>💰 ${p.capital}% | 📅 ${p.month}</span></div>`;
+                let aiIcon = p.isAI ? '🤖 ' : '';
+                let youMark = (!p.isAI && p.name === currentPlayerName) ? ' (Я)' : '';
+                return `<div class="player-item ${p.isAI ? 'player-ai' : ''}"><div><span class="player-rank-avatar">${avatar}</span> ${aiIcon}<b>${p.name}</b>${youMark}</div><span>💰 ${p.capital}% | 📅 ${p.month}</span></div>`;
             }).join('');
         }
         
@@ -1049,19 +1100,6 @@
             document.getElementById('historyList').innerHTML = history.map(h => `<div class="history-item">${h}</div>`).join('');
         }
         
-        function showAchievement(achievementId) {
-            let ach = achievements[achievementId];
-            if (!ach || ach.unlocked) return;
-            ach.unlocked = true;
-            unlockedAchievements.push(ach.name);
-            let toast = document.createElement('div');
-            toast.className = 'achievement-toast';
-            toast.innerHTML = `<span>🏆</span><div><strong>${ach.name}</strong><br>${ach.desc}</div>`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
-            addToHistory(`🏆 ДОСТИЖЕНИЕ: ${ach.name}!`);
-        }
-        
         function applyAction(cost, effect) {
             if (currentPlayerData.rubles < cost) { addToHistory(`❌ Не хватает ${cost.toLocaleString()} ₽`); return false; }
             currentPlayerData.rubles -= cost;
@@ -1069,21 +1107,22 @@
             if (effect.team) currentPlayerData.team = Math.min(currentPlayerData.team + effect.team, 100);
             if (effect.market) currentPlayerData.marketing = Math.min(currentPlayerData.marketing + effect.market, 100);
             updateUI(); updatePlayerInLeaderboard();
+            if (!firstInvestmentDone && (effect.cap || effect.team || effect.market)) { firstInvestmentDone = true; checkAllAchievements(); }
             return true;
         }
         
         function makeMove(action) {
             if (!currentPlayerName || gameEnded) return;
             switch (action) {
-                case 'hire': if (applyAction(200000, { team: 15 })) addToHistory("👥 Найм сотрудников: команда +15%"); break;
+                case 'hire': if (applyAction(200000, { team: 15 })) addToHistory("👥 Найм: команда +15%"); break;
                 case 'advertise': if (applyAction(150000, { market: 15 })) addToHistory("📢 Реклама: маркетинг +15%"); break;
                 case 'develop': if (applyAction(300000, { cap: 10, team: 10, market: 10 })) addToHistory("🔬 Разработка: все +10%"); break;
                 case 'investor': attractInvestor(); break;
                 case 'credit': takeCredit(); break;
                 case 'repay': repayCredit(); break;
-                case 'hireDevs': if (applyAction(150000, { cap: 5 })) addToHistory("👨‍💻 Разработчики наняты: качество +5%"); break;
-                case 'hireMarketers': if (applyAction(100000, { market: 5 })) addToHistory("📢 Маркетологи наняты: узнаваемость +5%"); break;
-                case 'hireManagers': if (applyAction(120000, {})) addToHistory("💼 Менеджеры наняты: эффективность повышена"); break;
+                case 'hireDevs': if (applyAction(150000, { cap: 5 })) addToHistory("👨‍💻 Разработчики: качество +5%"); break;
+                case 'hireMarketers': if (applyAction(100000, { market: 5 })) addToHistory("📢 Маркетологи: узнаваемость +5%"); break;
+                case 'hireManagers': if (applyAction(120000, {})) addToHistory("💼 Менеджеры: эффективность +10%"); break;
                 case 'endMonth': endMonth(); break;
             }
         }
@@ -1094,6 +1133,8 @@
                 let inv = Math.floor(Math.random() * 500000 + 300000);
                 currentPlayerData.rubles += inv;
                 addToHistory(`🎉 Инвестор вложил ${inv.toLocaleString()} ₽`);
+                investorCount++;
+                checkAllAchievements();
             } else {
                 currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
                 addToHistory(`😔 Инвестор отказал, репутация -10%`);
@@ -1106,7 +1147,7 @@
             currentPlayerData.credit_amount = 600000;
             currentPlayerData.credit_deadline = currentPlayerData.month + 3;
             currentPlayerData.rubles += 500000;
-            addToHistory(`💳 Кредит 500 000 ₽. Вернуть нужно 600 000 ₽ до ${currentPlayerData.credit_deadline} месяца`);
+            addToHistory(`💳 Кредит 500 000 ₽. Вернуть 600 000 ₽ до ${currentPlayerData.credit_deadline} месяца`);
             updateUI(); updatePlayerInLeaderboard();
         }
         
@@ -1116,50 +1157,53 @@
             currentPlayerData.rubles -= currentPlayerData.credit_amount;
             currentPlayerData.credit_amount = 0;
             addToHistory("✅ Кредит погашен");
+            creditPaid = true;
+            checkAllAchievements();
             updateUI(); updatePlayerInLeaderboard();
         }
         
         function updateCompetitor() {
-            let capDelta = Math.floor(Math.random() * 15) - 3;
-            competitor.capital = Math.min(Math.max(competitor.capital + capDelta, 0), 100);
+            let delta = Math.floor(Math.random() * 15) - 3;
+            competitor.capital = Math.min(Math.max(competitor.capital + delta, 0), 100);
             competitor.month++;
-            let warningDiv = document.getElementById('competitorWarning');
             let diff = competitor.capital - currentPlayerData.capital;
+            let w = document.getElementById('competitorWarning');
             if (diff > 20) {
-                warningDiv.innerHTML = "⚠️ ВНИМАНИЕ! ИИ-конкурент ОБОГНАЛ вас! Потеря доли рынка!";
-                warningDiv.style.background = "#f8d7da";
+                w.innerHTML = "⚠️ ИИ-конкурент ОБОГНАЛ! Потеря доли рынка!";
                 currentPlayerData.capital = Math.max(currentPlayerData.capital - 10, 0);
                 currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
                 updateUI();
-            } else if (diff > 10) { warningDiv.innerHTML = "⚠️ ИИ-конкурент дышит в спину! Нужно ускориться!"; warningDiv.style.background = "#fff3cd";
-            } else if (diff < -10) { warningDiv.innerHTML = "🚀 Отлично! Вы сильно обогнали ИИ-конкурента!"; warningDiv.style.background = "#d4edda";
-            } else { warningDiv.innerHTML = `🤖 ИИ-конкурент "СтартТех" — Капитал: ${competitor.capital}%`; warningDiv.style.background = "#e9ecef"; }
+            } else if (diff > 10) w.innerHTML = "⚠️ ИИ-конкурент дышит в спину!";
+            else if (diff < -10) w.innerHTML = "🚀 Вы сильно обогнали ИИ-конкурента!";
+            else w.innerHTML = `🤖 ИИ-конкурент "СтартТех" — Капитал: ${competitor.capital}%`;
             updateLeaderboard(); updateUI();
         }
         
         function startQuest() {
             if (activeQuest !== null) return;
             if (Math.random() > 0.15) return;
-            let questNames = Object.keys(quests);
-            let randomQuest = questNames[Math.floor(Math.random() * questNames.length)];
-            activeQuest = randomQuest; questStep = 0; showQuest();
+            let names = Object.keys(quests);
+            activeQuest = names[Math.floor(Math.random() * names.length)];
+            questStep = 0;
+            showQuest();
         }
         
         function showQuest() {
             if (!activeQuest) return;
-            let quest = quests[activeQuest];
+            let q = quests[activeQuest];
             document.getElementById('questBlock').style.display = 'block';
-            document.getElementById('questText').innerHTML = `<strong>${quest.name}</strong><br>${quest.steps[questStep].text}`;
-            let buttonsDiv = document.getElementById('questButtons'); buttonsDiv.innerHTML = '';
+            document.getElementById('questText').innerHTML = `<strong>${q.name}</strong><br>${q.steps[questStep].text}`;
+            let btns = document.getElementById('questButtons');
+            btns.innerHTML = '';
             if (activeQuest === 'bigClient') {
-                if (questStep === 0) buttonsDiv.innerHTML = `<button onclick="questChoice('yes')">✅ Да</button><button onclick="questChoice('no')">❌ Нет</button>`;
-                else if (questStep < 3) buttonsDiv.innerHTML = `<button onclick="questNext()">📅 Далее</button>`;
-                else buttonsDiv.innerHTML = `<button onclick="questNext()">🎉 Забрать</button>`;
+                if (questStep === 0) btns.innerHTML = `<button onclick="questChoice('yes')">✅ Да</button><button onclick="questChoice('no')">❌ Нет</button>`;
+                else if (questStep < 3) btns.innerHTML = `<button onclick="questNext()">📅 Далее</button>`;
+                else btns.innerHTML = `<button onclick="questNext()">🎉 Забрать</button>`;
             } else if (activeQuest === 'innovation') {
-                if (questStep === 0) buttonsDiv.innerHTML = `<button onclick="questChoice('invest')">🔬 Инвестировать</button><button onclick="questChoice('skip')">❌ Отказ</button>`;
-                else buttonsDiv.innerHTML = `<button onclick="questNext()">🔍 Результат</button>`;
+                if (questStep === 0) btns.innerHTML = `<button onclick="questChoice('invest')">🔬 Инвестировать</button><button onclick="questChoice('skip')">❌ Отказ</button>`;
+                else btns.innerHTML = `<button onclick="questNext()">🔍 Результат</button>`;
             } else if (activeQuest === 'crisis') {
-                if (questStep === 0) buttonsDiv.innerHTML = `<button onclick="questChoice('cut')">✂️ Сократить</button><button onclick="questChoice('credit')">🏦 Кредит</button>`;
+                if (questStep === 0) btns.innerHTML = `<button onclick="questChoice('cut')">✂️ Сократить</button><button onclick="questChoice('credit')">🏦 Кредит</button>`;
             }
         }
         
@@ -1179,6 +1223,7 @@
             }
             if (activeQuest !== null) showQuest();
             updateUI(); updatePlayerInLeaderboard();
+            checkAllAchievements();
         }
         
         function questNext() {
@@ -1194,23 +1239,26 @@
                 }
             }
             updatePlayerInLeaderboard();
+            checkAllAchievements();
         }
         
         function showGameEndModal(isWin) {
             gameEnded = true;
             let modal = document.getElementById('gameModal');
-            let modalContent = document.getElementById('gameModalContent');
-            let modalTitle = document.getElementById('gameModalTitle');
-            let modalMessage = document.getElementById('gameModalMessage');
+            let content = document.getElementById('gameModalContent');
+            let title = document.getElementById('gameModalTitle');
+            let msg = document.getElementById('gameModalMessage');
             if (isWin) {
-                modalContent.className = 'game-modal-content win';
-                modalTitle.innerHTML = '🏆 ПОБЕДА! 🏆';
-                modalMessage.innerHTML = `Вы успешно вывели компанию на IPO за ${currentPlayerData.month} месяцев!<br><br>Финальный капитал: ${currentPlayerData.capital}%<br><br>Отличная работа!`;
+                content.className = 'game-modal-content win';
+                title.innerHTML = '🏆 ПОБЕДА! 🏆';
+                msg.innerHTML = `Вы вывели компанию на IPO за ${currentPlayerData.month} месяцев!<br><br>Финальный капитал: ${currentPlayerData.capital}%`;
                 addToHistory("🏆 ПОБЕДА! ВЫХОД НА IPO!");
+                winCount++;
+                checkAllAchievements();
             } else {
-                modalContent.className = 'game-modal-content lose';
-                modalTitle.innerHTML = '💀 БАНКРОТСТВО 💀';
-                modalMessage.innerHTML = `К сожалению, ваша компания обанкротилась.<br><br>Вы продержались ${currentPlayerData.month} месяцев.<br><br>Попробуйте ещё раз!`;
+                content.className = 'game-modal-content lose';
+                title.innerHTML = '💀 БАНКРОТСТВО 💀';
+                msg.innerHTML = `Вы продержались ${currentPlayerData.month} месяцев.<br><br>Попробуйте ещё раз!`;
                 addToHistory("💀 БАНКРОТСТВО");
             }
             modal.style.display = 'flex';
@@ -1221,8 +1269,11 @@
         function endMonth() {
             if (gameEnded) return;
             if (currentPlayerData.credit_amount > 0 && currentPlayerData.month >= currentPlayerData.credit_deadline) {
-                currentPlayerData.rubles -= 100000; currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 15, 0); currentPlayerData.credit_amount = 0;
-                addToHistory("⚠️ ПРОСРОЧКА КРЕДИТА! Штраф 100 000 ₽"); updateUI();
+                currentPlayerData.rubles -= 100000;
+                currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 15, 0);
+                currentPlayerData.credit_amount = 0;
+                addToHistory("⚠️ ПРОСРОЧКА КРЕДИТА! Штраф 100 000 ₽");
+                updateUI();
             }
             let cost = 50000 + currentPlayerData.team * 2000 + currentPlayerData.marketing * 1500;
             if (currentPlayerData.rubles < cost) { showGameEndModal(false); return; }
@@ -1233,19 +1284,17 @@
             currentPlayerData.marketing = Math.min(Math.max(currentPlayerData.marketing + e.market, 0), 100);
             addToHistory(`${e.text} (💰 ${e.cap}%, 👥 ${e.team}%, 📢 ${e.market}%)`);
             document.getElementById('eventMessage').innerHTML = e.text;
-            if (e.positive) { positiveEventStreak++; if (positiveEventStreak >= 3) showAchievement('lucky'); } else { positiveEventStreak = 0; }
+            if (e.positive) { positiveEventStreak++; if (positiveEventStreak >= 3) checkAllAchievements(); }
+            else { positiveEventStreak = 0; }
             if (currentPlayerData.capital <= 10 && !survivedLow) { survivedLow = true; }
-            if (survivedLow && currentPlayerData.capital >= 50) { showAchievement('phoenix'); survivedLow = false; }
+            if (survivedLow && currentPlayerData.capital >= 50) { checkAllAchievements(); survivedLow = false; }
             updateCompetitor();
             currentPlayerData.month++;
             updateUI(); updatePlayerInLeaderboard();
             startQuest();
-            let randomTip = mascotTips[Math.floor(Math.random() * mascotTips.length)];
-            document.getElementById('mascotTip').innerHTML = randomTip;
+            let tips = ["💡 Инвестируй в разработку — это окупается!", "💡 Следи за ИИ-конкурентом!", "💡 Кредит помогает, но возвращай вовремя!"];
+            document.getElementById('mascotTip').innerHTML = tips[Math.floor(Math.random() * tips.length)];
             if (currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80 && currentPlayerData.month >= 6) {
-                if (currentPlayerData.capital === 100) showAchievement('unicorn');
-                if (currentPlayerData.month <= 6) showAchievement('speedrun');
-                winCount++; if (winCount >= 3) showAchievement('king');
                 showGameEndModal(true);
             } else if (currentPlayerData.capital <= 0) { showGameEndModal(false); }
         }
@@ -1256,7 +1305,7 @@
             activeQuest = null;
             chartData = { capital: [50], team: [50], marketing: [50], months: [0] };
             updateUI(); updatePlayerInLeaderboard();
-            document.getElementById('eventMessage').innerHTML = "🎮 Игра перезапущена! Удачи в бизнесе!";
+            document.getElementById('eventMessage').innerHTML = "🎮 Игра перезапущена!";
             document.getElementById('competitorWarning').innerHTML = "🤖 ИИ-конкурент 'СтартТех' — Капитал: 50%";
             document.getElementById('questBlock').style.display = 'none';
             addToHistory("🔄 Новая игра");
@@ -1267,7 +1316,7 @@
         
         function exportReport() {
             let status = (currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80 && currentPlayerData.month >= 6) ? "ПОБЕДА (IPO)" : "В ПРОЦЕССЕ";
-            let report = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏢 БИЗНЕС-СИМУЛЯТОР: ОТЧЁТ\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📅 Дата: ${new Date().toLocaleString()}\n👤 Игрок: ${currentPlayerName}\n🏆 Статус: ${status}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💰 Капитал: ${currentPlayerData.capital}% (${currentPlayerData.rubles.toLocaleString()} ₽)\n👥 Команда: ${currentPlayerData.team}%\n📢 Маркетинг: ${currentPlayerData.marketing}%\n📅 Месяцев: ${currentPlayerData.month}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏆 Достижения: ${unlockedAchievements.join(', ') || 'нет'}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            let report = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏢 БИЗНЕС-СИМУЛЯТОР: ОТЧЁТ\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📅 Дата: ${new Date().toLocaleString()}\n👤 Игрок: ${currentPlayerName}\n🏆 Статус: ${status}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💰 Капитал: ${currentPlayerData.capital}% (${currentPlayerData.rubles.toLocaleString()} ₽)\n👥 Команда: ${currentPlayerData.team}%\n📢 Маркетинг: ${currentPlayerData.marketing}%\n📅 Месяцев: ${currentPlayerData.month}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏆 Достижения: ${playerAchievements.map(id => achievementsList.find(a => a.id === id)?.icon || '').join(' ') || 'нет'}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
             let blob = new Blob([report], { type: 'text/plain' });
             let a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
@@ -1277,21 +1326,21 @@
         }
         
         function addFriend() {
-            let input = document.getElementById('newPlayerName');
-            let name = input.value.trim();
+            let name = document.getElementById('newPlayerName').value.trim();
             if (!name) { alert("Введите имя друга!"); return; }
             if (allPlayers.find(p => p.name === name)) { alert("Такой игрок уже есть!"); return; }
             allPlayers.push({ name: name, capital: 50, month: 0 });
-            input.value = "";
+            document.getElementById('newPlayerName').value = '';
             updateLeaderboard();
             addToHistory(`➕ Новый игрок: ${name}`);
         }
         
-        function login() {
+        async function login() {
             let name = document.getElementById('playerNameInput').value.trim();
             if (!name) { alert("Введите ваше имя!"); return; }
             currentPlayerName = name;
             if (!allPlayers.find(p => p.name === name)) { allPlayers.push({ name: name, capital: 50, month: 0 }); }
+            await loadAchievements(currentPlayerName);
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('gameInterface').style.display = 'block';
             document.getElementById('currentPlayerNameDisplay').innerText = currentPlayerName;
