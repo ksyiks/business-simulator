@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Бизнес-симулятор — ПИУ РАНХиГС</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #e8f4f8, #b8e1fc, #d4f1f9);
@@ -18,11 +16,9 @@
             display: flex;
             flex-direction: column;
         }
-        
         body.dark {
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
         }
-        
         body.dark .my-game,
         body.dark .leaderboard,
         body.dark .history-log,
@@ -34,24 +30,20 @@
             background: #0f3460;
             color: #e0e0e0;
         }
-        
         body.dark .stat-card,
         body.dark .player-item,
         body.dark .achievement-item {
             background: #1a1a2e;
             color: #e0e0e0;
         }
-        
         body.dark .nav-btn {
             background: rgba(255,255,255,0.2);
             color: white;
         }
-        
         body.dark .footer {
             background: rgba(0,0,0,0.5);
             color: #ffd700;
         }
-        
         .nav-bar {
             display: flex;
             justify-content: center;
@@ -79,20 +71,9 @@
             color: white;
             transform: scale(1.05);
         }
-        
-        .page {
-            display: none;
-        }
-        .page.active-page {
-            display: block;
-        }
-        
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            flex: 1;
-        }
-        
+        .page { display: none; }
+        .page.active-page { display: block; }
+        .container { max-width: 1600px; margin: 0 auto; flex: 1; }
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -103,7 +84,6 @@
             font-size: 13px;
             font-weight: bold;
         }
-        
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -112,14 +92,12 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        
         h1 {
             color: #333;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
             font-size: 1.8rem;
         }
         body.dark h1 { color: white; }
-        
         .theme-btn, .help-btn {
             background: rgba(0,0,0,0.1);
             border: none;
@@ -133,7 +111,6 @@
             background: rgba(255,255,255,0.2);
             color: white;
         }
-        
         .login-screen {
             background: white;
             max-width: 400px;
@@ -158,13 +135,11 @@
             border-radius: 10px;
             cursor: pointer;
         }
-        
         .game-layout {
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
         }
-        
         .my-game {
             flex: 2;
             background: white;
@@ -173,14 +148,12 @@
             transition: 0.3s;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
         .right-column {
             flex: 1.5;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-        
         .leaderboard,
         .history-log,
         .chart-container,
@@ -194,7 +167,6 @@
             transition: 0.3s;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
         .stats-main {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -219,42 +191,15 @@
         .stat-card.marketing { border-left-color: #ffc107; }
         .stat-card.month { border-left-color: #6c757d; }
         .stat-card.risk { border-left-color: #dc3545; }
-        
-        .stat-label {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .mood-emoji {
-            font-size: 18px;
-            margin-left: 5px;
-        }
-        .rubles {
-            font-size: 11px;
-            color: #666;
-            margin-top: 5px;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-        .progress-fill {
-            height: 100%;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
+        .stat-label { font-size: 13px; color: #666; margin-bottom: 5px; }
+        .stat-value { font-size: 24px; font-weight: bold; }
+        .mood-emoji { font-size: 18px; margin-left: 5px; }
+        .rubles { font-size: 11px; color: #666; margin-top: 5px; }
+        .progress-bar { width: 100%; height: 6px; background: #e9ecef; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+        .progress-fill { height: 100%; transition: width 0.3s ease; width: 0%; }
         .progress-fill.capital { background: linear-gradient(90deg, #28a745, #20c997); }
         .progress-fill.team { background: linear-gradient(90deg, #17a2b8, #6f42c1); }
         .progress-fill.marketing { background: linear-gradient(90deg, #ffc107, #fd7e14); }
-        
         .buttons {
             display: flex;
             flex-wrap: wrap;
@@ -274,7 +219,6 @@
         button:hover { transform: scale(1.02); }
         .success { background: #28a745; }
         .danger { background: #dc3545; }
-        
         .event-box {
             background: #e9ecef;
             border-radius: 10px;
@@ -284,7 +228,6 @@
             font-weight: bold;
             min-height: 70px;
         }
-        
         .vs-bar {
             background: #e9ecef;
             border-radius: 10px;
@@ -321,7 +264,6 @@
             right: 0;
             border-radius: 0 10px 10px 0;
         }
-        
         .quest-box {
             background: #d4edda;
             border-radius: 10px;
@@ -329,7 +271,6 @@
             margin: 10px 0;
             border-left: 5px solid #28a745;
         }
-        
         .player-list {
             max-height: 250px;
             overflow-y: auto;
@@ -347,11 +288,7 @@
             background: #e9ecef;
             border-left: 3px solid #dc3545;
         }
-        .player-rank-avatar {
-            font-size: 18px;
-            margin-right: 8px;
-        }
-        
+        .player-rank-avatar { font-size: 18px; margin-right: 8px; }
         .history-list {
             max-height: 200px;
             overflow-y: auto;
@@ -361,12 +298,10 @@
             padding: 5px;
             border-bottom: 1px solid #eee;
         }
-        
         canvas {
             max-height: 180px;
             width: 100%;
         }
-        
         .mascot-box {
             text-align: center;
             background: linear-gradient(135deg, #fff3cd, #ffeaa7);
@@ -377,7 +312,6 @@
             margin-top: 8px;
             font-style: italic;
         }
-        
         .add-friend {
             display: flex;
             gap: 8px;
@@ -389,7 +323,6 @@
             border: 1px solid #ddd;
             border-radius: 8px;
         }
-        
         .achievements-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -424,7 +357,6 @@
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
         }
-        
         .task-item {
             background: #f8f9fa;
             border-radius: 15px;
@@ -455,7 +387,6 @@
             cursor: pointer;
             text-decoration: underline;
         }
-        
         .help-modal, .game-modal {
             display: none;
             position: fixed;
@@ -505,13 +436,11 @@
             margin-top: 15px;
             width: 100%;
         }
-        
         @keyframes bounceIn {
             0% { transform: scale(0.3); opacity: 0; }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); opacity: 1; }
         }
-        
         .achievement-toast {
             position: fixed;
             bottom: 20px;
@@ -531,7 +460,6 @@
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-        
         @media (max-width: 1000px) {
             .stats-main, .stats-secondary { grid-template-columns: 1fr; }
             .game-layout { flex-direction: column; }
@@ -811,14 +739,6 @@
 
     <script>
         // ==============================================
-        // 🔥 ВСТАВЬТЕ ВАШИ КЛЮЧИ ЗДЕСЬ
-        // ==============================================
-      //  const SUPABASE_URL = https://yzbtiuvkbquxtnjliljw.supabase.co/rest/v1/;
-      //  const SUPABASE_ANON_KEY =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YnRpdXZrYnF1eHRuamxpbGp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NzQ4NDYsImV4cCI6MjA5MjM1MDg0Nn0.hdPiViXfJcvh56pBqjhd3POGzSSzjSOMwNfgjIjMiU4;
-        
-       // const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // ==============================================
         // ПЕРЕМЕННЫЕ
         // ==============================================
         let currentPlayerName = null;
@@ -842,38 +762,9 @@
         let creditPaid = false;
         let playerAchievements = [];
         
-        const events = [
-            { text: "🚀 Виральный успех в TikTok!", cap: 30, team: 0, market: 20, positive: true },
-            { text: "💸 Уход ключевого инвестора", cap: -25, team: -5, market: 0, positive: false },
-            { text: "👥 Конкуренты переманили сотрудников", cap: 0, team: -20, market: -5, positive: false },
-            { text: "📉 Скандал в СМИ", cap: -15, team: 0, market: -25, positive: false },
-            { text: "🏆 Премия 'Лучший стартап года'", cap: 20, team: 15, market: 30, positive: true },
-            { text: "⚖️ Налоговая проверка", cap: -20, team: -10, market: 0, positive: false },
-            { text: "🤝 Привлечение бизнес-ангела", cap: 40, team: 0, market: 0, positive: true },
-            { text: "😩 Выгорание команды", cap: 0, team: -15, market: -10, positive: false },
-            { text: "📈 Новый тренд", cap: 15, team: 0, market: 25, positive: true },
-            { text: "💡 Гениальная идея", cap: 0, team: 5, market: 20, positive: true },
-            { text: "📉 Экономический кризис", cap: -30, team: 0, market: -15, positive: false },
-            { text: "🤝 Крупный ритейлер", cap: 25, team: 0, market: 25, positive: true }
-        ];
-        
-        const quests = {
-            bigClient: { name: "Крупный клиент", steps: [
-                { text: "Подписать контракт на 3 месяца? (Да — +20% капитала через 3 месяца, Нет — +10% сейчас)" },
-                { text: "Первый месяц контракта прошёл" }, { text: "Второй месяц контракта прошёл" },
-                { text: "Контракт выполнен! +20% капитала" }
-            ] },
-            innovation: { name: "Инновация", steps: [
-                { text: "Инвестировать 300 000 ₽ в разработку? (70% успеха)" },
-                { text: "Результат инновации" }
-            ] },
-            crisis: { name: "Кризис", steps: [
-                { text: "Сократить расходы? (Да — -15% команды, +20% капитала / Нет — кредит 400 000 ₽)" }
-            ] }
-        };
-        
+        // Достижения с условиями проверки
         const achievementsList = [
-            { id: "unicorn", name: "Единорог", icon: "🦄", desc: "IPO с капиталом 100%", check: () => currentPlayerData.capital === 100 && gameEnded && document.getElementById('gameModalTitle').innerText === "🏆 ПОБЕДА!" },
+            { id: "unicorn", name: "Единорог", icon: "🦄", desc: "IPO с капиталом 100%", check: () => currentPlayerData.capital === 100 && gameEnded },
             { id: "speedrun", name: "Спидран", icon: "⚡", desc: "Победа за 6 месяцев", check: () => currentPlayerData.month <= 6 && gameEnded },
             { id: "phoenix", name: "Феникс", icon: "🔥", desc: "Выжить после падения ниже 10%", check: () => survivedLow },
             { id: "lucky", name: "Везунчик", icon: "🍀", desc: "3 положительных события подряд", check: () => positiveEventStreak >= 3 },
@@ -884,45 +775,42 @@
         ];
         
         // ==============================================
-        // ДОСТИЖЕНИЯ (Supabase)
+        // ДОСТИЖЕНИЯ (localStorage)
         // ==============================================
-        async function loadAchievements(playerName) {
-            try {
-                const { data, error } = await supabase
-                    .from('player_achievements')
-                    .select('achievement_id')
-                    .eq('player_name', playerName);
-                if (error) throw error;
-                playerAchievements = data ? data.map(a => a.achievement_id) : [];
-                updateAchievementsUI();
-            } catch(e) { console.log('Ошибка загрузки достижений:', e); }
+        function loadAchievements(playerName) {
+            let saved = localStorage.getItem(`achievements_${playerName}`);
+            if (saved) {
+                playerAchievements = JSON.parse(saved);
+            } else {
+                playerAchievements = [];
+            }
+            updateAchievementsUI();
         }
         
-        async function unlockAchievement(achievementId) {
+        function saveAchievements() {
+            localStorage.setItem(`achievements_${currentPlayerName}`, JSON.stringify(playerAchievements));
+        }
+        
+        function unlockAchievement(achievementId) {
             if (playerAchievements.includes(achievementId)) return;
-            try {
-                const { error } = await supabase
-                    .from('player_achievements')
-                    .insert({ player_name: currentPlayerName, achievement_id: achievementId });
-                if (error) throw error;
-                playerAchievements.push(achievementId);
-                updateAchievementsUI();
-                let ach = achievementsList.find(a => a.id === achievementId);
-                if (ach) {
-                    let toast = document.createElement('div');
-                    toast.className = 'achievement-toast';
-                    toast.innerHTML = `<span>🏆</span><div><strong>${ach.icon} ${ach.name}</strong><br>${ach.desc}</div>`;
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 4000);
-                    addToHistory(`🏆 ДОСТИЖЕНИЕ: ${ach.icon} ${ach.name}!`);
-                }
-            } catch(e) { console.log('Ошибка сохранения достижения:', e); }
+            playerAchievements.push(achievementId);
+            saveAchievements();
+            updateAchievementsUI();
+            let ach = achievementsList.find(a => a.id === achievementId);
+            if (ach) {
+                let toast = document.createElement('div');
+                toast.className = 'achievement-toast';
+                toast.innerHTML = `<span>🏆</span><div><strong>${ach.icon} ${ach.name}</strong><br>${ach.desc}</div>`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+                addToHistory(`🏆 ДОСТИЖЕНИЕ: ${ach.icon} ${ach.name}!`);
+            }
         }
         
-        async function checkAllAchievements() {
+        function checkAllAchievements() {
             for (let ach of achievementsList) {
                 if (!playerAchievements.includes(ach.id) && ach.check()) {
-                    await unlockAchievement(ach.id);
+                    unlockAchievement(ach.id);
                 }
             }
             updateAchievementsUI();
@@ -933,7 +821,8 @@
             let unlockedCount = playerAchievements.length;
             document.getElementById('achievementsCount').innerText = unlockedCount;
             document.getElementById('achievementsTotal').innerText = achievementsList.length;
-            document.getElementById('bestCapital').innerText = Math.max(currentPlayerData.capital, parseInt(document.getElementById('bestCapital').innerText) || 0);
+            let best = Math.max(currentPlayerData.capital, parseInt(document.getElementById('bestCapital').innerText) || 0);
+            document.getElementById('bestCapital').innerText = best;
             container.innerHTML = achievementsList.map(ach => `
                 <div class="achievement-item ${playerAchievements.includes(ach.id) ? 'unlocked' : ''}">
                     <div class="achievement-icon">${ach.icon}</div>
@@ -1188,6 +1077,21 @@
             showQuest();
         }
         
+        const quests = {
+            bigClient: { name: "Крупный клиент", steps: [
+                { text: "Подписать контракт на 3 месяца? (Да — +20% капитала через 3 месяца, Нет — +10% сейчас)" },
+                { text: "Первый месяц контракта прошёл" }, { text: "Второй месяц контракта прошёл" },
+                { text: "Контракт выполнен! +20% капитала" }
+            ] },
+            innovation: { name: "Инновация", steps: [
+                { text: "Инвестировать 300 000 ₽ в разработку? (70% успеха)" },
+                { text: "Результат инновации" }
+            ] },
+            crisis: { name: "Кризис", steps: [
+                { text: "Сократить расходы? (Да — -15% команды, +20% капитала / Нет — кредит 400 000 ₽)" }
+            ] }
+        };
+        
         function showQuest() {
             if (!activeQuest) return;
             let q = quests[activeQuest];
@@ -1278,7 +1182,21 @@
             let cost = 50000 + currentPlayerData.team * 2000 + currentPlayerData.marketing * 1500;
             if (currentPlayerData.rubles < cost) { showGameEndModal(false); return; }
             currentPlayerData.rubles -= cost;
-            let e = events[Math.floor(Math.random() * events.length)];
+            let eventsList = [
+                { text: "🚀 Виральный успех в TikTok!", cap: 30, team: 0, market: 20, positive: true },
+                { text: "💸 Уход ключевого инвестора", cap: -25, team: -5, market: 0, positive: false },
+                { text: "👥 Конкуренты переманили сотрудников", cap: 0, team: -20, market: -5, positive: false },
+                { text: "📉 Скандал в СМИ", cap: -15, team: 0, market: -25, positive: false },
+                { text: "🏆 Премия 'Лучший стартап года'", cap: 20, team: 15, market: 30, positive: true },
+                { text: "⚖️ Налоговая проверка", cap: -20, team: -10, market: 0, positive: false },
+                { text: "🤝 Привлечение бизнес-ангела", cap: 40, team: 0, market: 0, positive: true },
+                { text: "😩 Выгорание команды", cap: 0, team: -15, market: -10, positive: false },
+                { text: "📈 Новый тренд", cap: 15, team: 0, market: 25, positive: true },
+                { text: "💡 Гениальная идея", cap: 0, team: 5, market: 20, positive: true },
+                { text: "📉 Экономический кризис", cap: -30, team: 0, market: -15, positive: false },
+                { text: "🤝 Крупный ритейлер", cap: 25, team: 0, market: 25, positive: true }
+            ];
+            let e = eventsList[Math.floor(Math.random() * eventsList.length)];
             currentPlayerData.capital = Math.min(Math.max(currentPlayerData.capital + e.cap, 0), 100);
             currentPlayerData.team = Math.min(Math.max(currentPlayerData.team + e.team, 0), 100);
             currentPlayerData.marketing = Math.min(Math.max(currentPlayerData.marketing + e.market, 0), 100);
@@ -1335,12 +1253,12 @@
             addToHistory(`➕ Новый игрок: ${name}`);
         }
         
-        async function login() {
+        function login() {
             let name = document.getElementById('playerNameInput').value.trim();
             if (!name) { alert("Введите ваше имя!"); return; }
             currentPlayerName = name;
             if (!allPlayers.find(p => p.name === name)) { allPlayers.push({ name: name, capital: 50, month: 0 }); }
-            await loadAchievements(currentPlayerName);
+            loadAchievements(currentPlayerName);
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('gameInterface').style.display = 'block';
             document.getElementById('currentPlayerNameDisplay').innerText = currentPlayerName;
