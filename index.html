@@ -31,8 +31,7 @@
             border-radius: 24px;
             padding: 20px;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            backdrop-filter: blur(2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         
         body.dark .my-game, body.dark .leaderboard, body.dark .history-log,
@@ -41,7 +40,7 @@
         body.dark .rules-card {
             background: #0f3460;
             color: #e0e0e0;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         
         body.dark .stat-card, body.dark .player-item, body.dark .achievement-item,
@@ -69,7 +68,7 @@
             flex-wrap: wrap;
         }
         .nav-btn {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,0.08);
             border: none;
             padding: 10px 20px;
             border-radius: 50px;
@@ -77,13 +76,11 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(4px);
+            transition: all 0.2s ease;
         }
         .nav-btn.active {
             background: #667eea;
             color: white;
-            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
         }
         .nav-btn:hover {
             background: #667eea;
@@ -101,7 +98,7 @@
             text-align: center;
             margin-top: 30px;
             padding: 12px;
-            background: rgba(0,0,0,0.08);
+            background: rgba(0,0,0,0.06);
             border-radius: 16px;
             color: #333;
             font-size: 12px;
@@ -133,9 +130,9 @@
         }
         
         @keyframes glow {
-            0% { box-shadow: 0 0 5px #28a745; }
-            50% { box-shadow: 0 0 20px #28a745, 0 0 5px #20c997; }
-            100% { box-shadow: 0 0 5px #28a745; }
+            0% { box-shadow: 0 0 0 0 #28a745; }
+            50% { box-shadow: 0 0 0 0 #28a745; }
+            100% { box-shadow: 0 0 0 0 #28a745; }
         }
         .success { animation: glow 1.5s infinite; }
         
@@ -147,7 +144,7 @@
             color: #333;
             cursor: pointer;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         body.dark .theme-btn, body.dark .help-btn {
             background: rgba(255,255,255,0.15);
@@ -166,13 +163,13 @@
             padding: 35px;
             border-radius: 32px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         .login-screen input {
             width: 100%;
             padding: 14px;
             margin: 15px 0;
-            border: 2px solid #e0e0e0;
+            border: 1px solid #e0e0e0;
             border-radius: 16px;
             font-size: 16px;
             transition: 0.3s;
@@ -190,7 +187,7 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            transition: 0.3s;
+            transition: 0.2s;
         }
         .login-screen button:hover {
             background: #5a67d8;
@@ -264,7 +261,7 @@
         .progress-fill.team { background: linear-gradient(90deg, #17a2b8, #6f42c1); }
         .progress-fill.marketing { background: linear-gradient(90deg, #ffc107, #fd7e14); }
         
-        /* Кнопки в 2 ряда */
+        /* Кнопки в 2 ряда — без обводки */
         .buttons-row {
             display: flex;
             flex-direction: column;
@@ -284,6 +281,8 @@
             font-size: 12px;
             border-radius: 40px;
             font-weight: 600;
+            border: none;
+            cursor: pointer;
             transition: all 0.2s;
         }
         .buttons-group button:hover { transform: translateY(-2px); }
@@ -401,7 +400,7 @@
             border-radius: 40px;
         }
         
-        /* Книга правил */
+        /* Книга правил — улучшенная */
         .book-container {
             display: flex;
             flex-direction: column;
@@ -410,15 +409,16 @@
         .book-pages {
             display: flex;
             gap: 20px;
-            min-height: 460px;
+            min-height: 480px;
             transition: opacity 0.3s ease;
         }
         .book-page {
             flex: 1;
+            min-width: 0;
             background: #fef9e6;
             border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             border: 1px solid #e0d5b5;
             overflow-y: auto;
         }
@@ -427,25 +427,42 @@
             border-color: #5a5a5a;
         }
         .book-page h3 {
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             color: #667eea;
             border-bottom: 2px solid #667eea;
-            padding-bottom: 5px;
+            padding-bottom: 8px;
             font-size: 18px;
         }
-        .book-page p { margin-bottom: 8px; line-height: 1.4; font-size: 13px; }
-        .book-page ul { margin: 8px 0 8px 20px; }
-        .book-page li { margin-bottom: 4px; font-size: 13px; }
+        .book-page h4 {
+            margin: 16px 0 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        body.dark .book-page h4 { color: #ddd; }
+        .book-page p {
+            margin-bottom: 10px;
+            line-height: 1.45;
+            font-size: 13px;
+        }
+        .book-page ul {
+            margin: 8px 0 12px 20px;
+        }
+        .book-page li {
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
         .simple-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
+            margin: 8px 0;
         }
         .simple-table th, .simple-table td {
             border: 1px solid #ddd;
-            padding: 6px;
+            padding: 8px;
             text-align: left;
         }
+        body.dark .simple-table th, body.dark .simple-table td { border-color: #555; }
         .book-nav {
             display: flex;
             justify-content: center;
@@ -462,6 +479,7 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
+            transition: 0.2s;
         }
         .book-nav button:hover:not(:disabled) {
             background: #5a67d8;
@@ -561,7 +579,6 @@
         .duel-player-card.active {
             border-color: #28a745;
             background: #d4edda;
-            box-shadow: 0 0 12px rgba(40,167,69,0.3);
         }
         .duel-player-name { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
         .duel-player-stats { font-size: 12px; margin: 3px 0; }
@@ -711,7 +728,7 @@
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>👤 Игрок: <strong id="currentPlayerNameDisplay"></strong></div>
-                    <button onclick="logout()" class="danger" style="background: #dc3545; padding: 6px 16px; border-radius: 30px;">🚪 Выйти</button>
+                    <button onclick="logout()" class="danger" style="background: #dc3545; padding: 6px 16px; border-radius: 30px; border: none;">🚪 Выйти</button>
                 </div>
                 
                 <div class="game-layout">
@@ -796,7 +813,7 @@
                             <div id="playerList" class="player-list"></div>
                             <div class="add-friend">
                                 <input type="text" id="newPlayerName" placeholder="Имя друга">
-                                <button onclick="addFriend()" style="padding: 6px 12px; border-radius: 30px;">➕ ДОБАВИТЬ</button>
+                                <button onclick="addFriend()" style="padding: 6px 12px; border-radius: 30px; border: none;">➕ ДОБАВИТЬ</button>
                             </div>
                         </div>
                         <div class="history-log">
@@ -843,7 +860,7 @@
                     <div class="duel-controls">
                         <input type="text" id="duelPlayer1Name" placeholder="Имя игрока 1" style="padding: 10px; border-radius: 40px; border: 1px solid #ddd; flex:1;">
                         <input type="text" id="duelPlayer2Name" placeholder="Имя игрока 2" style="padding: 10px; border-radius: 40px; border: 1px solid #ddd; flex:1;">
-                        <button onclick="startDuel()" class="success" style="padding: 10px 25px;">⚔️ НАЧАТЬ</button>
+                        <button onclick="startDuel()" class="success" style="padding: 10px 25px; border: none;">⚔️ НАЧАТЬ</button>
                     </div>
                 </div>
                 <div id="duelGame" style="display: none;">
@@ -892,12 +909,12 @@
                 <div style="margin-top: 16px;">
                     <h3 style="font-size: 1rem;">📖 Цитата дня</h3>
                     <div id="quoteOfTheDay" style="font-style: italic; font-size: 14px; padding: 12px; background: #f0f0f0; border-radius: 16px;">"Ваше время ограничено, не тратьте его, живя чужой жизнью." — Стив Джобс</div>
-                    <button onclick="refreshQuote()" style="margin-top: 8px; padding: 6px 16px;">🔄 Другая цитата</button>
+                    <button onclick="refreshQuote()" style="margin-top: 8px; padding: 6px 16px; border: none; border-radius: 30px;">🔄 Другая цитата</button>
                 </div>
                 <div style="margin-top: 16px;">
                     <h3 style="font-size: 1rem;">🔍 Интересный факт</h3>
                     <div id="factOfTheDay" style="padding: 12px; background: #f0f0f0; border-radius: 16px; font-size: 13px;">90% стартапов закрываются в первые 3 года</div>
-                    <button onclick="refreshFact()" style="margin-top: 8px;">🔄 Другой факт</button>
+                    <button onclick="refreshFact()" style="margin-top: 8px; border: none; border-radius: 30px;">🔄 Другой факт</button>
                 </div>
                 <div style="margin-top: 16px;">
                     <h3 style="font-size: 1rem;">✅ Чек-лист предпринимателя</h3>
@@ -913,10 +930,10 @@
                     <h3 style="font-size: 1rem;">🧮 Калькулятор прибыли</h3>
                     <div>
                         <label>💰 Выручка (₽):</label>
-                        <input type="number" id="revenueInput" value="100000" style="width: 100%; padding: 8px; margin: 5px 0; border-radius: 12px;">
+                        <input type="number" id="revenueInput" value="100000" style="width: 100%; padding: 8px; margin: 5px 0; border-radius: 12px; border: 1px solid #ddd;">
                         <label>📉 Расходы (₽):</label>
-                        <input type="number" id="expenseInput" value="70000" style="width: 100%; padding: 8px; margin: 5px 0; border-radius: 12px;">
-                        <button onclick="calculateProfit()" style="margin-top: 5px;">📊 Рассчитать</button>
+                        <input type="number" id="expenseInput" value="70000" style="width: 100%; padding: 8px; margin: 5px 0; border-radius: 12px; border: 1px solid #ddd;">
+                        <button onclick="calculateProfit()" style="margin-top: 5px; border: none; border-radius: 30px;">📊 Рассчитать</button>
                         <div id="profitResult" style="margin-top: 8px; font-weight: bold; font-size: 14px;">💰 Прибыль: 30 000 ₽</div>
                     </div>
                 </div>
@@ -932,7 +949,7 @@
                     <div class="task-question">📊 Задание 1: У вас есть 100 000 ₽. Вы купили товар за 60 000 ₽ и продали за 85 000 ₽. Какая у вас прибыль?</div>
                     <div class="task-answer">
                         <input type="number" id="task1Answer" placeholder="Введите число">
-                        <button onclick="checkTask(1, 25000)">Проверить</button>
+                        <button onclick="checkTask(1, 25000)" style="border: none; border-radius: 30px;">Проверить</button>
                     </div>
                     <div id="task1Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(1)">💡 Подсказка</div>
@@ -941,7 +958,7 @@
                     <div class="task-question">💰 Задание 2: Вы взяли кредит 50 000 ₽ под 20% годовых. Сколько нужно вернуть через год?</div>
                     <div class="task-answer">
                         <input type="number" id="task2Answer" placeholder="Введите число">
-                        <button onclick="checkTask(2, 60000)">Проверить</button>
+                        <button onclick="checkTask(2, 60000)" style="border: none; border-radius: 30px;">Проверить</button>
                     </div>
                     <div id="task2Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(2)">💡 Подсказка</div>
@@ -950,7 +967,7 @@
                     <div class="task-question">📈 Задание 3: Ваша выручка выросла с 200 000 ₽ до 300 000 ₽. На сколько процентов выросли продажи?</div>
                     <div class="task-answer">
                         <input type="number" id="task3Answer" placeholder="Введите число">
-                        <button onclick="checkTask(3, 50)">Проверить</button>
+                        <button onclick="checkTask(3, 50)" style="border: none; border-radius: 30px;">Проверить</button>
                     </div>
                     <div id="task3Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(3)">💡 Подсказка</div>
@@ -959,7 +976,7 @@
                     <div class="task-question">👥 Задание 4: В вашей компании 10 сотрудников. Вы наняли ещё 5. На сколько процентов выросла команда?</div>
                     <div class="task-answer">
                         <input type="number" id="task4Answer" placeholder="Введите число">
-                        <button onclick="checkTask(4, 50)">Проверить</button>
+                        <button onclick="checkTask(4, 50)" style="border: none; border-radius: 30px;">Проверить</button>
                     </div>
                     <div id="task4Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(4)">💡 Подсказка</div>
@@ -968,7 +985,7 @@
                     <div class="task-question">📊 Задание 5: Ваша реклама принесла 50 новых клиентов. Из них 40 стали постоянными. Какой процент клиентов остался?</div>
                     <div class="task-answer">
                         <input type="number" id="task5Answer" placeholder="Введите число">
-                        <button onclick="checkTask(5, 80)">Проверить</button>
+                        <button onclick="checkTask(5, 80)" style="border: none; border-radius: 30px;">Проверить</button>
                     </div>
                     <div id="task5Result" class="task-result"></div>
                     <div class="task-hint" onclick="showHint(5)">💡 Подсказка</div>
@@ -994,9 +1011,7 @@
     </div>
 
     <script>
-        // ==============================================
         // КНИГА ПРАВИЛ
-        // ==============================================
         let currentPage = 0;
         const pagesContent = [
             {
@@ -1004,7 +1019,7 @@
                 right: `<h3>🎯 ЦЕЛЬ ИГРЫ</h3><p>Достичь <strong>80% по всем показателям</strong> (капитал, команда, маркетинг) и выйти на <strong>IPO</strong>.</p><h3>📊 ОСНОВНЫЕ ПОКАЗАТЕЛИ</h3><ul><li><strong>Капитал</strong> — деньги компании (0 → банкротство)</li><li><strong>Команда</strong> — качество сотрудников</li><li><strong>Маркетинг</strong> — узнаваемость бренда</li><li><strong>Месяц</strong> — время в игре</li><li><strong>Риск</strong> — вероятность банкротства</li></ul>`
             },
             {
-                left: `<h3>💰 ИНВЕСТИЦИИ (ЧАСТЬ 1)</h3><table class="simple-table"><tr><th>Кнопка</th><th>Стоимость</th><th>Эффект</th></tr><tr><td>👥 НАЙМ</td><td>200 000 ₽</td><td>+15% к команде</td></tr><tr><td>📢 РЕКЛАМА</td><td>150 000 ₽</td><td>+15% к маркетингу</td></tr><tr><td>🔬 РАЗРАБОТКА</td><td>300 000 ₽</td><td>+10% ко всем</td></tr><tr><td>💰 ИНВЕСТОР</td><td>Бесплатно</td><td>300–800 тыс. ₽</td></tr><tr><td>💳 КРЕДИТ</td><td>0 сразу</td><td>+500 000 ₽ (долг 600 тыс.)</td></tr></table>`,
+                left: `<h3>💰 ИНВЕСТИЦИИ (ЧАСТЬ 1)</h3><table class="simple-table"><tr><th>Кнопка</th><th>Стоимость</th><th>Эффект</th></tr><tr><td>👥 НАЙМ</td><td>200 000 ₽</td><td>+15% к команде</td></tr><tr><td>📢 РЕКЛАМА</td><td>150 000 ₽</td><td>+15% к маркетингу</td></tr><tr><td>🔬 РАЗРАБОТКА</td><td>300 000 ₽</td><td>+10% ко всем</td></tr><tr><td>💰 ИНВЕСТОР</td><td>Бесплатно</td><td>300–800 тыс. ₽ (зависит от репутации)</td></tr><tr><td>💳 КРЕДИТ</td><td>0 сразу</td><td>+500 000 ₽ (долг 600 тыс.)</td></tr></table>`,
                 right: `<h3>💰 ИНВЕСТИЦИИ (ЧАСТЬ 2)</h3><table class="simple-table"><tr><th>Кнопка</th><th>Стоимость</th><th>Эффект</th></tr><tr><td>💸 ПОГАСИТЬ</td><td>Сумма долга</td><td>Закрывает кредит</td></tr><tr><td>👨‍💻 РАЗРАБОТЧИКИ</td><td>150 000 ₽</td><td>+5% к капиталу</td></tr><tr><td>📢 МАРКЕТОЛОГИ</td><td>100 000 ₽</td><td>+5% к маркетингу</td></tr><tr><td>💼 МЕНЕДЖЕРЫ</td><td>120 000 ₽</td><td>Снижают расходы</td></tr></table><p style="margin-top:12px">💡 <strong>Совет:</strong> Разработка даёт +10% сразу ко всему — это лучшая инвестиция!</p>`
             },
             {
@@ -1040,9 +1055,7 @@
         function nextPage() { if (currentPage < pagesContent.length - 1) { currentPage++; updateBookDisplay(); } }
         function prevPage() { if (currentPage > 0) { currentPage--; updateBookDisplay(); } }
         
-        // ==============================================
         // ОБЩИЕ ФУНКЦИИ
-        // ==============================================
         function showPage(page) {
             document.getElementById('gamePage').classList.toggle('active-page', page === 'game');
             document.getElementById('rulesPage').classList.toggle('active-page', page === 'rules');
@@ -1057,10 +1070,7 @@
         }
         
         let currentPlayerName = null;
-        let currentPlayerData = {
-            capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0,
-            credit_amount: 0, credit_deadline: 0
-        };
+        let currentPlayerData = { capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
         let competitor = { name: "СтартТех", capital: 50, team: 50, marketing: 50, month: 0 };
         let allPlayers = [];
         let history = [];
