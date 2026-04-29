@@ -9,101 +9,55 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #e8f4f8, #b8e1fc, #d4f1f9);
             min-height: 100vh;
             padding: 20px;
-            transition: all 0.3s ease;
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
         }
-        
         body.dark {
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
         }
-        
-        /* Общие стили карточек в тёмной теме */
         body.dark .my-game, body.dark .leaderboard, body.dark .history-log,
         body.dark .chart-container, body.dark .mascot-box, body.dark .advice-card,
         body.dark .tasks-card, body.dark .achievements-card, body.dark .duel-card,
         body.dark .rules-card {
             background: #0f3460;
-            color: #f0f0f0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            color: #e0e0e0;
         }
-        
         body.dark .stat-card, body.dark .player-item, body.dark .achievement-item,
-        body.dark .duel-player-card, body.dark .task-item {
-            background: #1a2a4a;
-            color: #f0f0f0;
+        body.dark .duel-player-card {
+            background: #1a1a2e;
+            color: #e0e0e0;
         }
-        
-        body.dark .stat-card .stat-label, 
-        body.dark .stat-card .rubles,
-        body.dark .achievement-desc,
-        body.dark .task-question,
-        body.dark .task-result,
-        body.dark .book-page {
-            color: #ddd;
-        }
-        
         body.dark .nav-btn {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.2);
             color: white;
         }
-        
         body.dark .footer {
             background: rgba(0,0,0,0.5);
             color: #ffd700;
         }
-        
-        body.dark .event-box, body.dark .vs-bar, body.dark .competitor-warning,
-        body.dark .duelTurnIndicator, body.dark .duelHistory {
-            background: #1a2a4a;
-            color: #f0f0f0;
-        }
-        
-        body.dark button {
-            background: #5a67d8;
-            color: white;
-        }
-        
-        body.dark .success { background: #1f7b4d; }
-        body.dark .danger { background: #b91c1c; }
-        body.dark .theme-btn, body.dark .help-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-        
-        .my-game, .leaderboard, .history-log, .chart-container, .mascot-box,
-        .advice-card, .tasks-card, .achievements-card, .duel-card, .rules-card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 24px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        
-        /* Навигация */
         .nav-bar {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 8px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
         .nav-btn {
-            background: rgba(0,0,0,0.08);
+            background: rgba(0,0,0,0.1);
             border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
+            padding: 8px 14px;
+            border-radius: 40px;
             color: #333;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.3s;
         }
         .nav-btn.active {
             background: #667eea;
@@ -112,26 +66,21 @@
         .nav-btn:hover {
             background: #667eea;
             color: white;
-            transform: translateY(-2px);
+            transform: scale(1.05);
         }
-        
         .page { display: none; }
-        .page.active-page { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+        .page.active-page { display: block; }
         .container { max-width: 1600px; margin: 0 auto; flex: 1; }
-        
         .footer {
             text-align: center;
             margin-top: 30px;
-            padding: 12px;
-            background: rgba(0,0,0,0.06);
-            border-radius: 16px;
+            padding: 15px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 12px;
             color: #333;
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: bold;
         }
-        
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -140,133 +89,123 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        
         h1 {
             color: #333;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
             font-size: 1.6rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            animation: titleGlow 2s infinite;
         }
-        body.dark h1 {
-            background: linear-gradient(135deg, #9b8cff, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        body.dark h1 { color: white; }
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 5px gold; }
+            50% { text-shadow: 0 0 20px gold, 0 0 10px orange; }
+            100% { text-shadow: 0 0 5px gold; }
         }
-        
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #28a745; }
+            50% { box-shadow: 0 0 20px #28a745, 0 0 5px #20c997; }
+            100% { box-shadow: 0 0 5px #28a745; }
+        }
+        .success { animation: glow 1.5s infinite; }
         .theme-btn, .help-btn {
-            background: rgba(0,0,0,0.08);
+            background: rgba(0,0,0,0.1);
             border: none;
-            padding: 8px 18px;
-            border-radius: 50px;
+            padding: 8px 16px;
+            border-radius: 20px;
             color: #333;
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            transition: 0.3s;
         }
-        .theme-btn:hover, .help-btn:hover {
-            background: #667eea;
+        body.dark .theme-btn, body.dark .help-btn {
+            background: rgba(255,255,255,0.2);
             color: white;
-            transform: translateY(-2px);
         }
-        
         .login-screen {
             background: white;
             max-width: 400px;
-            margin: 60px auto;
-            padding: 35px;
-            border-radius: 32px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
         .login-screen input {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             margin: 15px 0;
-            border: 1px solid #e0e0e0;
-            border-radius: 16px;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-        .login-screen input:focus {
-            border-color: #667eea;
-            outline: none;
+            border: 1px solid #ddd;
+            border-radius: 10px;
         }
         .login-screen button {
             background: #667eea;
             color: white;
-            padding: 14px 35px;
+            padding: 12px 30px;
             border: none;
-            border-radius: 50px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: 0.2s;
         }
-        .login-screen button:hover {
-            background: #5a67d8;
-            transform: scale(1.02);
-        }
-        
         .game-layout {
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
         }
-        
         .my-game {
             flex: 2.5;
-            min-width: 280px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
         .right-column {
             flex: 1.2;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
-        
+        .leaderboard, .history-log, .chart-container, .mascot-box, .advice-card,
+        .tasks-card, .achievements-card, .duel-card, .rules-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
         .stats-main {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
         .stats-secondary {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
         .stat-card {
             background: #f8f9fa;
-            border-radius: 20px;
-            padding: 10px;
+            border-radius: 15px;
+            padding: 12px;
             text-align: center;
-            border-left: 4px solid;
-            transition: transform 0.2s;
+            border-left: 5px solid;
         }
-        .stat-card:hover { transform: translateY(-2px); }
         .stat-card.capital { border-left-color: #28a745; }
         .stat-card.team { border-left-color: #17a2b8; }
         .stat-card.marketing { border-left-color: #ffc107; }
         .stat-card.month { border-left-color: #6c757d; }
         .stat-card.risk { border-left-color: #dc3545; }
-        
-        .stat-label { font-size: 11px; color: #666; margin-bottom: 4px; }
-        .stat-value { font-size: 22px; font-weight: bold; }
-        .mood-emoji { font-size: 16px; margin-left: 4px; }
-        .rubles { font-size: 10px; color: #666; margin-top: 4px; }
-        
+        .stat-label { font-size: 13px; color: #666; margin-bottom: 5px; }
+        .stat-value { font-size: 24px; font-weight: bold; }
+        .mood-emoji { font-size: 18px; margin-left: 5px; }
+        .rubles { font-size: 11px; color: #666; margin-top: 5px; }
         .progress-bar {
             width: 100%;
-            height: 5px;
+            height: 6px;
             background: #e9ecef;
             border-radius: 10px;
             overflow: hidden;
-            margin-top: 6px;
+            margin-top: 8px;
         }
         .progress-fill {
             height: 100%;
@@ -276,63 +215,48 @@
         .progress-fill.capital { background: linear-gradient(90deg, #28a745, #20c997); }
         .progress-fill.team { background: linear-gradient(90deg, #17a2b8, #6f42c1); }
         .progress-fill.marketing { background: linear-gradient(90deg, #ffc107, #fd7e14); }
-        
-        /* Единый стиль кнопок для всех вкладок */
-        .buttons-row, .duel-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        .buttons-group {
+        .buttons {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            justify-content: center;
+            margin: 20px 0;
         }
-        .buttons-group button, .duel-buttons button, .advice-card button, .task-answer button, .book-nav button, .add-friend button {
+        button {
             background: #667eea;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: 600;
+            padding: 10px 14px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: 13px;
+            transition: transform 0.2s;
         }
-        .buttons-group button:hover, .duel-buttons button:hover, .advice-card button:hover, .task-answer button:hover, .book-nav button:hover, .add-friend button:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-        }
-        .success { background: #28a745 !important; }
-        .danger { background: #dc3545 !important; }
-        
+        button:hover { transform: scale(1.02); }
+        .success { background: #28a745; }
+        .danger { background: #dc3545; }
         .event-box {
             background: #e9ecef;
-            border-radius: 16px;
-            padding: 12px;
-            margin: 12px 0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
             text-align: center;
-            font-weight: 600;
-            font-size: 13px;
-            min-height: 65px;
+            font-weight: bold;
+            min-height: 70px;
         }
-        
         .vs-bar {
             background: #e9ecef;
-            border-radius: 12px;
-            padding: 8px;
-            margin: 8px 0;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
         }
         .vs-label {
             display: flex;
             justify-content: space-between;
-            font-size: 11px;
-            margin-bottom: 4px;
+            font-size: 12px;
+            margin-bottom: 5px;
         }
         .vs-progress {
-            height: 18px;
+            height: 20px;
             background: #ddd;
             border-radius: 10px;
             overflow: hidden;
@@ -355,136 +279,165 @@
             right: 0;
             border-radius: 0 10px 10px 0;
         }
-        
         .quest-box {
             background: #d4edda;
-            border-radius: 14px;
-            padding: 10px;
-            margin: 8px 0;
-            border-left: 4px solid #28a745;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0;
+            border-left: 5px solid #28a745;
         }
-        
         .player-list {
-            max-height: 260px;
+            max-height: 300px;
             overflow-y: auto;
         }
         .player-item {
             background: #f8f9fa;
-            border-radius: 14px;
-            padding: 8px 12px;
+            border-radius: 10px;
+            padding: 8px;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
         }
         .player-ai {
             background: #e9ecef;
             border-left: 3px solid #dc3545;
         }
-        .player-rank-avatar { font-size: 16px; margin-right: 8px; }
-        
+        .player-rank-avatar { font-size: 18px; margin-right: 8px; }
         .history-list {
-            max-height: 160px;
+            max-height: 200px;
             overflow-y: auto;
-            font-size: 11px;
+            font-size: 12px;
         }
         .history-item {
-            padding: 4px 0;
+            padding: 5px;
             border-bottom: 1px solid #eee;
         }
-        
         canvas {
-            max-height: 150px;
+            max-height: 180px;
             width: 100%;
         }
-        
         .mascot-box {
             text-align: center;
             background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-            border-radius: 20px;
-            padding: 12px;
         }
-        body.dark .mascot-box { background: linear-gradient(135deg, #2a2a2a, #1a1a2e); }
-        .mascot-emoji { font-size: 36px; }
-        .mascot-tip { font-size: 12px; margin-top: 6px; font-style: italic; }
-        
+        .mascot-emoji { font-size: 40px; }
+        .mascot-tip {
+            font-size: 13px;
+            margin-top: 8px;
+            font-style: italic;
+        }
         .add-friend {
             display: flex;
             gap: 8px;
-            margin-top: 12px;
+            margin-top: 10px;
         }
         .add-friend input {
             flex: 1;
             padding: 8px;
             border: 1px solid #ddd;
-            border-radius: 40px;
-            background: white;
+            border-radius: 8px;
         }
-        body.dark .add-friend input {
-            background: #1a2a4a;
-            color: white;
-            border-color: #4a6a8a;
-        }
-        
         /* Книга правил */
         .book-container {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
         .book-pages {
             display: flex;
             gap: 20px;
-            min-height: 480px;
+            min-height: 500px;
             transition: opacity 0.3s ease;
         }
         .book-page {
             flex: 1;
             background: #fef9e6;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: 1px solid #e0d5b5;
             overflow-y: auto;
         }
         body.dark .book-page {
-            background: #1a2a4a;
-            border-color: #4a6a8a;
-            color: #f0f0f0;
+            background: #2a2a2a;
+            border-color: #5a5a5a;
+            color: #e0e0e0;
         }
         .book-page h3 {
-            margin-bottom: 16px;
+            margin-bottom: 15px;
             color: #667eea;
             border-bottom: 2px solid #667eea;
-            padding-bottom: 8px;
-            font-size: 18px;
+            padding-bottom: 5px;
         }
-        .book-page p, .book-page li { font-size: 13px; line-height: 1.45; margin-bottom: 8px; }
+        body.dark .book-page h3 {
+            color: #9b8cff;
+            border-bottom-color: #9b8cff;
+        }
+        .book-page h4 { margin: 15px 0 8px 0; color: #333; }
+        body.dark .book-page h4 { color: #ddd; }
+        .book-page p { margin-bottom: 10px; line-height: 1.4; }
+        .book-page ul, .book-page .simple-table { margin: 10px 0 10px 20px; }
+        .book-page li { margin-bottom: 5px; }
         .simple-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px;
-            margin: 8px 0;
+            font-size: 13px;
         }
         .simple-table th, .simple-table td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 6px;
             text-align: left;
         }
-        body.dark .simple-table th, body.dark .simple-table td { border-color: #4a6a8a; }
-        
+        body.dark .simple-table th, body.dark .simple-table td { border-color: #555; }
+        .book-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 10px;
+        }
+        .book-nav button {
+            background: #667eea;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .book-nav button:hover:not(:disabled) {
+            background: #5a67d8;
+            transform: scale(1.02);
+        }
+        .book-nav button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .page-indicator {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        body.dark .page-indicator { color: #ddd; }
+        @media (max-width: 800px) {
+            .book-pages { flex-direction: column; }
+            .book-page { min-height: auto; }
+        }
         .achievements-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin-top: 15px;
         }
         .achievement-item {
             background: #f8f9fa;
-            border-radius: 16px;
-            padding: 12px;
+            border-radius: 15px;
+            padding: 15px;
             text-align: center;
+            transition: 0.3s;
             border: 2px solid transparent;
         }
         .achievement-item.unlocked {
@@ -493,122 +446,80 @@
         }
         body.dark .achievement-item.unlocked {
             background: linear-gradient(135deg, #1a5a2e, #0f3a1e);
-            color: white;
         }
-        .achievement-icon { font-size: 36px; margin-bottom: 6px; }
-        .achievement-name { font-weight: bold; font-size: 13px; }
-        .achievement-desc { font-size: 10px; color: #666; }
-        .achievement-status { margin-top: 6px; font-size: 11px; }
+        .achievement-icon { font-size: 48px; margin-bottom: 10px; }
+        .achievement-name { font-weight: bold; margin-bottom: 5px; }
+        .achievement-desc { font-size: 11px; color: #666; }
+        .achievement-status { margin-top: 8px; font-size: 12px; }
         .achievement-status.locked { color: #dc3545; }
         .achievement-status.unlocked { color: #28a745; }
         .progress-stats {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
             border-bottom: 1px solid #eee;
-            font-size: 13px;
         }
-        
         .task-item {
             background: #f8f9fa;
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-left: 4px solid #667eea;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
         }
-        .task-question { font-weight: bold; font-size: 13px; margin-bottom: 8px; }
+        body.dark .task-item { background: #1a1a2e; }
+        .task-question { font-weight: bold; margin-bottom: 10px; }
         .task-answer {
             display: flex;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 10px;
+            margin-top: 10px;
             align-items: center;
             flex-wrap: wrap;
         }
         .task-answer input {
             padding: 8px;
             border: 1px solid #ddd;
-            border-radius: 40px;
-            width: 130px;
-            background: white;
+            border-radius: 8px;
+            width: 150px;
         }
-        body.dark .task-answer input {
-            background: #1a2a4a;
-            color: white;
-            border-color: #4a6a8a;
-        }
-        .task-result { margin-top: 6px; font-size: 12px; }
+        .task-result { margin-top: 8px; font-size: 13px; }
         .task-hint {
-            font-size: 11px;
+            font-size: 12px;
             color: #666;
-            margin-top: 6px;
+            margin-top: 8px;
             cursor: pointer;
             text-decoration: underline;
         }
-        
         .duel-players {
             display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
+            gap: 20px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
         .duel-player-card {
             flex: 1;
             background: #f8f9fa;
-            border-radius: 20px;
-            padding: 12px;
+            border-radius: 15px;
+            padding: 15px;
             text-align: center;
             border: 2px solid #ddd;
+            transition: 0.3s;
         }
         .duel-player-card.active {
             border-color: #28a745;
             background: #d4edda;
+            box-shadow: 0 0 15px rgba(40,167,69,0.3);
         }
         body.dark .duel-player-card.active {
             background: #1a5a2e;
-            color: white;
+            border-color: #28a745;
         }
-        .duel-player-name { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
-        .duel-player-stats { font-size: 12px; margin: 3px 0; }
-        .duel-winner-badge { margin-top: 8px; font-size: 18px; }
-        .duel-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-        .duel-controls input {
-            padding: 10px;
-            border-radius: 40px;
-            border: 1px solid #ddd;
-            flex: 1;
-            background: white;
-        }
-        body.dark .duel-controls input {
-            background: #1a2a4a;
-            color: white;
-            border-color: #4a6a8a;
-        }
-        .duelTurnIndicator {
-            text-align: center;
-            margin: 12px 0;
-            padding: 8px;
-            background: #e9ecef;
-            border-radius: 30px;
-            font-size: 13px;
-        }
-        .duelHistory {
-            margin-top: 12px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 16px;
-            max-height: 120px;
-            overflow-y: auto;
-            font-size: 11px;
-        }
-        .vs-badge { font-size: 22px; font-weight: bold; color: #dc3545; display: flex; align-items: center; }
-        
+        .duel-player-name { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .duel-player-stats { font-size: 14px; margin: 5px 0; }
+        .duel-winner-badge { margin-top: 10px; font-size: 20px; }
+        .duel-controls { display: flex; gap: 10px; justify-content: center; margin: 15px 0; flex-wrap: wrap; }
+        .duel-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
+        .vs-badge { font-size: 24px; font-weight: bold; color: #dc3545; display: flex; align-items: center; }
         .help-modal, .game-modal {
             display: none;
             position: fixed;
@@ -624,8 +535,8 @@
         .help-modal-content, .game-modal-content {
             background: white;
             padding: 25px;
-            border-radius: 28px;
-            max-width: 450px;
+            border-radius: 20px;
+            max-width: 500px;
             max-height: 80vh;
             overflow-y: auto;
             animation: bounceIn 0.4s ease;
@@ -638,64 +549,53 @@
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: white;
         }
-        .game-modal-content h2 { font-size: 28px; margin-bottom: 12px; }
+        .game-modal-content h2 { font-size: 32px; margin-bottom: 15px; }
         .game-modal-content button {
-            margin-top: 18px;
-            padding: 10px 28px;
+            margin-top: 20px;
+            padding: 10px 30px;
             background: white;
             color: #333;
             border: none;
-            border-radius: 40px;
+            border-radius: 10px;
             cursor: pointer;
-            font-weight: bold;
         }
         .help-close {
             background: #667eea;
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 40px;
+            border-radius: 10px;
             cursor: pointer;
             margin-top: 15px;
             width: 100%;
-            font-weight: bold;
         }
-        
         @keyframes bounceIn {
             0% { transform: scale(0.3); opacity: 0; }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); opacity: 1; }
         }
-        
         .achievement-toast {
             position: fixed;
-            bottom: 20px;
+           底部: 20px;
             right: 20px;
             background: linear-gradient(135deg, #f093fb, #f5576c);
             color: white;
-            padding: 10px 18px;
-            border-radius: 40px;
+            padding: 12px 20px;
+            border-radius: 30px;
             font-weight: bold;
             animation: slideIn 0.4s ease;
             z-index: 1001;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 13px;
         }
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-        
         @media (max-width: 1000px) {
-            .stats-main, .stats-secondary { grid-template-columns: repeat(2, 1fr); }
-            .game-layout, .duel-players, .book-pages { flex-direction: column; }
-            .book-pages { min-height: auto; }
-        }
-        @media (max-width: 600px) {
-            .stats-main { grid-template-columns: 1fr; }
-            .buttons-group button { min-width: 80px; }
+            .stats-main, .stats-secondary { grid-template-columns: 1fr; }
+            .game-layout, .duel-players { flex-direction: column; }
         }
     </style>
 </head>
@@ -749,12 +649,12 @@
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>👤 Игрок: <strong id="currentPlayerNameDisplay"></strong></div>
-                    <button onclick="logout()" class="danger" style="background: #dc3545; padding: 6px 16px; border-radius: 30px; border: none;">🚪 Выйти</button>
+                    <button onclick="logout()" class="danger">🚪 Выйти</button>
                 </div>
                 
                 <div class="game-layout">
                     <div class="my-game">
-                        <h2 style="font-size: 1.3rem; margin-bottom: 12px;">🎮 Моя компания</h2>
+                        <h2>🎮 Моя компания</h2>
                         
                         <div class="stats-main">
                             <div class="stat-card capital">
@@ -799,38 +699,34 @@
                             </div>
                         </div>
                         
-                        <div class="competitor-warning" id="competitorWarning" style="background: #fff3cd; border-radius: 12px; padding: 8px; text-align: center; font-size: 12px;">🤖 ИИ-конкурент "СтартТех" рядом с вами</div>
+                        <div class="competitor-warning" id="competitorWarning">🤖 ИИ-конкурент "СтартТех" рядом с вами</div>
                         
                         <div id="questBlock" style="display: none;" class="quest-box">
                             <strong>🎯 КВЕСТ!</strong>
-                            <div id="questText" style="font-size: 12px;"></div>
-                            <div id="questButtons" style="display: flex; gap: 8px; margin-top: 8px;"></div>
+                            <div id="questText"></div>
+                            <div id="questButtons" style="display: flex; gap: 10px; margin-top: 10px;"></div>
                         </div>
                         
                         <div class="event-box" id="eventMessage">🎲 Нажмите "Завершить месяц"</div>
                         
-                        <div class="buttons-row">
-                            <div class="buttons-group">
-                                <button onclick="makeMove('hire')">👥 НАЙМ</button>
-                                <button onclick="makeMove('advertise')">📢 РЕКЛАМА</button>
-                                <button onclick="makeMove('develop')">🔬 РАЗРАБОТКА</button>
-                                <button onclick="makeMove('investor')">💰 ИНВЕСТОР</button>
-                                <button onclick="makeMove('credit')">💳 КРЕДИТ</button>
-                                <button onclick="makeMove('repay')">💸 ПОГАСИТЬ</button>
-                            </div>
-                            <div class="buttons-group">
-                                <button onclick="makeMove('hireDevs')">👨‍💻 РАЗРАБОТЧИКИ</button>
-                                <button onclick="makeMove('hireMarketers')">📢 МАРКЕТОЛОГИ</button>
-                                <button onclick="makeMove('hireManagers')">💼 МЕНЕДЖЕРЫ</button>
-                                <button onclick="makeMove('endMonth')" class="success">⏩ МЕСЯЦ</button>
-                                <button onclick="resetGame()" class="danger">🔄 НОВАЯ ИГРА</button>
-                            </div>
+                        <div class="buttons">
+                            <button onclick="makeMove('hire')">👥 НАЙМ</button>
+                            <button onclick="makeMove('advertise')">📢 РЕКЛАМА</button>
+                            <button onclick="makeMove('develop')">🔬 РАЗРАБОТКА</button>
+                            <button onclick="makeMove('investor')">💰 ИНВЕСТОР</button>
+                            <button onclick="makeMove('credit')">💳 КРЕДИТ</button>
+                            <button onclick="makeMove('repay')">💸 ПОГАСИТЬ</button>
+                            <button onclick="makeMove('hireDevs')">👨‍💻 РАЗРАБОТЧИКИ</button>
+                            <button onclick="makeMove('hireMarketers')">📢 МАРКЕТОЛОГИ</button>
+                            <button onclick="makeMove('hireManagers')">💼 МЕНЕДЖЕРЫ</button>
+                            <button onclick="makeMove('endMonth')" class="success">⏩ МЕСЯЦ</button>
+                            <button onclick="resetGame()" class="danger">🔄 НОВАЯ ИГРА</button>
                         </div>
                     </div>
                     
                     <div class="right-column">
                         <div class="leaderboard">
-                            <h3 style="font-size: 1.1rem;">🏆 ТАБЛИЦА ЛИДЕРОВ</h3>
+                            <h3>🏆 ТАБЛИЦА ЛИДЕРОВ</h3>
                             <div id="playerList" class="player-list"></div>
                             <div class="add-friend">
                                 <input type="text" id="newPlayerName" placeholder="Имя друга">
@@ -838,11 +734,11 @@
                             </div>
                         </div>
                         <div class="history-log">
-                            <h4 style="font-size: 0.9rem;">📜 ИСТОРИЯ ХОДОВ</h4>
+                            <h4>📜 ИСТОРИЯ ХОДОВ</h4>
                             <div id="historyList" class="history-list"></div>
                         </div>
                         <div class="chart-container">
-                            <h4 style="font-size: 0.9rem;">📈 ДИНАМИКА ПОКАЗАТЕЛЕЙ</h4>
+                            <h4>📈 ДИНАМИКА ПОКАЗАТЕЛЕЙ</h4>
                             <canvas id="dynamicsChart"></canvas>
                         </div>
                         <div class="mascot-box">
@@ -854,10 +750,10 @@
             </div>
         </div>
         
-        <!-- СТРАНИЦА 2: КНИГА ПРАВИЛ -->
+        <!-- СТРАНИЦА 2: ИСТОРИЯ И ПРАВИЛА (КНИГА) -->
         <div id="rulesPage" class="page">
             <div class="rules-card">
-                <h2 style="font-size: 1.4rem;">📖 ИСТОРИЯ И ПРАВИЛА</h2>
+                <h2>📖 ИСТОРИЯ И ПРАВИЛА</h2>
                 <div class="book-container">
                     <div id="bookPages" class="book-pages">
                         <div id="leftPage" class="book-page"></div>
@@ -875,15 +771,17 @@
         <!-- СТРАНИЦА 3: ДУЭЛЬ -->
         <div id="duelPage" class="page">
             <div class="duel-card">
-                <h2 style="font-size: 1.4rem;">⚔️ РЕЖИМ ДУЭЛИ</h2>
-                <p style="margin-bottom: 15px; font-size: 13px;">Два игрока играют по очереди. Побеждает тот, у кого выше капитал или кто раньше достиг IPO!</p>
+                <h2>⚔️ РЕЖИМ ДУЭЛИ</h2>
+                <p style="margin-bottom: 15px;">Два игрока играют по очереди. Побеждает тот, у кого выше капитал или кто раньше достиг IPO!</p>
+                
                 <div id="duelSetup" style="margin-bottom: 20px;">
                     <div class="duel-controls">
-                        <input type="text" id="duelPlayer1Name" placeholder="Имя игрока 1">
-                        <input type="text" id="duelPlayer2Name" placeholder="Имя игрока 2">
-                        <button onclick="startDuel()" class="success">⚔️ НАЧАТЬ</button>
+                        <input type="text" id="duelPlayer1Name" placeholder="Имя игрока 1" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; flex:1;">
+                        <input type="text" id="duelPlayer2Name" placeholder="Имя игрока 2" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; flex:1;">
+                        <button onclick="startDuel()" class="success">⚔️ НАЧАТЬ ДУЭЛЬ</button>
                     </div>
                 </div>
+                
                 <div id="duelGame" style="display: none;">
                     <div class="duel-players">
                         <div id="duelPlayer1Card" class="duel-player-card">
@@ -904,8 +802,13 @@
                             <div class="duel-winner-badge" id="duelPlayer2Winner"></div>
                         </div>
                     </div>
-                    <div id="duelTurnIndicator" class="duelTurnIndicator">🔥 Ход игрока: <strong id="currentTurnName">—</strong></div>
-                    <div id="duelEventBox" class="event-box" style="font-size: 12px;">🎲 Нажмите "Завершить месяц"</div>
+                    
+                    <div id="duelTurnIndicator" style="text-align: center; margin: 15px 0; padding: 10px; background: #e9ecef; border-radius: 10px;">
+                        🔥 Ход игрока: <strong id="currentTurnName">—</strong>
+                    </div>
+                    
+                    <div id="duelEventBox" class="event-box">🎲 Нажмите "Завершить месяц"</div>
+                    
                     <div class="duel-buttons">
                         <button onclick="duelMakeMove('hire')">👥 НАЙМ</button>
                         <button onclick="duelMakeMove('advertise')">📢 РЕКЛАМА</button>
@@ -913,10 +816,13 @@
                         <button onclick="duelMakeMove('investor')">💰 ИНВЕСТОР</button>
                         <button onclick="duelMakeMove('credit')">💳 КРЕДИТ</button>
                         <button onclick="duelMakeMove('repay')">💸 ПОГАСИТЬ</button>
-                        <button onclick="duelMakeMove('endMonth')" class="success">⏩ МЕСЯЦ</button>
-                        <button onclick="endDuel()" class="danger">🏁 ЗАВЕРШИТЬ</button>
+                        <button onclick="duelMakeMove('endMonth')" class="success">⏩ ЗАВЕРШИТЬ МЕСЯЦ</button>
+                        <button onclick="endDuel()" class="danger">🏁 ЗАВЕРШИТЬ ДУЭЛЬ</button>
                     </div>
-                    <div id="duelHistory" class="duelHistory"><div>✨ Дуэль началась!</div></div>
+                    
+                    <div id="duelHistory" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 10px; max-height: 150px; overflow-y: auto; font-size: 12px;">
+                        <div>✨ Дуэль началась!</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -924,20 +830,20 @@
         <!-- СТРАНИЦА 4: СОВЕТЫ -->
         <div id="advicePage" class="page">
             <div class="advice-card">
-                <h2 style="font-size: 1.4rem;">💡 БИЗНЕС-СОВЕТЫ</h2>
-                <div style="margin-top: 16px;">
-                    <h3 style="font-size: 1rem;">📖 Цитата дня</h3>
-                    <div id="quoteOfTheDay" style="font-style: italic; font-size: 14px; padding: 12px; background: #f0f0f0; border-radius: 16px;">"Ваше время ограничено, не тратьте его, живя чужой жизнью." — Стив Джобс</div>
-                    <button onclick="refreshQuote()" style="margin-top: 8px;">🔄 Другая цитата</button>
+                <h2>💡 БИЗНЕС-СОВЕТЫ</h2>
+                <div style="margin-top: 20px;">
+                    <h3>📖 Цитата дня</h3>
+                    <div id="quoteOfTheDay" style="font-style: italic; font-size: 16px; padding: 15px; background: #f0f0f0; border-radius: 10px;">"Ваше время ограничено, не тратьте его, живя чужой жизнью." — Стив Джобс</div>
+                    <button onclick="refreshQuote()">🔄 Другая цитата</button>
                 </div>
-                <div style="margin-top: 16px;">
-                    <h3 style="font-size: 1rem;">🔍 Интересный факт</h3>
-                    <div id="factOfTheDay" style="padding: 12px; background: #f0f0f0; border-radius: 16px; font-size: 13px;">90% стартапов закрываются в первые 3 года</div>
-                    <button onclick="refreshFact()" style="margin-top: 8px;">🔄 Другой факт</button>
+                <div style="margin-top: 20px;">
+                    <h3>🔍 Интересный факт</h3>
+                    <div id="factOfTheDay" style="padding: 15px; background: #f0f0f0; border-radius: 10px;">90% стартапов закрываются в первые 3 года</div>
+                    <button onclick="refreshFact()">🔄 Другой факт</button>
                 </div>
-                <div style="margin-top: 16px;">
-                    <h3 style="font-size: 1rem;">✅ Чек-лист предпринимателя</h3>
-                    <ul style="list-style: none; padding-left: 0; font-size: 13px;">
+                <div style="margin-top: 20px;">
+                    <h3>✅ Чек-лист предпринимателя</h3>
+                    <ul style="list-style: none; padding-left: 0;">
                         <li>📝 <input type="checkbox"> Изучить рынок и конкурентов</li>
                         <li>📊 <input type="checkbox"> Составить бизнес-план</li>
                         <li>🏢 <input type="checkbox"> Зарегистрировать компанию</li>
@@ -945,15 +851,15 @@
                         <li>📈 <input type="checkbox"> Постоянно анализировать результаты</li>
                     </ul>
                 </div>
-                <div style="margin-top: 16px;">
-                    <h3 style="font-size: 1rem;">🧮 Калькулятор прибыли</h3>
+                <div style="margin-top: 20px;">
+                    <h3>🧮 Калькулятор прибыли</h3>
                     <div>
                         <label>💰 Выручка (₽):</label>
-                        <input type="number" id="revenueInput" value="100000" style="width: 100%; padding: 8px; margin: 5px 0; border-radius: 40px; border: 1px solid #ddd;">
+                        <input type="number" id="revenueInput" value="100000" style="width: 100%; padding: 8px; margin: 5px 0;">
                         <label>📉 Расходы (₽):</label>
-                        <input type="number" id="expenseInput" value="70000" style="width: 100%; padding: 8px; margin: 5px 0; border-radius: 40px; border: 1px solid #ddd;">
-                        <button onclick="calculateProfit()" style="margin-top: 5px;">📊 Рассчитать</button>
-                        <div id="profitResult" style="margin-top: 8px; font-weight: bold; font-size: 14px;">💰 Прибыль: 30 000 ₽</div>
+                        <input type="number" id="expenseInput" value="70000" style="width: 100%; padding: 8px; margin: 5px 0;">
+                        <button onclick="calculateProfit()">📊 Рассчитать</button>
+                        <div id="profitResult" style="margin-top: 10px; font-weight: bold;">💰 Прибыль: 30 000 ₽</div>
                     </div>
                 </div>
             </div>
@@ -962,8 +868,8 @@
         <!-- СТРАНИЦА 5: ЗАДАНИЯ -->
         <div id="tasksPage" class="page">
             <div class="tasks-card">
-                <h2 style="font-size: 1.4rem;">📚 БИЗНЕС-ЗАДАНИЯ</h2>
-                <p style="margin-bottom: 15px; font-size: 13px;">Решите задачи и проверьте свои знания!</p>
+                <h2>📚 БИЗНЕС-ЗАДАНИЯ</h2>
+                <p style="margin-bottom: 20px;">Решите задачи и проверьте свои знания!</p>
                 <div class="task-item">
                     <div class="task-question">📊 Задание 1: У вас есть 100 000 ₽. Вы купили товар за 60 000 ₽ и продали за 85 000 ₽. Какая у вас прибыль?</div>
                     <div class="task-answer">
@@ -1015,7 +921,7 @@
         <!-- СТРАНИЦА 6: ДОСТИЖЕНИЯ -->
         <div id="achievementsPage" class="page">
             <div class="achievements-card">
-                <h2 style="font-size: 1.4rem;">🏆 ДОСТИЖЕНИЯ</h2>
+                <h2>🏆 ДОСТИЖЕНИЯ</h2>
                 <div class="progress-stats">
                     <span>🏅 Прогресс: <span id="achievementsCount">0</span>/<span id="achievementsTotal">8</span></span>
                     <span>⭐ Лучший результат: <span id="bestCapital">0</span>%</span>
@@ -1030,29 +936,146 @@
     </div>
 
     <script>
-        // КНИГА ПРАВИЛ (содержимое сокращено для краткости, но полное в финальной версии)
+        // ==============================================
+        // КНИГА ПРАВИЛ
+        // ==============================================
         let currentPage = 0;
         const pagesContent = [
-            { left: `<h3>📖 ПРЕДЫСТОРИЯ</h3><p>...</p>`, right: `<h3>🎯 ЦЕЛЬ ИГРЫ</h3><p>...</p>` },
-            { left: `<h3>💰 ИНВЕСТИЦИИ</h3><p>...</p>`, right: `<h3>💰 ИНВЕСТИЦИИ (ЧАСТЬ 2)</h3><p>...</p>` },
-            { left: `<h3>🏆 УСЛОВИЯ ПОБЕДЫ</h3><p>...</p>`, right: `<h3>🎯 КВЕСТЫ</h3><p>...</p>` },
-            { left: `<h3>🏅 ДОСТИЖЕНИЯ</h3><p>...</p>`, right: `<h3>🏅 ДОСТИЖЕНИЯ (продолжение)</h3><p>...</p>` }
+            {
+                left: `
+                    <h3>📖 ПРЕДЫСТОРИЯ</h3>
+                    <p>🌟 <strong>Вы — молодой предприниматель</strong>, решивший открыть свой бизнес. Стартовый капитал — <strong>2 500 000 ₽</strong>, команда энтузиастов и огромное желание добиться успеха.</p>
+                    <p>📉 Рынок жесток: конкуренты не дремлют, инвесторы капризны, клиенты непредсказуемы. Сумеете ли вы пройти путь от гаража до небоскрёба и вывести компанию на IPO? Или ваш стартап пополнит статистику 90% провалившихся проектов?</p>
+                    <p>🚀 <strong>Всё в ваших руках!</strong></p>
+                `,
+                right: `
+                    <h3>🎯 ЦЕЛЬ ИГРЫ</h3>
+                    <p>Достичь <strong>80% по всем показателям</strong> (капитал, команда, маркетинг) и выйти на <strong>IPO</strong>.</p>
+                    <h3>📊 ОСНОВНЫЕ ПОКАЗАТЕЛИ</h3>
+                    <ul>
+                        <li><strong>Капитал</strong> — деньги компании (0 → банкротство)</li>
+                        <li><strong>Команда</strong> — качество сотрудников</li>
+                        <li><strong>Маркетинг</strong> — узнаваемость бренда</li>
+                        <li><strong>Месяц</strong> — время в игре</li>
+                        <li><strong>Риск</strong> — вероятность банкротства</li>
+                    </ul>
+                `
+            },
+            {
+                left: `
+                    <h3>💰 ИНВЕСТИЦИИ (ЧАСТЬ 1)</h3>
+                    <table class="simple-table">
+                        <tr><th>Кнопка</th><th>Стоимость</th><th>Эффект</th></tr>
+                        <tr><td>👥 НАЙМ</td><td>200 000 ₽</td><td>+15% к команде</td> </tr>
+                        <tr><td>📢 РЕКЛАМА</td><td>150 000 ₽</td><td>+15% к маркетингу</td> </tr>
+                        <tr><td>🔬 РАЗРАБОТКА</td><td>300 000 ₽</td><td>+10% ко всем</td> </tr>
+                        <tr><td>💰 ИНВЕСТОР</td><td>Бесплатно</td><td>300–800 тыс. ₽ (зависит от репутации)</td> </tr>
+                        <tr><td>💳 КРЕДИТ</td><td>0 сразу</td><td>+500 000 ₽ (долг 600 тыс. через 3 мес.)</td> </tr>
+                    </table>
+                `,
+                right: `
+                    <h3>💰 ИНВЕСТИЦИИ (ЧАСТЬ 2)</h3>
+                    <table class="simple-table">
+                        <tr><th>Кнопка</th><th>Стоимость</th><th>Эффект</th> </tr>
+                        <tr><td>💸 ПОГАСИТЬ</td><td>Сумма долга</td><td>Закрывает кредит</td> </tr>
+                        <tr><td>👨‍💻 РАЗРАБОТЧИКИ</td><td>150 000 ₽</td><td>+5% к капиталу</td> </tr>
+                        <tr><td>📢 МАРКЕТОЛОГИ</td><td>100 000 ₽</td><td>+5% к маркетингу</td> </tr>
+                        <tr><td>💼 МЕНЕДЖЕРЫ</td><td>120 000 ₽</td><td>Снижают расходы</td> </tr>
+                    </table>
+                    <p style="margin-top:12px">💡 <strong>Совет:</strong> Разработка даёт +10% сразу ко всему — это лучшая инвестиция!</p>
+                `
+            },
+            {
+                left: `
+                    <h3>🏆 УСЛОВИЯ ПОБЕДЫ И ПОРАЖЕНИЯ</h3>
+                    <table class="simple-table">
+                        <tr><th>Исход</th><th>Условие</th> </tr>
+                        <tr><td>🏆 ПОБЕДА (IPO)</td><td>Капитал ≥80%, Команда ≥80%, Маркетинг ≥80%, Месяц ≥6</td> </tr>
+                        <tr><td>💀 Банкротство</td><td>Капитал = 0</td> </tr>
+                        <tr><td>💀 Критический крах</td><td>Два любых показателя ≤10%</td> </tr>
+                        <tr><td>⚠️ Поглощение</td><td>Месяц ≥15, показатели <40%</td> </tr>
+                    </table>
+                    <h3>🤖 ИИ-КОНКУРЕНТ</h3>
+                    <p>Развивается автоматически. Если обгоняет более чем на 20% → вы теряете 10% капитала и маркетинга. Следите за шкалой «Вы vs ИИ»!</p>
+                `,
+                right: `
+                    <h3>🎯 КВЕСТЫ</h3>
+                    <table class="simple-table">
+                        <tr><th>Квест</th><th>Награда</th> </tr>
+                        <tr><td>🏢 Крупный клиент</td><td>+20% капитала через 3 месяца (или +10% сразу)</td> </tr>
+                        <tr><td>💡 Инновация</td><td>70% шанс на +25% ко всем показателям</td> </tr>
+                        <tr><td>⚠️ Кризис</td><td>+20% капитала или кредит 400 000 ₽</td> </tr>
+                    </table>
+                    <h3>📈 СОВЕТЫ ДЛЯ ПОБЕДЫ</h3>
+                    <ul>
+                        <li>🔬 <strong>Сначала РАЗРАБОТКА</strong> — даёт +10% ко всему сразу</li>
+                        <li>🤖 <strong>Следите за ИИ-конкурентом</strong> — не дайте ему обогнать</li>
+                        <li>💳 <strong>Кредит</strong> — только при острой необходимости</li>
+                        <li>💰 <strong>Инвестор</strong> — бесплатные деньги, но зависит от репутации</li>
+                        <li>💼 <strong>Менеджеры</strong> — снижают расходы, окупаются быстро</li>
+                    </ul>
+                `
+            },
+            {
+                left: `
+                    <h3>🏅 ДОСТИЖЕНИЯ</h3>
+                    <ul>
+                        <li>🦄 <strong>Единорог</strong> — IPO с капиталом 100%</li>
+                        <li>⚡ <strong>Спидран</strong> — Победа за 6 месяцев</li>
+                        <li>🔥 <strong>Феникс</strong> — Выжить после падения ниже 10%</li>
+                        <li>🍀 <strong>Везунчик</strong> — 3 положительных события подряд</li>
+                        <li>👑 <strong>Король</strong> — Победить 3 раза подряд</li>
+                    </ul>
+                `,
+                right: `
+                    <h3>🏅 ДОСТИЖЕНИЯ (продолжение)</h3>
+                    <ul>
+                        <li>💰 <strong>Миллионер</strong> — Накопить 5 000 000 ₽</li>
+                        <li>🎲 <strong>Надёжный</strong> — Взять кредит и вовремя погасить</li>
+                        <li>📈 <strong>Инвестор</strong> — Привлечь инвестора 5 раз</li>
+                    </ul>
+                    <p style="margin-top:20px">✨ <strong>Следите за прогрессом на вкладке «Достижения»!</strong></p>
+                `
+            }
         ];
         
         function updateBookDisplay() {
             const leftPageDiv = document.getElementById('leftPage');
             const rightPageDiv = document.getElementById('rightPage');
-            const pairIndex = Math.min(currentPage, pagesContent.length - 1);
-            leftPageDiv.innerHTML = pagesContent[pairIndex].left;
-            rightPageDiv.innerHTML = pagesContent[pairIndex].right;
-            document.getElementById('pageIndicator').innerText = `Страница ${pairIndex+1}/${pagesContent.length}`;
-            document.getElementById('prevPageBtn').disabled = (pairIndex === 0);
-            document.getElementById('nextPageBtn').disabled = (pairIndex === pagesContent.length - 1);
+            const totalPairs = pagesContent.length;
+            const pairIndex = Math.min(currentPage, totalPairs - 1);
+            const pair = pagesContent[pairIndex];
+            leftPageDiv.innerHTML = pair.left;
+            rightPageDiv.innerHTML = pair.right;
+            document.getElementById('pageIndicator').innerText = `Страница ${pairIndex+1}/${totalPairs}`;
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+            if (prevBtn) prevBtn.disabled = (pairIndex === 0);
+            if (nextBtn) nextBtn.disabled = (pairIndex === totalPairs - 1);
+            const bookPages = document.getElementById('bookPages');
+            if (bookPages) {
+                bookPages.style.opacity = '0';
+                setTimeout(() => { bookPages.style.opacity = '1'; }, 100);
+            }
         }
-        function nextPage() { if (currentPage < pagesContent.length - 1) { currentPage++; updateBookDisplay(); } }
-        function prevPage() { if (currentPage > 0) { currentPage--; updateBookDisplay(); } }
         
-        // ОБЩИЕ ФУНКЦИИ (полные, рабочие)
+        function nextPage() {
+            if (currentPage < pagesContent.length - 1) {
+                currentPage++;
+                updateBookDisplay();
+            }
+        }
+        
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                updateBookDisplay();
+            }
+        }
+        
+        // ==============================================
+        // ОБЩИЕ ФУНКЦИИ И ПЕРЕМЕННЫЕ
+        // ==============================================
         function showPage(page) {
             document.getElementById('gamePage').classList.toggle('active-page', page === 'game');
             document.getElementById('rulesPage').classList.toggle('active-page', page === 'rules');
@@ -1060,17 +1083,192 @@
             document.getElementById('advicePage').classList.toggle('active-page', page === 'advice');
             document.getElementById('tasksPage').classList.toggle('active-page', page === 'tasks');
             document.getElementById('achievementsPage').classList.toggle('active-page', page === 'achievements');
-            if (page === 'rules') { currentPage = 0; updateBookDisplay(); }
+            const btns = document.querySelectorAll('.nav-btn');
+            const pages = ['game', 'rules', 'duel', 'advice', 'tasks', 'achievements'];
+            pages.forEach((p, i) => { btns[i].classList.toggle('active', p === page); });
+            if (page === 'rules') {
+                currentPage = 0;
+                updateBookDisplay();
+            }
         }
         
         let currentPlayerName = null;
-        let currentPlayerData = { capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
+        let currentPlayerData = {
+            capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0,
+            credit_amount: 0, credit_deadline: 0
+        };
         let competitor = { name: "СтартТех", capital: 50, team: 50, marketing: 50, month: 0 };
-        let allPlayers = [], history = [];
-        let gameEnded = false, dynamicsChart = null;
+        let allPlayers = [];
+        let history = [];
+        let activeQuest = null;
+        let questStep = 0;
+        let gameEnded = false;
+        let chartData = { capital: [50], team: [50], marketing: [50], months: [0] };
+        let dynamicsChart = null;
+        let winCount = 0;
+        let positiveEventStreak = 0;
+        let survivedLow = false;
+        let investorCount = 0;
+        let firstInvestmentDone = false;
+        let creditPaid = false;
+        let playerAchievements = [];
         
-        // ... (остальные функции игры полностью сохранены, в финальном коде они все есть)
-        // Для краткости здесь приведены основные функции, но в полном коде они все рабочие
+        const eventsList = [
+            { text: "🚀 Виральный успех в TikTok!", cap: 30, team: 0, market: 20, positive: true },
+            { text: "💸 Уход ключевого инвестора", cap: -25, team: -5, market: 0, positive: false },
+            { text: "👥 Конкуренты переманили сотрудников", cap: 0, team: -20, market: -5, positive: false },
+            { text: "📉 Скандал в СМИ", cap: -15, team: 0, market: -25, positive: false },
+            { text: "🏆 Премия 'Лучший стартап года'", cap: 20, team: 15, market: 30, positive: true },
+            { text: "⚖️ Налоговая проверка", cap: -20, team: -10, market: 0, positive: false },
+            { text: "🤝 Привлечение бизнес-ангела", cap: 40, team: 0, market: 0, positive: true },
+            { text: "😩 Выгорание команды", cap: 0, team: -15, market: -10, positive: false },
+            { text: "📈 Новый тренд", cap: 15, team: 0, market: 25, positive: true },
+            { text: "💡 Гениальная идея", cap: 0, team: 5, market: 20, positive: true },
+            { text: "📉 Экономический кризис", cap: -30, team: 0, market: -15, positive: false },
+            { text: "🤝 Крупный ритейлер", cap: 25, team: 0, market: 25, positive: true }
+        ];
+        
+        const quests = {
+            bigClient: { name: "Крупный клиент", steps: [
+                { text: "Подписать контракт на 3 месяца? (Да — +20% капитала через 3 месяца, Нет — +10% сейчас)" },
+                { text: "Первый месяц контракта прошёл" }, { text: "Второй месяц контракта прошёл" },
+                { text: "Контракт выполнен! +20% капитала" }
+            ] },
+            innovation: { name: "Инновация", steps: [
+                { text: "Инвестировать 300 000 ₽ в разработку? (70% успеха)" },
+                { text: "Результат инновации" }
+            ] },
+            crisis: { name: "Кризис", steps: [
+                { text: "Сократить расходы? (Да — -15% команды, +20% капитала / Нет — кредит 400 000 ₽)" }
+            ] }
+        };
+        
+        const achievementsList = [
+            { id: "unicorn", name: "Единорог", icon: "🦄", desc: "IPO с капиталом 100%", check: () => currentPlayerData.capital === 100 && gameEnded },
+            { id: "speedrun", name: "Спидран", icon: "⚡", desc: "Победа за 6 месяцев", check: () => currentPlayerData.month <= 6 && gameEnded },
+            { id: "phoenix", name: "Феникс", icon: "🔥", desc: "Выжить после падения ниже 10%", check: () => survivedLow },
+            { id: "lucky", name: "Везунчик", icon: "🍀", desc: "3 положительных события подряд", check: () => positiveEventStreak >= 3 },
+            { id: "king", name: "Король", icon: "👑", desc: "Победить 3 раза подряд", check: () => winCount >= 3 },
+            { id: "millionaire", name: "Миллионер", icon: "💰", desc: "Накопить 5 000 000 ₽", check: () => currentPlayerData.rubles >= 5000000 },
+            { id: "reliable", name: "Надёжный", icon: "🎲", desc: "Взять кредит и вовремя погасить", check: () => creditPaid },
+            { id: "investor", name: "Инвестор", icon: "📈", desc: "Привлечь инвестора 5 раз", check: () => investorCount >= 5 }
+        ];
+        
+        // ==============================================
+        // ДОСТИЖЕНИЯ
+        // ==============================================
+        function loadAchievements(playerName) {
+            let saved = localStorage.getItem(`achievements_${playerName}`);
+            playerAchievements = saved ? JSON.parse(saved) : [];
+            updateAchievementsUI();
+        }
+        
+        function saveAchievements() {
+            localStorage.setItem(`achievements_${currentPlayerName}`, JSON.stringify(playerAchievements));
+        }
+        
+        function unlockAchievement(achievementId) {
+            if (playerAchievements.includes(achievementId)) return;
+            playerAchievements.push(achievementId);
+            saveAchievements();
+            updateAchievementsUI();
+            let ach = achievementsList.find(a => a.id === achievementId);
+            if (ach) {
+                let toast = document.createElement('div');
+                toast.className = 'achievement-toast';
+                toast.innerHTML = `<span>🏆</span><div><strong>${ach.icon} ${ach.name}</strong><br>${ach.desc}</div>`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+                addToHistory(`🏆 ДОСТИЖЕНИЕ: ${ach.icon} ${ach.name}!`);
+            }
+        }
+        
+        function checkAllAchievements() {
+            for (let ach of achievementsList) {
+                if (!playerAchievements.includes(ach.id) && ach.check()) {
+                    unlockAchievement(ach.id);
+                }
+            }
+            updateAchievementsUI();
+        }
+        
+        function updateAchievementsUI() {
+            let container = document.getElementById('achievementsGrid');
+            let unlockedCount = playerAchievements.length;
+            document.getElementById('achievementsCount').innerText = unlockedCount;
+            document.getElementById('achievementsTotal').innerText = achievementsList.length;
+            let best = Math.max(currentPlayerData.capital, parseInt(document.getElementById('bestCapital').innerText) || 0);
+            document.getElementById('bestCapital').innerText = best;
+            if (container) {
+                container.innerHTML = achievementsList.map(ach => `
+                    <div class="achievement-item ${playerAchievements.includes(ach.id) ? 'unlocked' : ''}">
+                        <div class="achievement-icon">${ach.icon}</div>
+                        <div class="achievement-name">${ach.name}</div>
+                        <div class="achievement-desc">${ach.desc}</div>
+                        <div class="achievement-status ${playerAchievements.includes(ach.id) ? 'unlocked' : 'locked'}">
+                            ${playerAchievements.includes(ach.id) ? '✅ ПОЛУЧЕНО' : '❌ НЕ ПОЛУЧЕНО'}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // ==============================================
+        // ОСНОВНЫЕ ФУНКЦИИ ИГРЫ
+        // ==============================================
+        function updateUI() {
+            document.getElementById('capitalValue').innerText = currentPlayerData.capital;
+            document.getElementById('teamValue').innerText = currentPlayerData.team;
+            document.getElementById('marketingValue').innerText = currentPlayerData.marketing;
+            document.getElementById('monthValue').innerText = currentPlayerData.month;
+            document.getElementById('riskValue').innerText = Math.max(0, Math.round(100 - (currentPlayerData.capital + currentPlayerData.team + currentPlayerData.marketing) / 3));
+            document.getElementById('capitalBar').style.width = currentPlayerData.capital + '%';
+            document.getElementById('teamBar').style.width = currentPlayerData.team + '%';
+            document.getElementById('marketingBar').style.width = currentPlayerData.marketing + '%';
+            document.getElementById('rublesValue').innerText = currentPlayerData.rubles.toLocaleString() + ' ₽';
+            
+            let total = currentPlayerData.capital + competitor.capital;
+            document.getElementById('vsFillPlayer').style.width = total > 0 ? (currentPlayerData.capital / total) * 100 + '%' : '50%';
+            document.getElementById('vsFillAI').style.width = total > 0 ? (competitor.capital / total) * 100 + '%' : '50%';
+            document.getElementById('vsPlayerValue').innerText = currentPlayerData.capital + '%';
+            document.getElementById('vsAIValue').innerText = competitor.capital + '%';
+            
+            let moods = { capital: document.getElementById('capitalMood'), team: document.getElementById('teamMood'), marketing: document.getElementById('marketingMood') };
+            if (currentPlayerData.capital >= 80) moods.capital.innerHTML = '🤑';
+            else if (currentPlayerData.capital >= 60) moods.capital.innerHTML = '😊';
+            else if (currentPlayerData.capital >= 40) moods.capital.innerHTML = '😐';
+            else if (currentPlayerData.capital >= 20) moods.capital.innerHTML = '😟';
+            else moods.capital.innerHTML = '😭';
+            
+            if (currentPlayerData.team >= 80) moods.team.innerHTML = '🔥🔥';
+            else if (currentPlayerData.team >= 60) moods.team.innerHTML = '😊👍';
+            else if (currentPlayerData.team >= 40) moods.team.innerHTML = '😐';
+            else if (currentPlayerData.team >= 20) moods.team.innerHTML = '😟';
+            else moods.team.innerHTML = '😭💀';
+            
+            if (currentPlayerData.marketing >= 80) moods.marketing.innerHTML = '🌟';
+            else if (currentPlayerData.marketing >= 60) moods.marketing.innerHTML = '😊';
+            else if (currentPlayerData.marketing >= 40) moods.marketing.innerHTML = '😐';
+            else if (currentPlayerData.marketing >= 20) moods.marketing.innerHTML = '😟';
+            else moods.marketing.innerHTML = '📉';
+            
+            updateChart();
+        }
+        
+        function updateChart() {
+            chartData.capital.push(currentPlayerData.capital);
+            chartData.team.push(currentPlayerData.team);
+            chartData.marketing.push(currentPlayerData.marketing);
+            chartData.months.push(currentPlayerData.month);
+            if (chartData.months.length > 20) { chartData.capital.shift(); chartData.team.shift(); chartData.marketing.shift(); chartData.months.shift(); }
+            if (dynamicsChart) {
+                dynamicsChart.data.datasets[0].data = [...chartData.capital];
+                dynamicsChart.data.datasets[1].data = [...chartData.team];
+                dynamicsChart.data.datasets[2].data = [...chartData.marketing];
+                dynamicsChart.data.labels = chartData.months.map(m => 'М' + m);
+                dynamicsChart.update();
+            }
+        }
         
         function initChart() {
             let ctx = document.getElementById('dynamicsChart').getContext('2d');
@@ -1078,47 +1276,529 @@
             dynamicsChart = new Chart(ctx, {
                 type: 'line',
                 data: { labels: ['М0'], datasets: [
-                    { label: '💰 Капитал', data: [50], borderColor: '#28a745', tension: 0.3, fill: true },
-                    { label: '👥 Команда', data: [50], borderColor: '#17a2b8', tension: 0.3, fill: true },
-                    { label: '📢 Маркетинг', data: [50], borderColor: '#ffc107', tension: 0.3, fill: true }
+                    { label: '💰 Капитал', data: [50], borderColor: '#28a745', backgroundColor: 'rgba(40,167,69,0.1)', tension: 0.3, fill: true },
+                    { label: '👥 Команда', data: [50], borderColor: '#17a2b8', backgroundColor: 'rgba(23,162,184,0.1)', tension: 0.3, fill: true },
+                    { label: '📢 Маркетинг', data: [50], borderColor: '#ffc107', backgroundColor: 'rgba(255,193,7,0.1)', tension: 0.3, fill: true }
                 ] },
-                options: { responsive: true, maintainAspectRatio: true }
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
             });
+        }
+        
+        function updateLeaderboard() {
+            let container = document.getElementById('playerList');
+            let participants = [...allPlayers];
+            let aiExists = participants.some(p => p.name === "🤖 СтартТех");
+            if (!aiExists) participants.push({ name: "🤖 СтартТех", capital: competitor.capital, month: competitor.month, isAI: true });
+            else { let ai = participants.find(p => p.name === "🤖 СтартТех"); ai.capital = competitor.capital; ai.month = competitor.month; }
+            participants.sort((a,b) => b.capital - a.capital);
+            if (participants.length === 0) container.innerHTML = '<div class="player-item">➕ Добавьте друзей</div>';
+            else container.innerHTML = participants.map((p, idx) => {
+                let avatar = '';
+                if (idx === 0 && !p.isAI) avatar = '👑';
+                else if (p.capital >= 80) avatar = '🦄';
+                else if (p.capital >= 50) avatar = '🚀';
+                else if (p.capital <= 0) avatar = '💀';
+                else avatar = '📈';
+                let aiIcon = p.isAI ? '🤖 ' : '';
+                let youMark = (!p.isAI && p.name === currentPlayerName) ? ' (Я)' : '';
+                return `<div class="player-item ${p.isAI ? 'player-ai' : ''}"><div><span class="player-rank-avatar">${avatar}</span> ${aiIcon}<b>${p.name}</b>${youMark}</div><span>💰 ${p.capital}% | 📅 ${p.month}</span></div>`;
+            }).join('');
+        }
+        
+        function updatePlayerInLeaderboard() {
+            let player = allPlayers.find(p => p.name === currentPlayerName);
+            if (player) { player.capital = currentPlayerData.capital; player.month = currentPlayerData.month; }
+            updateLeaderboard();
+        }
+        
+        function addToHistory(text) {
+            history.unshift(`📅 Месяц ${currentPlayerData.month}: ${text}`);
+            if (history.length > 15) history.pop();
+            document.getElementById('historyList').innerHTML = history.map(h => `<div class="history-item">${h}</div>`).join('');
+        }
+        
+        function applyAction(cost, effect) {
+            if (currentPlayerData.rubles < cost) { addToHistory(`❌ Не хватает ${cost.toLocaleString()} ₽`); return false; }
+            currentPlayerData.rubles -= cost;
+            if (effect.cap) currentPlayerData.capital = Math.min(currentPlayerData.capital + effect.cap, 100);
+            if (effect.team) currentPlayerData.team = Math.min(currentPlayerData.team + effect.team, 100);
+            if (effect.market) currentPlayerData.marketing = Math.min(currentPlayerData.marketing + effect.market, 100);
+            updateUI(); updatePlayerInLeaderboard();
+            if (!firstInvestmentDone && (effect.cap || effect.team || effect.market)) { firstInvestmentDone = true; checkAllAchievements(); }
+            return true;
+        }
+        
+        function makeMove(action) {
+            if (!currentPlayerName || gameEnded) return;
+            switch (action) {
+                case 'hire': if (applyAction(200000, { team: 15 })) addToHistory("👥 Найм: команда +15%"); break;
+                case 'advertise': if (applyAction(150000, { market: 15 })) addToHistory("📢 Реклама: маркетинг +15%"); break;
+                case 'develop': if (applyAction(300000, { cap: 10, team: 10, market: 10 })) addToHistory("🔬 Разработка: все +10%"); break;
+                case 'investor': attractInvestor(); break;
+                case 'credit': takeCredit(); break;
+                case 'repay': repayCredit(); break;
+                case 'hireDevs': if (applyAction(150000, { cap: 5 })) addToHistory("👨‍💻 Разработчики: качество +5%"); break;
+                case 'hireMarketers': if (applyAction(100000, { market: 5 })) addToHistory("📢 Маркетологи: узнаваемость +5%"); break;
+                case 'hireManagers': if (applyAction(120000, {})) addToHistory("💼 Менеджеры: эффективность +10%"); break;
+                case 'endMonth': endMonth(); break;
+            }
+        }
+        
+        function attractInvestor() {
+            let chance = Math.floor((currentPlayerData.team + currentPlayerData.marketing + currentPlayerData.capital) / 3);
+            if (Math.random() * 100 <= chance) {
+                let inv = Math.floor(Math.random() * 500000 + 300000);
+                currentPlayerData.rubles += inv;
+                addToHistory(`🎉 Инвестор вложил ${inv.toLocaleString()} ₽`);
+                investorCount++;
+                checkAllAchievements();
+            } else {
+                currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
+                addToHistory(`😔 Инвестор отказал, репутация -10%`);
+            }
+            updateUI(); updatePlayerInLeaderboard();
+        }
+        
+        function takeCredit() {
+            if (currentPlayerData.credit_amount > 0) { addToHistory("❌ Уже есть кредит"); return; }
+            currentPlayerData.credit_amount = 600000;
+            currentPlayerData.credit_deadline = currentPlayerData.month + 3;
+            currentPlayerData.rubles += 500000;
+            addToHistory(`💳 Кредит 500 000 ₽. Вернуть 600 000 ₽ до ${currentPlayerData.credit_deadline} месяца`);
+            updateUI(); updatePlayerInLeaderboard();
+        }
+        
+        function repayCredit() {
+            if (currentPlayerData.credit_amount <= 0) { addToHistory("Нет кредитов"); return; }
+            if (currentPlayerData.rubles < currentPlayerData.credit_amount) { addToHistory(`❌ Не хватает ${currentPlayerData.credit_amount.toLocaleString()} ₽`); return; }
+            currentPlayerData.rubles -= currentPlayerData.credit_amount;
+            currentPlayerData.credit_amount = 0;
+            addToHistory("✅ Кредит погашен");
+            creditPaid = true;
+            checkAllAchievements();
+            updateUI(); updatePlayerInLeaderboard();
+        }
+        
+        function updateCompetitor() {
+            let delta = Math.floor(Math.random() * 15) - 3;
+            competitor.capital = Math.min(Math.max(competitor.capital + delta, 0), 100);
+            competitor.month++;
+            let diff = competitor.capital - currentPlayerData.capital;
+            let w = document.getElementById('competitorWarning');
+            if (diff > 20) {
+                w.innerHTML = "⚠️ ИИ-конкурент ОБОГНАЛ! Потеря доли рынка!";
+                currentPlayerData.capital = Math.max(currentPlayerData.capital - 10, 0);
+                currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
+                updateUI();
+            } else if (diff > 10) w.innerHTML = "⚠️ ИИ-конкурент дышит в спину!";
+            else if (diff < -10) w.innerHTML = "🚀 Вы сильно обогнали ИИ-конкурента!";
+            else w.innerHTML = `🤖 ИИ-конкурент "СтартТех" — Капитал: ${competitor.capital}%`;
+            updateLeaderboard(); updateUI();
+        }
+        
+        function startQuest() {
+            if (activeQuest !== null) return;
+            if (Math.random() > 0.15) return;
+            let names = Object.keys(quests);
+            activeQuest = names[Math.floor(Math.random() * names.length)];
+            questStep = 0;
+            showQuest();
+        }
+        
+        function showQuest() {
+            if (!activeQuest) return;
+            let q = quests[activeQuest];
+            document.getElementById('questBlock').style.display = 'block';
+            document.getElementById('questText').innerHTML = `<strong>${q.name}</strong><br>${q.steps[questStep].text}`;
+            let btns = document.getElementById('questButtons');
+            btns.innerHTML = '';
+            if (activeQuest === 'bigClient') {
+                if (questStep === 0) btns.innerHTML = `<button onclick="questChoice('yes')">✅ Да</button><button onclick="questChoice('no')">❌ Нет</button>`;
+                else if (questStep < 3) btns.innerHTML = `<button onclick="questNext()">📅 Далее</button>`;
+                else btns.innerHTML = `<button onclick="questNext()">🎉 Забрать</button>`;
+            } else if (activeQuest === 'innovation') {
+                if (questStep === 0) btns.innerHTML = `<button onclick="questChoice('invest')">🔬 Инвестировать</button><button onclick="questChoice('skip')">❌ Отказ</button>`;
+                else btns.innerHTML = `<button onclick="questNext()">🔍 Результат</button>`;
+            } else if (activeQuest === 'crisis') {
+                if (questStep === 0) btns.innerHTML = `<button onclick="questChoice('cut')">✂️ Сократить</button><button onclick="questChoice('credit')">🏦 Кредит</button>`;
+            }
+        }
+        
+        function questChoice(choice) {
+            if (activeQuest === 'bigClient') {
+                if (choice === 'yes') { questStep = 1; addToHistory("✅ Контракт подписан!"); }
+                else { currentPlayerData.capital = Math.min(currentPlayerData.capital + 10, 100); updateUI(); addToHistory("💰 Отказ, +10% капитала"); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; }
+            } else if (activeQuest === 'innovation') {
+                if (choice === 'invest') {
+                    if (currentPlayerData.rubles >= 300000) { currentPlayerData.rubles -= 300000; questStep = 1; addToHistory("🔬 Инвестиции сделаны!"); updateUI(); }
+                    else { addToHistory("❌ Недостаточно средств!"); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; }
+                } else { addToHistory("😔 Идея отклонена."); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; }
+            } else if (activeQuest === 'crisis') {
+                if (choice === 'cut') { currentPlayerData.team = Math.max(currentPlayerData.team - 15, 0); currentPlayerData.capital = Math.min(currentPlayerData.capital + 20, 100); addToHistory("✂️ Расходы сокращены."); }
+                else { currentPlayerData.rubles += 400000; currentPlayerData.capital = Math.min(currentPlayerData.capital + 15, 100); addToHistory("🏦 Кредит 400 000 ₽."); updateUI(); }
+                activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI();
+            }
+            if (activeQuest !== null) showQuest();
+            updateUI(); updatePlayerInLeaderboard();
+            checkAllAchievements();
+        }
+        
+        function questNext() {
+            if (activeQuest === 'bigClient') {
+                if (questStep === 3) { currentPlayerData.capital = Math.min(currentPlayerData.capital + 20, 100); addToHistory("🎉 Контракт выполнен! +20% капитала!"); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI(); }
+                else { questStep++; showQuest(); }
+            } else if (activeQuest === 'innovation') {
+                if (questStep === 1) {
+                    let success = Math.random() < 0.7;
+                    if (success) { currentPlayerData.capital = Math.min(currentPlayerData.capital + 25, 100); currentPlayerData.team = Math.min(currentPlayerData.team + 15, 100); currentPlayerData.marketing = Math.min(currentPlayerData.marketing + 20, 100); addToHistory("🚀 ИННОВАЦИЯ УСПЕШНА!"); }
+                    else { addToHistory("😞 Инновация провалилась."); }
+                    activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI();
+                }
+            }
+            updatePlayerInLeaderboard();
+            checkAllAchievements();
+        }
+        
+        function showGameEndModal(isWin) {
+            gameEnded = true;
+            let modal = document.getElementById('gameModal');
+            let content = document.getElementById('gameModalContent');
+            let title = document.getElementById('gameModalTitle');
+            let msg = document.getElementById('gameModalMessage');
+            if (isWin) {
+                content.className = 'game-modal-content win';
+                title.innerHTML = '🏆 ПОБЕДА! 🏆';
+                msg.innerHTML = `Вы вывели компанию на IPO за ${currentPlayerData.month} месяцев!<br><br>Финальный капитал: ${currentPlayerData.capital}%`;
+                addToHistory("🏆 ПОБЕДА! ВЫХОД НА IPO!");
+                winCount++;
+                canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.6 }, startVelocity: 25, colors: ['#ffd700', '#28a745', '#17a2b8', '#ffc107', '#dc3545'] });
+                setTimeout(() => canvasConfetti({ particleCount: 800, spread: 150, origin: { y: 0.4 } }), 200);
+                checkAllAchievements();
+            } else {
+                content.className = 'game-modal-content lose';
+                title.innerHTML = '💀 БАНКРОТСТВО 💀';
+                msg.innerHTML = `Вы продержались ${currentPlayerData.month} месяцев.<br><br>Попробуйте ещё раз!`;
+                addToHistory("💀 БАНКРОТСТВО");
+            }
+            modal.style.display = 'flex';
+        }
+        
+        function closeModalAndReset() { document.getElementById('gameModal').style.display = 'none'; resetGame(); gameEnded = false; }
+        
+        function endMonth() {
+            if (gameEnded) return;
+            if (currentPlayerData.credit_amount > 0 && currentPlayerData.month >= currentPlayerData.credit_deadline) {
+                currentPlayerData.rubles -= 100000;
+                currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 15, 0);
+                currentPlayerData.credit_amount = 0;
+                addToHistory("⚠️ ПРОСРОЧКА КРЕДИТА! Штраф 100 000 ₽");
+                updateUI();
+            }
+            let cost = 50000 + currentPlayerData.team * 2000 + currentPlayerData.marketing * 1500;
+            if (currentPlayerData.rubles < cost) { showGameEndModal(false); return; }
+            currentPlayerData.rubles -= cost;
+            let e = eventsList[Math.floor(Math.random() * eventsList.length)];
+            currentPlayerData.capital = Math.min(Math.max(currentPlayerData.capital + e.cap, 0), 100);
+            currentPlayerData.team = Math.min(Math.max(currentPlayerData.team + e.team, 0), 100);
+            currentPlayerData.marketing = Math.min(Math.max(currentPlayerData.marketing + e.market, 0), 100);
+            addToHistory(`${e.text} (💰 ${e.cap}%, 👥 ${e.team}%, 📢 ${e.market}%)`);
+            document.getElementById('eventMessage').innerHTML = e.text;
+            if (e.positive) { positiveEventStreak++; if (positiveEventStreak >= 3) checkAllAchievements(); }
+            else { positiveEventStreak = 0; }
+            if (currentPlayerData.capital <= 10 && !survivedLow) { survivedLow = true; }
+            if (survivedLow && currentPlayerData.capital >= 50) { checkAllAchievements(); survivedLow = false; }
+            updateCompetitor();
+            currentPlayerData.month++;
+            updateUI(); updatePlayerInLeaderboard();
+            startQuest();
+            let tips = ["💡 Инвестируй в разработку — это окупается!", "💡 Следи за ИИ-конкурентом!", "💡 Кредит помогает, но возвращай вовремя!"];
+            document.getElementById('mascotTip').innerHTML = tips[Math.floor(Math.random() * tips.length)];
+            if (currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80 && currentPlayerData.month >= 6) {
+                showGameEndModal(true);
+            } else if (currentPlayerData.capital <= 0) { showGameEndModal(false); }
+        }
+        
+        function resetGame() {
+            currentPlayerData = { capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
+            competitor = { name: "СтартТех", capital: 50, team: 50, marketing: 50, month: 0 };
+            activeQuest = null;
+            chartData = { capital: [50], team: [50], marketing: [50], months: [0] };
+            updateUI(); updatePlayerInLeaderboard();
+            document.getElementById('eventMessage').innerHTML = "🎮 Игра перезапущена!";
+            document.getElementById('competitorWarning').innerHTML = "🤖 ИИ-конкурент 'СтартТех' — Капитал: 50%";
+            document.getElementById('questBlock').style.display = 'none';
+            addToHistory("🔄 Новая игра");
+            if (dynamicsChart) { dynamicsChart.destroy(); initChart(); }
+        }
+        
+        function toggleTheme() { document.body.classList.toggle('dark'); addToHistory(document.body.classList.contains('dark') ? "🌙 Тёмная тема" : "☀️ Светлая тема"); }
+        
+        function exportReport() {
+            let status = (currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80 && currentPlayerData.month >= 6) ? "ПОБЕДА (IPO)" : "В ПРОЦЕССЕ";
+            let report = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏢 БИЗНЕС-СИМУЛЯТОР: ОТЧЁТ\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📅 Дата: ${new Date().toLocaleString()}\n👤 Игрок: ${currentPlayerName}\n🏆 Статус: ${status}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💰 Капитал: ${currentPlayerData.capital}% (${currentPlayerData.rubles.toLocaleString()} ₽)\n👥 Команда: ${currentPlayerData.team}%\n📢 Маркетинг: ${currentPlayerData.marketing}%\n📅 Месяцев: ${currentPlayerData.month}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏆 Достижения: ${playerAchievements.map(id => achievementsList.find(a => a.id === id)?.icon || '').join(' ') || 'нет'}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            let blob = new Blob([report], { type: 'text/plain' });
+            let a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `business_report_${currentPlayerName}_${Date.now()}.txt`;
+            a.click();
+            addToHistory("📄 Отчёт экспортирован");
+        }
+        
+        function addFriend() {
+            let name = document.getElementById('newPlayerName').value.trim();
+            if (!name) { alert("Введите имя друга!"); return; }
+            if (allPlayers.find(p => p.name === name)) { alert("Такой игрок уже есть!"); return; }
+            allPlayers.push({ name: name, capital: 50, month: 0 });
+            document.getElementById('newPlayerName').value = '';
+            updateLeaderboard();
+            addToHistory(`➕ Новый игрок: ${name}`);
         }
         
         function login() {
             let name = document.getElementById('playerNameInput').value.trim();
-            if (!name) { alert("Введите имя!"); return; }
+            if (!name) { alert("Введите ваше имя!"); return; }
             currentPlayerName = name;
+            if (!allPlayers.find(p => p.name === name)) { allPlayers.push({ name: name, capital: 50, month: 0 }); }
+            loadAchievements(currentPlayerName);
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('gameInterface').style.display = 'block';
-            document.getElementById('currentPlayerNameDisplay').innerText = name;
-            initChart();
+            document.getElementById('currentPlayerNameDisplay').innerText = currentPlayerName;
+            initChart(); updateUI(); updateLeaderboard();
+            addToHistory(`✨ Добро пожаловать, ${name}!`);
+            gameEnded = false;
         }
         
         function logout() {
             document.getElementById('gameInterface').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('playerNameInput').value = '';
+            currentPlayerName = null;
+            if (dynamicsChart) { dynamicsChart.destroy(); dynamicsChart = null; }
+            gameEnded = false;
         }
         
-        function toggleTheme() { document.body.classList.toggle('dark'); }
+        // ==============================================
+        // ДУЭЛЬ
+        // ==============================================
+        let duelActive = false;
+        let duelPlayers = {
+            player1: { name: "", capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, finished: false, winner: false },
+            player2: { name: "", capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, finished: false, winner: false }
+        };
+        let currentTurn = 1;
+        let duelHistory = [];
+        
+        function startDuel() {
+            let p1Name = document.getElementById('duelPlayer1Name').value.trim();
+            let p2Name = document.getElementById('duelPlayer2Name').value.trim();
+            if (!p1Name || !p2Name) { alert("Введите имена обоих игроков!"); return; }
+            if (p1Name === p2Name) { alert("Имена игроков должны различаться!"); return; }
+            
+            duelPlayers.player1 = { name: p1Name, capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, finished: false, winner: false };
+            duelPlayers.player2 = { name: p2Name, capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, finished: false, winner: false };
+            currentTurn = 1;
+            duelActive = true;
+            duelHistory = ["✨ Дуэль началась!"];
+            
+            document.getElementById('duelSetup').style.display = 'none';
+            document.getElementById('duelGame').style.display = 'block';
+            document.getElementById('duelPlayer1NameDisplay').innerText = p1Name;
+            document.getElementById('duelPlayer2NameDisplay').innerText = p2Name;
+            document.getElementById('currentTurnName').innerText = p1Name;
+            updateDuelUI();
+            updateDuelHistory();
+            document.getElementById('duelPlayer1Card').classList.add('active');
+            document.getElementById('duelPlayer2Card').classList.remove('active');
+        }
+        
+        function updateDuelUI() {
+            document.getElementById('duelPlayer1Capital').innerText = duelPlayers.player1.capital;
+            document.getElementById('duelPlayer1Team').innerText = duelPlayers.player1.team;
+            document.getElementById('duelPlayer1Marketing').innerText = duelPlayers.player1.marketing;
+            document.getElementById('duelPlayer1Month').innerText = duelPlayers.player1.month;
+            document.getElementById('duelPlayer2Capital').innerText = duelPlayers.player2.capital;
+            document.getElementById('duelPlayer2Team').innerText = duelPlayers.player2.team;
+            document.getElementById('duelPlayer2Marketing').innerText = duelPlayers.player2.marketing;
+            document.getElementById('duelPlayer2Month').innerText = duelPlayers.player2.month;
+            if (duelPlayers.player1.finished && duelPlayers.player2.finished) determineWinner();
+        }
+        
+        function updateDuelHistory() {
+            let container = document.getElementById('duelHistory');
+            container.innerHTML = duelHistory.map(h => `<div>${h}</div>`).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function addDuelHistory(text) {
+            duelHistory.unshift(`📅 ${text}`);
+            if (duelHistory.length > 20) duelHistory.pop();
+            updateDuelHistory();
+        }
+        
+        function duelApplyAction(player, cost, effect) {
+            if (player.rubles < cost) { addDuelHistory(`❌ ${player.name}: не хватает ${cost.toLocaleString()} ₽`); return false; }
+            player.rubles -= cost;
+            if (effect.cap) player.capital = Math.min(player.capital + effect.cap, 100);
+            if (effect.team) player.team = Math.min(player.team + effect.team, 100);
+            if (effect.market) player.marketing = Math.min(player.marketing + effect.market, 100);
+            return true;
+        }
+        
+        function duelMakeMove(action) {
+            if (!duelActive) return;
+            let player = currentTurn === 1 ? duelPlayers.player1 : duelPlayers.player2;
+            if (player.finished) { addDuelHistory(`⚠️ ${player.name} уже завершил игру!`); return; }
+            
+            switch(action) {
+                case 'hire': if (duelApplyAction(player, 200000, { team: 15 })) addDuelHistory(`${player.name}: 👥 Найм сотрудников (команда +15%)`); break;
+                case 'advertise': if (duelApplyAction(player, 150000, { market: 15 })) addDuelHistory(`${player.name}: 📢 Реклама (маркетинг +15%)`); break;
+                case 'develop': if (duelApplyAction(player, 300000, { cap: 10, team: 10, market: 10 })) addDuelHistory(`${player.name}: 🔬 Разработка (все +10%)`); break;
+                case 'investor':
+                    let chance = Math.floor((player.team + player.marketing + player.capital) / 3);
+                    if (Math.random() * 100 <= chance) {
+                        let inv = Math.floor(Math.random() * 500000 + 300000);
+                        player.rubles += inv;
+                        addDuelHistory(`${player.name}: 🎉 Инвестор вложил ${inv.toLocaleString()} ₽`);
+                    } else {
+                        player.marketing = Math.max(player.marketing - 10, 0);
+                        addDuelHistory(`${player.name}: 😔 Инвестор отказал, репутация -10%`);
+                    }
+                    break;
+                case 'credit':
+                    if (player.credit_amount > 0) addDuelHistory(`${player.name}: ❌ Уже есть кредит`);
+                    else {
+                        player.credit_amount = 600000;
+                        player.credit_deadline = player.month + 3;
+                        player.rubles += 500000;
+                        addDuelHistory(`${player.name}: 💳 Кредит 500 000 ₽ (вернуть 600 000 ₽ до ${player.credit_deadline} месяца)`);
+                    }
+                    break;
+                case 'repay':
+                    if (player.credit_amount <= 0) addDuelHistory(`${player.name}: Нет кредитов`);
+                    else if (player.rubles < player.credit_amount) addDuelHistory(`${player.name}: ❌ Не хватает для погашения`);
+                    else { player.rubles -= player.credit_amount; player.credit_amount = 0; addDuelHistory(`${player.name}: ✅ Кредит погашен`); }
+                    break;
+                case 'endMonth': duelEndMonth(player); break;
+            }
+            updateDuelUI();
+        }
+        
+        function duelEndMonth(player) {
+            if (player.credit_amount > 0 && player.month >= player.credit_deadline) {
+                player.rubles -= 100000;
+                player.marketing = Math.max(player.marketing - 15, 0);
+                player.credit_amount = 0;
+                addDuelHistory(`${player.name}: ⚠️ ПРОСРОЧКА КРЕДИТА! Штраф 100 000 ₽`);
+            }
+            let cost = 50000 + player.team * 2000 + player.marketing * 1500;
+            if (player.rubles < cost) {
+                addDuelHistory(`${player.name}: 💀 БАНКРОТСТВО! Игра окончена.`);
+                player.finished = true;
+                switchTurn();
+                return;
+            }
+            player.rubles -= cost;
+            let e = eventsList[Math.floor(Math.random() * eventsList.length)];
+            player.capital = Math.min(Math.max(player.capital + e.cap, 0), 100);
+            player.team = Math.min(Math.max(player.team + e.team, 0), 100);
+            player.marketing = Math.min(Math.max(player.marketing + e.market, 0), 100);
+            addDuelHistory(`${player.name}: ${e.text} (💰 ${e.cap}%, 👥 ${e.team}%, 📢 ${e.market}%)`);
+            document.getElementById('duelEventBox').innerHTML = e.text;
+            player.month++;
+            if (player.capital >= 80 && player.team >= 80 && player.marketing >= 80 && player.month >= 6) {
+                addDuelHistory(`🏆 ${player.name} достиг IPO! Игра завершена.`);
+                canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.5 } });
+                player.finished = true;
+            }
+            updateDuelUI();
+            switchTurn();
+        }
+        
+        function switchTurn() {
+            if (!duelActive) return;
+            currentTurn = currentTurn === 1 ? 2 : 1;
+            let nextPlayer = currentTurn === 1 ? duelPlayers.player1 : duelPlayers.player2;
+            document.getElementById('currentTurnName').innerText = nextPlayer.name;
+            if (currentTurn === 1) {
+                document.getElementById('duelPlayer1Card').classList.add('active');
+                document.getElementById('duelPlayer2Card').classList.remove('active');
+            } else {
+                document.getElementById('duelPlayer1Card').classList.remove('active');
+                document.getElementById('duelPlayer2Card').classList.add('active');
+            }
+            addDuelHistory(`🔄 Ход передан игроку ${nextPlayer.name}`);
+            if (duelPlayers.player1.finished && duelPlayers.player2.finished) determineWinner();
+        }
+        
+        function determineWinner() {
+            let p1 = duelPlayers.player1, p2 = duelPlayers.player2;
+            if (p1.capital > p2.capital) {
+                document.getElementById('duelPlayer1Winner').innerHTML = "🏆 ПОБЕДИТЕЛЬ! 🏆";
+                addDuelHistory(`🏆🏆🏆 ПОБЕДИТЕЛЬ ДУЭЛИ: ${p1.name}! 🏆🏆🏆`);
+                canvasConfetti({ particleCount: 500, spread: 120, origin: { y: 0.5 } });
+            } else if (p2.capital > p1.capital) {
+                document.getElementById('duelPlayer2Winner').innerHTML = "🏆 ПОБЕДИТЕЛЬ! 🏆";
+                addDuelHistory(`🏆🏆🏆 ПОБЕДИТЕЛЬ ДУЭЛИ: ${p2.name}! 🏆🏆🏆`);
+                canvasConfetti({ particleCount: 500, spread: 120, origin: { y: 0.5 } });
+            } else if (p1.month < p2.month) {
+                document.getElementById('duelPlayer1Winner').innerHTML = "🏆 ПОБЕДИТЕЛЬ! 🏆";
+                addDuelHistory(`🏆🏆🏆 ПОБЕДИТЕЛЬ ДУЭЛИ: ${p1.name}! 🏆🏆🏆`);
+                canvasConfetti({ particleCount: 500, spread: 120, origin: { y: 0.5 } });
+            } else if (p2.month < p1.month) {
+                document.getElementById('duelPlayer2Winner').innerHTML = "🏆 ПОБЕДИТЕЛЬ! 🏆";
+                addDuelHistory(`🏆🏆🏆 ПОБЕДИТЕЛЬ ДУЭЛИ: ${p2.name}! 🏆🏆🏆`);
+                canvasConfetti({ particleCount: 500, spread: 120, origin: { y: 0.5 } });
+            } else {
+                addDuelHistory(`🤝 НИЧЬЯ!`);
+            }
+            duelActive = false;
+        }
+        
+        function endDuel() {
+            if (confirm("Завершить дуэль?")) {
+                duelPlayers.player1.finished = true;
+                duelPlayers.player2.finished = true;
+                determineWinner();
+            }
+        }
+        
+        // ==============================================
+        // СОВЕТЫ И ЗАДАНИЯ
+        // ==============================================
+        const quotes = [
+            { text: "Ваше время ограничено, не тратьте его, живя чужой жизнью.", author: "Стив Джобс" },
+            { text: "Единственный способ делать великую работу — любить то, что вы делаете.", author: "Стив Джобс" },
+            { text: "Не бойтесь ошибаться — бойтесь повторять ошибки.", author: "Теодор Рузвельт" }
+        ];
+        const facts = ["90% стартапов закрываются в первые 3 года", "Amazon начинался как книжный магазин", "Instagram купили за 1 млрд $ через 2 года"];
+        
+        function refreshQuote() {
+            let q = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quoteOfTheDay').innerHTML = `"${q.text}" — ${q.author}`;
+        }
+        function refreshFact() {
+            document.getElementById('factOfTheDay').innerHTML = facts[Math.floor(Math.random() * facts.length)];
+        }
+        function calculateProfit() {
+            let revenue = parseFloat(document.getElementById('revenueInput').value) || 0;
+            let expense = parseFloat(document.getElementById('expenseInput').value) || 0;
+            document.getElementById('profitResult').innerHTML = `💰 Прибыль: ${(revenue - expense).toLocaleString()} ₽`;
+        }
+        function checkTask(taskNum, correct) {
+            let input = document.getElementById(`task${taskNum}Answer`);
+            let user = parseFloat(input.value);
+            let resultDiv = document.getElementById(`task${taskNum}Result`);
+            if (isNaN(user)) resultDiv.innerHTML = "❌ Введите число!";
+            else if (user === correct) resultDiv.innerHTML = "✅ Правильно!";
+            else resultDiv.innerHTML = `❌ Неправильно. Ответ: ${correct}`;
+        }
+        function showHint(taskNum) {
+            let hints = {1: "Прибыль = Выручка - Себестоимость", 2: "50 000 + 50 000×20%", 3: "(300-200)/200×100%", 4: "(5/10)×100%", 5: "(40/50)×100%"};
+            alert(hints[taskNum]);
+        }
+        
         function showHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
         function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
-        function closeModalAndReset() { document.getElementById('gameModal').style.display = 'none'; }
-        function makeMove(action) { alert("Ход: " + action); }
-        function resetGame() { }
-        function exportReport() { alert("Отчёт экспортирован"); }
-        function addFriend() { alert("Друг добавлен"); }
-        function refreshQuote() { document.getElementById('quoteOfTheDay').innerHTML = "Новая цитата"; }
-        function refreshFact() { document.getElementById('factOfTheDay').innerHTML = "Новый факт"; }
-        function calculateProfit() { alert("Калькулятор"); }
-        function checkTask(t, c) { alert("Задание " + t); }
-        function showHint(t) { alert("Подсказка к заданию " + t); }
-        
-        let duelActive = false;
-        function startDuel() { alert("Дуэль началась"); document.getElementById('duelSetup').style.display = 'none'; document.getElementById('duelGame').style.display = 'block'; }
-        function duelMakeMove(action) { alert("Ход в дуэли: " + action); }
-        function endDuel() { alert("Дуэль завершена"); }
     </script>
 </body>
 </html>
