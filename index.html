@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
     <style>
         :root {
             --bg: #0a0a14;
@@ -467,6 +467,159 @@
         .balance-after { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
         .balance-after span { color: var(--text); font-weight: 600; }
 
+        /* OFFICE VISUAL */
+        .office-widget {
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px; text-align: center;
+            margin-bottom: 16px; position: relative; overflow: hidden;
+        }
+        .office-scene {
+            font-size: 52px; line-height: 1; margin-bottom: 8px;
+            transition: all 0.5s; display: block;
+            filter: drop-shadow(0 4px 12px rgba(124,92,252,0.3));
+        }
+        .office-label {
+            font-family: 'Unbounded', sans-serif; font-size: 10px;
+            color: var(--accent); text-transform: uppercase; letter-spacing: .06em;
+        }
+        .office-sublabel { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+        /* NEWS FEED */
+        .news-feed {
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; margin-bottom: 16px;
+        }
+        .news-feed-header {
+            padding: 10px 14px; border-bottom: 1px solid var(--border);
+            font-family: 'Unbounded', sans-serif; font-size: 10px;
+            color: var(--accent); text-transform: uppercase; letter-spacing: .06em;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .news-dot { width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        .news-list { max-height: 140px; overflow-y: auto; }
+        .news-item {
+            padding: 8px 14px; border-bottom: 1px solid var(--border);
+            font-size: 11px; display: flex; gap: 8px; align-items: flex-start;
+            animation: newsIn 0.4s ease;
+        }
+        @keyframes newsIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
+        .news-item:last-child { border-bottom: none; }
+        .news-icon { font-size: 14px; flex-shrink: 0; }
+        .news-text { color: var(--muted); line-height: 1.4; }
+        .news-text strong { color: var(--text); }
+        .news-time { font-size: 9px; color: var(--muted); margin-top: 1px; white-space: nowrap; }
+
+        /* RADAR CHART */
+        .radar-wrap { position: relative; height: 180px; }
+
+        /* DILEMMA MODAL */
+        .dilemma-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            z-index: 3000; justify-content: center; align-items: center;
+        }
+        .dilemma-overlay.open { display: flex; }
+        .dilemma-box {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 24px; padding: 32px; max-width: 520px; width: 90%;
+            animation: modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .dilemma-tag {
+            font-family: 'Unbounded', sans-serif; font-size: 9px;
+            color: var(--yellow); text-transform: uppercase; letter-spacing: .1em;
+            background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3);
+            border-radius: 99px; padding: 4px 10px; display: inline-block; margin-bottom: 14px;
+        }
+        .dilemma-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+        .dilemma-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+        .dilemma-options { display: grid; gap: 10px; }
+        .dilemma-opt {
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 14px 16px;
+            cursor: pointer; transition: all 0.2s; text-align: left;
+        }
+        .dilemma-opt:hover { border-color: var(--accent); background: rgba(124,92,252,0.1); }
+        .dilemma-opt-label { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+        .dilemma-opt-effect { font-size: 11px; color: var(--muted); }
+
+        /* COMPETITORS */
+        .competitors-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .competitor-chip {
+            display: flex; align-items: center; gap: 5px;
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: 99px; padding: 4px 10px; font-size: 11px;
+        }
+        .competitor-chip .chip-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+        /* RESULT CARD (share) */
+        .result-card-btn {
+            margin-top: 12px; width: 100%;
+        }
+        #shareCanvas { display: none; }
+
+        /* ANIMATED COUNTER */
+        .stat-value { transition: color 0.3s; }
+        .stat-value.up { color: var(--green) !important; }
+        .stat-value.down { color: var(--red) !important; }
+
+        /* ONBOARDING TOUR */
+        .tour-overlay {
+            position: fixed; inset: 0; z-index: 9000;
+            pointer-events: none;
+        }
+        .tour-overlay.active { pointer-events: all; }
+        .tour-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 9001;
+            transition: opacity 0.3s;
+        }
+        .tour-highlight {
+            position: fixed; z-index: 9002;
+            border-radius: 12px;
+            box-shadow: 0 0 0 4000px rgba(0,0,0,0.72), 0 0 0 3px var(--accent), 0 0 24px rgba(124,92,252,0.6);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: none;
+        }
+        .tour-bubble {
+            position: fixed; z-index: 9003;
+            background: var(--card);
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 18px 20px;
+            max-width: 280px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(124,92,252,0.3);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            animation: bubbleIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes bubbleIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+        .tour-bubble::before {
+            content: ''; position: absolute;
+            width: 12px; height: 12px;
+            background: var(--card);
+            border: 1px solid var(--accent);
+            transform: rotate(45deg);
+        }
+        .tour-bubble.arrow-top::before { bottom: -7px; left: 24px; border-top: none; border-left: none; }
+        .tour-bubble.arrow-bottom::before { top: -7px; left: 24px; border-bottom: none; border-right: none; }
+        .tour-bubble.arrow-left::before { right: -7px; top: 20px; border-left: none; border-bottom: none; }
+        .tour-step-num {
+            font-family: 'Unbounded', sans-serif; font-size: 9px;
+            color: var(--accent); text-transform: uppercase; letter-spacing: .08em;
+            margin-bottom: 6px;
+        }
+        .tour-step-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+        .tour-step-text { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
+        .tour-controls { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .tour-dots { display: flex; gap: 4px; }
+        .tour-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: background 0.2s; }
+        .tour-dot.active { background: var(--accent); }
+        .tour-skip { font-size: 11px; color: var(--muted); cursor: pointer; background: none; border: none; padding: 0; }
+        .tour-skip:hover { color: var(--text); }
+        .tour-next { font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; background: var(--accent); color: white; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; }
+        .tour-next:hover { background: #9070ff; }
+
         /* TOAST */
         .achievement-toast {
             position: fixed; bottom: 24px; right: 24px;
@@ -640,6 +793,7 @@
             <div id="gameModalTitle" class="modal-title"></div>
             <div id="gameModalBody" class="modal-body"></div>
             <button class="btn btn-primary btn-lg" onclick="closeModalAndReset()">🔄 Новая игра</button>
+            <button class="btn btn-ghost" id="shareCardBtn" style="margin-top:10px;width:100%;display:none" onclick="showResultCard()">📸 Поделиться результатом</button>
         </div>
     </div>
 
@@ -831,10 +985,35 @@
 
                     <!-- RIGHT COLUMN -->
                     <div class="right-col">
+                        <!-- OFFICE VISUAL -->
+                        <div class="office-widget">
+                            <span class="office-scene" id="officeScene">🏠</span>
+                            <div class="office-label" id="officeLabel">Гараж</div>
+                            <div class="office-sublabel" id="officeSublabel">Стартап только начинается</div>
+                        </div>
+
+                        <!-- NEWS FEED -->
+                        <div class="news-feed">
+                            <div class="news-feed-header">
+                                <div class="news-dot"></div>
+                                Лента новостей компании
+                            </div>
+                            <div class="news-list" id="newsFeed">
+                                <div class="news-item">
+                                    <span class="news-icon">🚀</span>
+                                    <div>
+                                        <div class="news-text">Компания <strong id="playerCompanyName">ваша</strong> начинает путь к IPO</div>
+                                        <div class="news-time">Только что</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- LEADERBOARD -->
                         <div class="card">
                             <div class="card-title">🏆 Таблица лидеров</div>
                             <div id="playerList" class="player-list"></div>
+                            <div class="competitors-row" id="aiCompetitorsRow"></div>
                             <div class="add-friend-row">
                                 <input type="text" id="newPlayerName" placeholder="Имя друга" maxlength="20"
                                     onkeydown="if(event.key==='Enter')addFriend()">
@@ -848,7 +1027,13 @@
                             <div id="historyList" class="history-list"></div>
                         </div>
 
-                        <!-- CHART -->
+                        <!-- RADAR + LINE CHART -->
+                        <div class="card">
+                            <div class="card-title">📊 Форма бизнеса</div>
+                            <div class="radar-wrap">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                        </div>
                         <div class="card">
                             <div class="card-title">📈 Динамика</div>
                             <div class="chart-wrap">
@@ -1075,7 +1260,7 @@
                         <span class="s-name" id="sliderLabel">Количество</span>
                         <span class="s-val" id="sliderVal">1</span>
                     </div>
-                    <input type="range" id="actionSlider" min="1" max="5" value="1" oninput="onSliderChange()">
+                    <input type="range" id="actionSlider" min="1" max="5" value="1">
                     <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px">
                         <span id="sliderMin">1</span><span id="sliderMax">5</span>
                     </div>
@@ -1089,7 +1274,7 @@
                         <span class="s-name">Сумма кредита</span>
                         <span class="s-val" id="creditAmtVal">500 000 ₽</span>
                     </div>
-                    <input type="range" id="creditSlider" min="1" max="5" value="1" oninput="onCreditSliderChange()">
+                    <input type="range" id="creditSlider" min="1" max="5" value="1">
                     <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px">
                         <span>100 000 ₽</span><span>500 000 ₽</span>
                     </div>
@@ -1099,7 +1284,7 @@
                         <span class="s-name">Срок возврата</span>
                         <span class="s-val" id="creditTermVal">3 мес.</span>
                     </div>
-                    <input type="range" id="creditTermSlider" min="1" max="6" value="3" oninput="onCreditTermChange()">
+                    <input type="range" id="creditTermSlider" min="1" max="6" value="3">
                     <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px">
                         <span>1 мес.</span><span>6 мес.</span>
                     </div>
@@ -1112,13 +1297,55 @@
                     <span class="sum-value cost" id="sumCost">200 000 ₽</span>
                 </div>
                 <div class="sum-row">
-                    <span class="sum-label">📈 Эффект</span>
+                    <span class="sum-label">📈 Прямой эффект</span>
                     <span class="sum-value effect" id="sumEffect">Команда +15%</span>
                 </div>
+            </div>
+            <div id="synergyPreview" style="background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2);border-radius:10px;padding:10px 14px;margin:0 0 10px;font-size:11px;color:var(--muted);display:none">
+                <div style="font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">⚡ Цепочка синергий (следующий месяц)</div>
+                <div id="synergyPreviewList"></div>
             </div>
             <div class="balance-after">Баланс после: <span id="balanceAfter">—</span></div>
 
             <button class="btn btn-primary btn-lg btn-full" id="actionConfirmBtn" onclick="confirmAction()">✅ Выполнить</button>
+        </div>
+    </div>
+
+    <!-- DILEMMA MODAL -->
+    <div id="dilemmaModal" class="dilemma-overlay">
+        <div class="dilemma-box">
+            <div class="dilemma-tag">⚡ Событие-дилемма</div>
+            <div class="dilemma-title" id="dilemmaTitle"></div>
+            <div class="dilemma-desc" id="dilemmaDesc"></div>
+            <div class="dilemma-options" id="dilemmaOptions"></div>
+        </div>
+    </div>
+
+    <!-- RESULT CARD MODAL -->
+    <div id="resultCardModal" class="modal-overlay" style="display:none">
+        <div class="modal-box" style="text-align:center">
+            <div class="section-header" style="font-size:16px;margin-bottom:16px">📸 Карточка результата</div>
+            <canvas id="shareCanvas" width="600" height="340" style="display:block;width:100%;border-radius:12px;border:1px solid var(--border)"></canvas>
+            <div style="display:flex;gap:10px;margin-top:16px;justify-content:center">
+                <button class="btn btn-primary" onclick="downloadResultCard()">⬇️ Скачать PNG</button>
+                <button class="btn btn-ghost" onclick="document.getElementById('resultCardModal').style.display='none'">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONBOARDING TOUR -->
+    <div id="tourOverlay" class="tour-overlay" style="display:none">
+        <div class="tour-backdrop" onclick="tourNext()"></div>
+        <div class="tour-highlight" id="tourHighlight"></div>
+        <div class="tour-bubble" id="tourBubble">
+            <div class="tour-step-num" id="tourStepNum">Шаг 1 из 7</div>
+            <div class="tour-step-title" id="tourStepTitle"></div>
+            <div class="tour-step-text" id="tourStepText"></div>
+            <div class="tour-controls">
+                <button class="tour-skip" onclick="tourSkip()">Пропустить</button>
+                <div class="tour-dots" id="tourDots"></div>
+                <button class="tour-next" id="tourNextBtn" onclick="tourNext()">Далее →</button>
+            </div>
         </div>
     </div>
 
@@ -1127,126 +1354,83 @@
     </div>
 
     <script>
-    // ==============================
-    // BOOK / RULES
-    // ==============================
-    let currentPage = 0;
-    const pagesContent = [
+    // iOS polyfills
+    if (!Array.prototype.find) {
+        Array.prototype.find = function(fn) { for (var i=0;i<this.length;i++) { if (fn(this[i],i,this)) return this[i]; } return undefined; };
+    }
+    if (!Array.prototype.findIndex) {
+        Array.prototype.findIndex = function(fn) { for (var i=0;i<this.length;i++) { if (fn(this[i],i,this)) return i; } return -1; };
+    }
+    window.onerror = function(msg, src, line, col, err) { console.warn('Game error:', msg, line); return true; };
+
+    // === BOOK / RULES ===
+    var currentPage = 0;
+    var pagesContent = [
         {
-            left: `<h3>📖 Предыстория</h3>
-                <p>🌟 <strong>Вы — молодой предприниматель</strong>, решивший открыть свой бизнес. Стартовый капитал — <strong>2 500 000 ₽</strong>, команда энтузиастов и огромное желание добиться успеха.</p>
-                <p>📉 Рынок жесток: конкуренты не дремлют, инвесторы капризны, клиенты непредсказуемы. Сумеете ли вы вывести компанию на IPO?</p>
-                <p>🚀 <strong>Всё в ваших руках!</strong></p>
-                <h4>🎯 Цель игры</h4>
-                <p>Достичь <strong>80%</strong> по всем трём показателям (капитал, команда, маркетинг) и выйти на IPO. Минимум через 6 месяцев игры.</p>`,
-            right: `<h3>📋 Основные правила</h3>
-                <h4>🔄 Ход</h4>
-                <p>Каждый ход — один месяц. Вы можете совершить несколько действий до нажатия «Завершить месяц». После — случайное событие изменит показатели, спишутся операционные расходы.</p>
-                <h4>💀 Банкротство</h4>
-                <p>Если денег (₽) не хватит на покрытие расходов в начале месяца — игра заканчивается банкротством. Следите за балансом!</p>
-                <h4>⚠️ Риск банкротства</h4>
-                <p>Показывает: насколько далеко вы от банкротства. Чем ниже средний показатель метрик — тем выше расходы и риск.</p>`
+            left: '<h3>📖 Предыстория</h3><p>🌟 <strong>Вы — молодой предприниматель</strong>, решивший открыть свой бизнес. Стартовый капитал — <strong>2 500 000 ₽</strong>, команда энтузиастов и огромное желание добиться успеха.</p><p>📉 Рынок жесток: конкуренты не дремлют, инвесторы капризны, клиенты непредсказуемы. Сумеете ли вы вывести компанию на IPO?</p><h4>🎯 Цель игры</h4><p>Достичь <strong>80%</strong> по всем трём показателям (капитал, команда, маркетинг) и выйти на IPO. Минимум через 6 месяцев игры.</p>',
+            right: '<h3>📋 Основные правила</h3><h4>🔄 Ход</h4><p>Каждый ход — один месяц. Вы можете совершить несколько действий до нажатия «Завершить месяц».</p><h4>💀 Банкротство</h4><p>Если денег не хватит на операционные расходы — банкротство. Следите за балансом!</p><h4>⚖️ Синергия</h4><p>Метрики взаимосвязаны: команда генерирует доход, маркетинг привлекает таланты. Держите баланс — получите бонус!</p>'
         },
         {
-            left: `<h3>💰 Инвестиции (часть 1)</h3>
-                <table>
-                    <tr><th>Действие</th><th>Стоимость</th><th>Эффект</th></tr>
-                    <tr><td>👥 Найм</td><td>200 000 ₽</td><td>Команда +15%</td></tr>
-                    <tr><td>📢 Реклама</td><td>150 000 ₽</td><td>Маркетинг +15%</td></tr>
-                    <tr><td>🔬 Разработка</td><td>300 000 ₽</td><td>Все показатели +10%</td></tr>
-                    <tr><td>👨‍💻 Разработчики</td><td>150 000 ₽</td><td>Капитал +5%</td></tr>
-                    <tr><td>🎯 Маркетологи</td><td>100 000 ₽</td><td>Маркетинг +5%</td></tr>
-                    <tr><td>💼 Менеджеры</td><td>120 000 ₽</td><td>Расходы -10%</td></tr>
-                </table>`,
-            right: `<h3>💰 Инвестиции (часть 2)</h3>
-                <h4>💳 Кредит</h4>
-                <p>Получаете 500 000 ₽ прямо сейчас, но должны вернуть <strong>600 000 ₽</strong> в течение 3 месяцев. Просрочка — штраф 100 000 ₽ и удар по маркетингу.</p>
-                <h4>💰 Инвестор</h4>
-                <p>Шанс успеха = среднее ваших трёх показателей (%). При успехе — от 300 000 до 800 000 ₽. При отказе — репутация -10%.</p>
-                <h4>📅 Операционные расходы</h4>
-                <p>Каждый месяц: <code>50 000 + команда×2000 + маркетинг×1500</code> ₽. Чем сильнее компания — тем дороже её содержать!</p>`
+            left: '<h3>💰 Инвестиции</h3><table><tr><th>Действие</th><th>Стоимость</th><th>Эффект</th></tr><tr><td>👥 Найм</td><td>200 000 ₽</td><td>Команда +15%</td></tr><tr><td>📢 Реклама</td><td>150 000 ₽</td><td>Маркетинг +15%</td></tr><tr><td>🔬 Разработка</td><td>300 000 ₽</td><td>Все +10%</td></tr><tr><td>👨‍💻 Разработчики</td><td>150 000 ₽</td><td>Капитал +5%</td></tr><tr><td>🎯 Маркетологи</td><td>100 000 ₽</td><td>Маркетинг +5%</td></tr><tr><td>💼 Менеджеры</td><td>120 000 ₽</td><td>Расходы -10%</td></tr></table>',
+            right: '<h3>💳 Кредит и инвестор</h3><h4>Кредит</h4><p>Выбираете сумму (100к–500к) и срок (1–6 мес.). Возврат = сумма × 1.2. Просрочка — штраф 100 000 ₽ и репутация -15%.</p><h4>Инвестор</h4><p>Шанс успеха = среднее метрик. При успехе — от 300к до 800к ₽. При отказе — маркетинг -10%.</p><h4>Операционные расходы</h4><p>Каждый месяц: 50 000 + команда×2000 + маркетинг×1500 ₽. Менеджеры снижают на 10%.</p>'
         },
         {
-            left: `<h3>🤖 ИИ-конкурент</h3>
-                <p>«СтартТех» развивается параллельно с вами. Его капитал меняется каждый месяц по своей логике (с учётом своих стратегий).</p>
-                <p>⚠️ Если ИИ обгоняет вас больше чем на 20% по капиталу — вы теряете 10% капитала и маркетинга (отток клиентов).</p>
-                <p>🚀 Следите за шкалой «Вы vs ИИ»!</p>
-                <h4>🎯 Квесты</h4>
-                <p>Раз в несколько месяцев случается особое событие-квест. Ваш выбор определяет исход. Квесты дают крупные бонусы или несут риски.</p>`,
-            right: `<h3>📋 Случайные события</h3>
-                <table>
-                    <tr><th>Событие</th><th>Эффект</th></tr>
-                    <tr><td>🚀 Виральный успех</td><td>Капитал +30%, маркетинг +20%</td></tr>
-                    <tr><td>🏆 Премия стартапа</td><td>Капитал +20%, команда +15%, маркетинг +30%</td></tr>
-                    <tr><td>🤝 Бизнес-ангел</td><td>Капитал +40%</td></tr>
-                    <tr><td>💸 Уход инвестора</td><td>Капитал -25%, команда -5%</td></tr>
-                    <tr><td>📉 Скандал в СМИ</td><td>Капитал -15%, маркетинг -25%</td></tr>
-                    <tr><td>⚖️ Налоговая проверка</td><td>Капитал -20%, команда -10%</td></tr>
-                </table>`
+            left: '<h3>🤖 ИИ-конкуренты</h3><p>Три соперника с разными стратегиями: <strong>СтартТех</strong> (агрессивный рост), <strong>МегаКорп</strong> (стабильный), <strong>ФинТек</strong> (маркетинговый). Если любой из них обгонит вас на 20%+ — вы теряете долю рынка!</p><h4>🎭 Дилеммы</h4><p>Раз в 2–3 месяца — событие с выбором. Ваше решение влияет на все метрики.</p>',
+            right: '<h3>📋 Случайные события</h3><table><tr><th>Событие</th><th>Эффект</th></tr><tr><td>🚀 Виральный успех</td><td>Кап +30%, Мкт +20%</td></tr><tr><td>🏆 Премия стартапа</td><td>Все +15–30%</td></tr><tr><td>🤝 Бизнес-ангел</td><td>Кап +40%</td></tr><tr><td>💸 Уход инвестора</td><td>Кап -25%, Ком -5%</td></tr><tr><td>📉 Скандал в СМИ</td><td>Кап -15%, Мкт -25%</td></tr><tr><td>⚖️ Налоговая</td><td>Кап -20%, Ком -10%</td></tr></table>'
         },
         {
-            left: `<h3>🏆 Достижения</h3>
-                <ul>
-                    <li>🦄 <strong>Единорог</strong> — IPO с капиталом 100%</li>
-                    <li>⚡ <strong>Спидран</strong> — победа за 6 месяцев</li>
-                    <li>🔥 <strong>Феникс</strong> — выжить после падения ниже 10%</li>
-                    <li>🍀 <strong>Везунчик</strong> — 3 позитивных события подряд</li>
-                    <li>👑 <strong>Король</strong> — победить 3 раза</li>
-                    <li>💰 <strong>Миллионер</strong> — накопить 5 000 000 ₽</li>
-                    <li>🎲 <strong>Надёжный</strong> — взять кредит и вовремя погасить</li>
-                    <li>📈 <strong>Инвестор</strong> — привлечь инвестора 5 раз</li>
-                </ul>`,
-            right: `<h3>⚔️ Режим дуэли</h3>
-                <p>Два игрока соревнуются по очереди. Каждый делает свои действия, потом нажимает «Завершить месяц». Ход переходит ко второму.</p>
-                <h4>🏆 Победа в дуэли</h4>
-                <p>Побеждает тот, кто первым достиг IPO. Если оба завершили без IPO — побеждает тот, у кого выше капитал. Если капитал равный — быстрее достигший результата.</p>
-                <h4>💡 Стратегия</h4>
-                <p>В дуэли важно не только расти самому, но и следить за соперником. Иногда стоит рискнуть с инвестором или взять кредит для рывка!</p>`
+            left: '<h3>🏆 Достижения</h3><ul><li>🦄 <strong>Единорог</strong> — IPO с капиталом 100%</li><li>⚡ <strong>Спидран</strong> — победа за 6 месяцев</li><li>🔥 <strong>Феникс</strong> — выжить после падения ниже 10%</li><li>🍀 <strong>Везунчик</strong> — 3 позитивных события подряд</li><li>👑 <strong>Король</strong> — победить 3 раза</li><li>💰 <strong>Миллионер</strong> — накопить 5 000 000 ₽</li><li>🎲 <strong>Надёжный</strong> — взять кредит и вовремя погасить</li><li>📈 <strong>Инвестор</strong> — привлечь инвестора 5 раз</li></ul>',
+            right: '<h3>⚖️ Синергия метрик</h3><table><tr><th>Источник</th><th>Влияет на</th><th>Условие</th></tr><tr><td>👥 Команда</td><td>💰 Капитал</td><td>Команда > 30%</td></tr><tr><td>👥 Команда</td><td>📢 Маркетинг</td><td>Команда > 40%</td></tr><tr><td>📢 Маркетинг</td><td>💰 Капитал</td><td>Маркетинг > 30%</td></tr><tr><td>📢 Маркетинг</td><td>👥 Команда</td><td>Маркетинг > 60%</td></tr><tr><td>💰 Капитал</td><td>👥 Команда</td><td>Капитал > 60%</td></tr><tr><td>⚖️ Баланс</td><td>Все +бонус</td><td>Разброс < 15%</td></tr></table>'
         }
     ];
-
     function updateBookDisplay() {
-        const pg = pagesContent[currentPage];
+        var pg = pagesContent[currentPage];
         document.getElementById('leftPage').innerHTML = pg.left;
         document.getElementById('rightPage').innerHTML = pg.right;
-        document.getElementById('pageIndicator').textContent = `${currentPage + 1} / ${pagesContent.length}`;
+        document.getElementById('pageIndicator').textContent = (currentPage + 1) + ' / ' + pagesContent.length;
         document.getElementById('prevPageBtn').disabled = currentPage === 0;
         document.getElementById('nextPageBtn').disabled = currentPage === pagesContent.length - 1;
     }
     function nextPage() { if (currentPage < pagesContent.length - 1) { currentPage++; updateBookDisplay(); } }
     function prevPage() { if (currentPage > 0) { currentPage--; updateBookDisplay(); } }
 
-    // ==============================
-    // GAME STATE
-    // ==============================
+    // === PAGE NAV ===
     function showPage(page) {
-        ['game','rules','duel','advice','tasks','achievements'].forEach((p, i) => {
+        var pages = ['game','rules','duel','advice','tasks','achievements'];
+        pages.forEach(function(p, i) {
             document.getElementById(p + 'Page').classList.toggle('active-page', p === page);
             document.querySelectorAll('.nav-btn')[i].classList.toggle('active', p === page);
         });
         if (page === 'rules') { currentPage = 0; updateBookDisplay(); }
     }
 
-    let currentPlayerName = null;
-    let managerHired = false; // FIX: track manager effect
-    let currentPlayerData = { capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
-    let competitor = { name: 'СтартТех', capital: 50, team: 50, marketing: 50, month: 0 };
-    let allPlayers = [];
-    let history = [];
-    let activeQuest = null;
-    let questStep = 0;
-    let gameEnded = false;
-    let chartData = { capital: [50], team: [50], marketing: [50], months: [0] };
-    let dynamicsChart = null;
-    let winCount = 0;
-    let positiveEventStreak = 0;
-    let survivedLow = false;
-    let investorCount = 0;
-    let firstInvestmentDone = false;
-    let creditPaid = false;
-    let playerAchievements = [];
+    // === GAME STATE ===
+    var currentPlayerName = null;
+    var managerHired = false;
+    var managerLevel = 0;
+    var currentPlayerData = { capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
+    var competitor = { name: 'СтартТех', capital: 50 };
+    var allPlayers = [];
+    var gameHistory = [];
+    var activeQuest = null;
+    var questStep = 0;
+    var gameEnded = false;
+    var chartData = { capital: [50], team: [50], marketing: [50], months: [0] };
+    var dynamicsChart = null;
+    var radarChart = null;
+    var winCount = 0;
+    var positiveEventStreak = 0;
+    var survivedLow = false;
+    var investorCount = 0;
+    var firstInvestmentDone = false;
+    var creditPaid = false;
+    var playerAchievements = [];
+    var prevMetrics = { capital: 50, team: 50, marketing: 50 };
+    var activeDilemma = null;
+    var dilemmaQueue = [];
+    var aiCompetitors = [];
 
-    const eventsList = [
+    var eventsList = [
         { text: '🚀 Виральный успех в TikTok!', cap: 30, team: 0, market: 20, positive: true },
         { text: '💸 Уход ключевого инвестора', cap: -25, team: -5, market: 0, positive: false },
         { text: '👥 Конкуренты переманили сотрудников', cap: 0, team: -20, market: -5, positive: false },
@@ -1261,194 +1445,399 @@
         { text: '🤝 Партнёрство с крупным ритейлером', cap: 25, team: 0, market: 25, positive: true }
     ];
 
-    const quests = {
+    var dilemmas = [
+        {
+            title: '👔 Сотрудник требует повышения',
+            desc: 'Ваш ключевой разработчик просит поднять зарплату на 30%. Конкуренты уже сделали ему предложение.',
+            options: [
+                { label: '✅ Повысить зарплату', effect: '−150 000 ₽, Команда +10%', fn: function(p) { p.rubles -= 150000; p.team = Math.min(p.team + 10, 100); } },
+                { label: '❌ Отказать', effect: 'Команда −20%', fn: function(p) { p.team = Math.max(p.team - 20, 0); } },
+                { label: '🤝 Предложить долю', effect: 'Капитал −5%, Команда +15%', fn: function(p) { p.capital = Math.max(p.capital - 5, 0); p.team = Math.min(p.team + 15, 100); } }
+            ]
+        },
+        {
+            title: '📰 Журналист предлагает интервью',
+            desc: 'Крупное издание хочет написать о вашей компании. Вопросы могут быть неудобными.',
+            options: [
+                { label: '🎤 Дать интервью', effect: 'Маркетинг +15–20%', fn: function(p) { p.marketing = Math.min(p.marketing + (p.marketing >= 50 ? 20 : 12), 100); } },
+                { label: '🙅 Отказаться', effect: 'Маркетинг −5%', fn: function(p) { p.marketing = Math.max(p.marketing - 5, 0); } },
+                { label: '💼 Нанять PR-агентство', effect: '−200 000 ₽, Маркетинг +25%', fn: function(p) { if (p.rubles >= 200000) { p.rubles -= 200000; p.marketing = Math.min(p.marketing + 25, 100); } } }
+            ]
+        },
+        {
+            title: '🔥 Конкурент скопировал продукт',
+            desc: 'МегаКорп выпустил копию вашего продукта на 30% дешевле.',
+            options: [
+                { label: '⚡ Ускорить разработку', effect: '−300 000 ₽, Кап +15%, Ком −5%', fn: function(p) { if (p.rubles >= 300000) { p.rubles -= 300000; p.capital = Math.min(p.capital + 15, 100); p.team = Math.max(p.team - 5, 0); } } },
+                { label: '📢 Атаковать маркетингом', effect: '−150 000 ₽, Маркетинг +20%', fn: function(p) { if (p.rubles >= 150000) { p.rubles -= 150000; p.marketing = Math.min(p.marketing + 20, 100); } } },
+                { label: '⚖️ Подать в суд', effect: 'Кап ±10% (50/50)', fn: function(p) { p.capital = Math.random() > 0.5 ? Math.min(p.capital + 10, 100) : Math.max(p.capital - 5, 0); } }
+            ]
+        },
+        {
+            title: '🌍 Предложение о партнёрстве',
+            desc: 'Крупная компания предлагает совместный выход на международный рынок.',
+            options: [
+                { label: '🤝 Принять', effect: '+400 000 ₽, Мкт +15%, Кап +10%', fn: function(p) { p.rubles += 400000; p.marketing = Math.min(p.marketing + 15, 100); p.capital = Math.min(p.capital + 10, 100); } },
+                { label: '🔍 Изучить (пропустить)', effect: 'Без изменений', fn: function() {} },
+                { label: '❌ Делать самим', effect: 'Ком +20%, Мкт −10%', fn: function(p) { p.team = Math.min(p.team + 20, 100); p.marketing = Math.max(p.marketing - 10, 0); } }
+            ]
+        },
+        {
+            title: '💸 Инвестор предлагает раунд B',
+            desc: 'Венчурный фонд готов вложить 1 млн ₽, но хочет 20% компании.',
+            options: [
+                { label: '✅ Принять раунд B', effect: '+1 000 000 ₽, Кап −5%', fn: function(p) { p.rubles += 1000000; p.capital = Math.max(p.capital - 5, 0); } },
+                { label: '🤝 Торговаться (700к/10%)', effect: '+700 000 ₽, Кап −2%', fn: function(p) { p.rubles += 700000; p.capital = Math.max(p.capital - 2, 0); } },
+                { label: '❌ Отказать', effect: 'Мкт +10%', fn: function(p) { p.marketing = Math.min(p.marketing + 10, 100); } }
+            ]
+        }
+    ];
+
+    var quests = {
         bigClient: { name: 'Крупный клиент', steps: [
-            { text: 'Крупный клиент предлагает контракт на 3 месяца. Да — +20% капитала через 3 мес. Нет — +10% сейчас.' },
-            { text: 'Первый месяц контракта прошёл. Работа идёт по плану.' },
-            { text: 'Второй месяц контракта прошёл. Клиент доволен.' },
-            { text: 'Контракт выполнен успешно! Получите вознаграждение.' }
+            { text: 'Крупный клиент предлагает контракт на 3 месяца. Да — +20% капитала потом. Нет — +10% сейчас.' },
+            { text: 'Первый месяц контракта. Работа идёт по плану.' },
+            { text: 'Второй месяц. Клиент доволен.' },
+            { text: 'Контракт выполнен! Получите вознаграждение.' }
         ]},
         innovation: { name: 'Инновация', steps: [
             { text: 'Команда предлагает инвестировать 300 000 ₽ в прорывную разработку. Шанс успеха — 70%.' },
             { text: 'Результат инновации...' }
         ]},
         crisis: { name: 'Кризис', steps: [
-            { text: 'Острый кризис ликвидности! Выберите стратегию: сократить команду (-15% команды, +20% капитала) или взять срочный кредит (+400 000 ₽, +15% капитала).' }
+            { text: 'Кризис ликвидности! Выберите: сократить команду (-15% команды, +20% капитала) или взять срочный кредит (+400 000 ₽, +15% капитала).' }
         ]}
     };
 
-    const achievementsList = [
-        { id: 'unicorn', name: 'Единорог', icon: '🦄', desc: 'IPO с капиталом 100%', check: () => currentPlayerData.capital === 100 && gameEnded },
-        { id: 'speedrun', name: 'Спидран', icon: '⚡', desc: 'Победа за 6 месяцев', check: () => currentPlayerData.month <= 6 && gameEnded },
-        { id: 'phoenix', name: 'Феникс', icon: '🔥', desc: 'Выжить после падения ниже 10%', check: () => survivedLow },
-        { id: 'lucky', name: 'Везунчик', icon: '🍀', desc: '3 позитивных события подряд', check: () => positiveEventStreak >= 3 },
-        { id: 'king', name: 'Король', icon: '👑', desc: 'Победить 3 раза', check: () => winCount >= 3 },
-        { id: 'millionaire', name: 'Миллионер', icon: '💰', desc: 'Накопить 5 000 000 ₽', check: () => currentPlayerData.rubles >= 5000000 },
-        { id: 'reliable', name: 'Надёжный', icon: '🎲', desc: 'Взять кредит и вовремя погасить', check: () => creditPaid },
-        { id: 'investor', name: 'Топ-инвестор', icon: '📈', desc: 'Привлечь инвестора 5 раз', check: () => investorCount >= 5 }
+    var achievementsList = [
+        { id: 'unicorn', name: 'Единорог', icon: '🦄', desc: 'IPO с капиталом 100%', check: function() { return currentPlayerData.capital === 100 && gameEnded; } },
+        { id: 'speedrun', name: 'Спидран', icon: '⚡', desc: 'Победа за 6 месяцев', check: function() { return currentPlayerData.month <= 6 && gameEnded; } },
+        { id: 'phoenix', name: 'Феникс', icon: '🔥', desc: 'Выжить после падения ниже 10%', check: function() { return survivedLow; } },
+        { id: 'lucky', name: 'Везунчик', icon: '🍀', desc: '3 позитивных события подряд', check: function() { return positiveEventStreak >= 3; } },
+        { id: 'king', name: 'Король', icon: '👑', desc: 'Победить 3 раза', check: function() { return winCount >= 3; } },
+        { id: 'millionaire', name: 'Миллионер', icon: '💰', desc: 'Накопить 5 000 000 ₽', check: function() { return currentPlayerData.rubles >= 5000000; } },
+        { id: 'reliable', name: 'Надёжный', icon: '🎲', desc: 'Взять кредит и вовремя погасить', check: function() { return creditPaid; } },
+        { id: 'investor_ach', name: 'Топ-инвестор', icon: '📈', desc: 'Привлечь инвестора 5 раз', check: function() { return investorCount >= 5; } }
     ];
 
-    // ==============================
-    // ACHIEVEMENTS
-    // ==============================
+    var aiProfiles = [
+        { name: 'СтартТех', emoji: '🤖', color: '#ff4d6d', strategy: 'aggressive', capital: 50 },
+        { name: 'МегаКорп',  emoji: '🏦', color: '#fbbf24', strategy: 'balanced',   capital: 45 },
+        { name: 'ФинТек',    emoji: '💡', color: '#38bdf8', strategy: 'marketing',  capital: 48 }
+    ];
+
+    var officeStages = [
+        { min: 0,  emoji: '🏠',  label: 'Гараж',          sub: 'Стартап только начинается' },
+        { min: 20, emoji: '🏪',  label: 'Офис в аренду',  sub: 'Первые сотрудники' },
+        { min: 40, emoji: '🏢',  label: 'Свой офис',      sub: 'Компания растёт' },
+        { min: 60, emoji: '🏬',  label: 'Бизнес-центр',   sub: 'Серьёзный игрок рынка' },
+        { min: 75, emoji: '🏙️', label: 'Небоскрёб',      sub: 'Лидер отрасли' },
+        { min: 90, emoji: '🌍',  label: 'Глобальная штаб-квартира', sub: 'IPO на горизонте!' }
+    ];
+
+    // === ACHIEVEMENTS ===
     function loadAchievements(name) {
-        try { playerAchievements = JSON.parse(localStorage.getItem('ach_' + name) || '[]'); } catch { playerAchievements = []; }
+        try { playerAchievements = JSON.parse(localStorage.getItem('ach_' + name) || '[]'); } catch(e) { playerAchievements = []; }
         updateAchievementsUI();
     }
     function saveAchievements() {
-        try { localStorage.setItem('ach_' + currentPlayerName, JSON.stringify(playerAchievements)); } catch {}
+        try { localStorage.setItem('ach_' + currentPlayerName, JSON.stringify(playerAchievements)); } catch(e) { /* file:// — ignore */ }
     }
     function unlockAchievement(id) {
-        if (playerAchievements.includes(id)) return;
+        if (playerAchievements.indexOf(id) !== -1) return;
         playerAchievements.push(id);
         saveAchievements();
         updateAchievementsUI();
-        const ach = achievementsList.find(a => a.id === id);
+        var ach = achievementsList.find(function(a) { return a.id === id; });
         if (ach) {
-            const t = document.createElement('div');
+            var t = document.createElement('div');
             t.className = 'achievement-toast';
-            t.innerHTML = `<span style="font-size:24px">${ach.icon}</span><div><div style="font-size:11px;color:var(--accent);font-family:Unbounded,sans-serif;letter-spacing:.05em">ДОСТИЖЕНИЕ РАЗБЛОКИРОВАНО</div><div>${ach.name}</div></div>`;
+            t.innerHTML = '<span style="font-size:24px">' + ach.icon + '</span><div><div style="font-size:11px;color:var(--accent);font-family:Unbounded,sans-serif;letter-spacing:.05em">ДОСТИЖЕНИЕ!</div><div>' + ach.name + '</div></div>';
             document.body.appendChild(t);
-            setTimeout(() => t.remove(), 4000);
+            setTimeout(function() { t.remove(); }, 4000);
             addToHistory('🏆 ' + ach.icon + ' ' + ach.name + '!');
         }
     }
     function checkAllAchievements() {
-        for (const ach of achievementsList) {
-            if (!playerAchievements.includes(ach.id) && ach.check()) unlockAchievement(ach.id);
-        }
+        achievementsList.forEach(function(ach) {
+            if (playerAchievements.indexOf(ach.id) === -1 && ach.check()) unlockAchievement(ach.id);
+        });
         updateAchievementsUI();
     }
     function updateAchievementsUI() {
-        const cnt = document.getElementById('achievementsCount');
+        var cnt = document.getElementById('achievementsCount');
         if (cnt) cnt.textContent = playerAchievements.length;
-        const best = Math.max(currentPlayerData.capital, parseInt(document.getElementById('bestCapital')?.textContent || 0) || 0);
-        const bc = document.getElementById('bestCapital');
-        if (bc) bc.textContent = best;
-        const grid = document.getElementById('achievementsGrid');
+        var bc = document.getElementById('bestCapital');
+        if (bc) bc.textContent = Math.max(currentPlayerData.capital, parseInt(bc.textContent) || 0);
+        var grid = document.getElementById('achievementsGrid');
         if (!grid) return;
-        grid.innerHTML = achievementsList.map(a => `
-            <div class="achievement-item ${playerAchievements.includes(a.id) ? 'unlocked' : ''}">
-                <span class="ach-icon">${a.icon}</span>
-                <div class="ach-name">${a.name}</div>
-                <div class="ach-desc">${a.desc}</div>
-                <span class="ach-badge ${playerAchievements.includes(a.id) ? 'got' : 'not'}">${playerAchievements.includes(a.id) ? '✅ Получено' : '🔒 Заблокировано'}</span>
-            </div>
-        `).join('');
+        grid.innerHTML = achievementsList.map(function(a) {
+            var got = playerAchievements.indexOf(a.id) !== -1;
+            return '<div class="achievement-item ' + (got ? 'unlocked' : '') + '"><span class="ach-icon">' + a.icon + '</span><div class="ach-name">' + a.name + '</div><div class="ach-desc">' + a.desc + '</div><span class="ach-badge ' + (got ? 'got' : 'not') + '">' + (got ? '✅ Получено' : '🔒 Заблокировано') + '</span></div>';
+        }).join('');
     }
 
-    // ==============================
-    // UI UPDATE
-    // ==============================
+    // === OFFICE ===
+    function updateOffice() {
+        var avg = (currentPlayerData.capital + currentPlayerData.team + currentPlayerData.marketing) / 3;
+        var stage = officeStages[0];
+        for (var i = officeStages.length - 1; i >= 0; i--) {
+            if (avg >= officeStages[i].min) { stage = officeStages[i]; break; }
+        }
+        var sc = document.getElementById('officeScene');
+        var lb = document.getElementById('officeLabel');
+        var sl = document.getElementById('officeSublabel');
+        if (sc) sc.textContent = stage.emoji;
+        if (lb) lb.textContent = stage.label;
+        if (sl) sl.textContent = stage.sub;
+    }
+
+    // === NEWS ===
+    function addNews(type) {
+        var map = {
+            capital_high: ['📈 Аналитики повышают оценку <strong>{n} Inc.</strong>', '💎 <strong>{n} Inc.</strong> привлекла внимание венчурных фондов', '🏆 <strong>{n} Inc.</strong> вошла в топ-10 стартапов'],
+            team_high:    ['👥 <strong>{n} Inc.</strong> признана лучшим работодателем', '🎓 Топ-специалисты выстраиваются в очередь в <strong>{n} Inc.</strong>'],
+            marketing_high:['📢 Кампания <strong>{n} Inc.</strong> стала вирусной!', '🌟 <strong>{n} Inc.</strong> упомянули в Forbes'],
+            balance:      ['⚖️ <strong>{n} Inc.</strong> — образец сбалансированного роста'],
+            crisis:       ['⚠️ Источники сообщают о трудностях в <strong>{n} Inc.</strong>'],
+            ipo:          ['🔔 Биржа ждёт: <strong>{n} Inc.</strong> готовится к историческому IPO!']
+        };
+        var templates = map[type]; if (!templates) return;
+        var n = currentPlayerName || 'Ваша';
+        var text = templates[Math.floor(Math.random() * templates.length)].replace(/{n}/g, n);
+        var feed = document.getElementById('newsFeed'); if (!feed) return;
+        var item = document.createElement('div');
+        item.className = 'news-item';
+        var icons = { capital_high:'📈', team_high:'👥', marketing_high:'📢', balance:'⚖️', crisis:'⚠️', ipo:'🔔' };
+        item.innerHTML = '<span class="news-icon">' + (icons[type]||'📰') + '</span><div><div class="news-text">' + text + '</div><div class="news-time">Месяц ' + currentPlayerData.month + '</div></div>';
+        feed.insertBefore(item, feed.firstChild);
+        while (feed.children.length > 6) feed.removeChild(feed.lastChild);
+    }
+    function checkAndAddNews() {
+        var p = currentPlayerData;
+        var maxDiff = Math.max(p.capital, p.team, p.marketing) - Math.min(p.capital, p.team, p.marketing);
+        if (p.capital >= 80 && p.team >= 80 && p.marketing >= 80) addNews('ipo');
+        else if (p.capital >= 70) addNews('capital_high');
+        else if (p.team >= 70) addNews('team_high');
+        else if (p.marketing >= 70) addNews('marketing_high');
+        else if (maxDiff <= 10 && p.capital >= 50) addNews('balance');
+        else if (p.capital <= 20 || p.rubles < 200000) addNews('crisis');
+    }
+
+    // === AI COMPETITORS ===
+    function initAICompetitors() {
+        aiCompetitors = aiProfiles.map(function(p) { return { name: p.name, emoji: p.emoji, color: p.color, strategy: p.strategy, capital: p.capital, month: 0 }; });
+        updateAICompetitorsUI();
+    }
+    function updateAICompetitors() {
+        aiCompetitors.forEach(function(ai) {
+            var delta;
+            if (ai.strategy === 'aggressive') delta = ai.month < 4 ? Math.floor(Math.random() * 12) + 3 : Math.floor(Math.random() * 7) - 1;
+            else if (ai.strategy === 'balanced') delta = Math.floor(Math.random() * 8) + 1;
+            else delta = Math.floor(Math.random() * 6) + (ai.month % 2 === 0 ? 4 : -1);
+            ai.capital = Math.min(Math.max(ai.capital + delta, 0), 100);
+            ai.month++;
+        });
+        updateAICompetitorsUI();
+        // check leader vs player
+        var topAI = Math.max.apply(null, aiCompetitors.map(function(a) { return a.capital; }));
+        var w = document.getElementById('competitorWarning');
+        if (w) {
+            var diff = topAI - currentPlayerData.capital;
+            if (diff > 20) {
+                w.innerHTML = '⚠️ Конкурент обогнал! Потеря доли рынка!';
+                w.className = 'competitor-msg danger';
+                currentPlayerData.capital = Math.max(currentPlayerData.capital - 10, 0);
+                currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
+            } else if (diff > 10) { w.innerHTML = '⚠️ Конкуренты дышат в спину!'; w.className = 'competitor-msg warn'; }
+            else if (diff < -10) { w.innerHTML = '🚀 Вы значительно обгоняете всех конкурентов!'; w.className = 'competitor-msg good'; }
+            else { w.innerHTML = '🤖 Конкуренты: ' + aiCompetitors.map(function(a){ return a.emoji+' '+a.capital+'%'; }).join(' · '); w.className = 'competitor-msg'; }
+        }
+    }
+    function updateAICompetitorsUI() {
+        var row = document.getElementById('aiCompetitorsRow'); if (!row) return;
+        row.innerHTML = aiCompetitors.map(function(ai) {
+            return '<div class="competitor-chip" title="' + ai.strategy + '"><div class="chip-dot" style="background:' + ai.color + '"></div><span>' + ai.emoji + ' ' + ai.name + ': ' + ai.capital + '%</span></div>';
+        }).join('');
+        updateLeaderboard();
+    }
+
+    // === RADAR CHART ===
+    function initRadar() {
+        try {
+            if (typeof Chart === 'undefined') return;
+            var el = document.getElementById('radarChart'); if (!el) return;
+            var ctx = el.getContext('2d');
+            if (radarChart) { try { radarChart.destroy(); } catch(e){} radarChart = null; }
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: { labels: ['Капитал', 'Команда', 'Маркетинг'], datasets: [{ label: 'Ваш бизнес', data: [50, 50, 50], borderColor: '#7c5cfc', backgroundColor: 'rgba(124,92,252,0.15)', pointBackgroundColor: '#7c5cfc', pointRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { color: '#888aaa', font: { size: 9 }, stepSize: 25 }, grid: { color: 'rgba(255,255,255,0.06)' }, angleLines: { color: 'rgba(255,255,255,0.06)' }, pointLabels: { color: '#888aaa', font: { size: 10 } } } }, plugins: { legend: { display: false } } }
+            });
+        } catch(e) { console.warn('Radar init:', e.message); }
+    }
+    function updateRadar() {
+        try { if (!radarChart) return; radarChart.data.datasets[0].data = [currentPlayerData.capital, currentPlayerData.team, currentPlayerData.marketing]; radarChart.update(); } catch(e) {}
+    }
+
+    // === DILEMMAS ===
+    function maybeShowDilemma() {
+        if (activeDilemma || currentPlayerData.month < 2) return;
+        if (currentPlayerData.month % 3 !== 0 && Math.random() > 0.3) return;
+        var unused = dilemmas.filter(function(d, i) { return dilemmaQueue.indexOf(i) === -1; });
+        if (unused.length === 0) { dilemmaQueue = []; return; }
+        var d = unused[Math.floor(Math.random() * unused.length)];
+        dilemmaQueue.push(dilemmas.indexOf(d));
+        showDilemma(d);
+    }
+    function showDilemma(d) {
+        activeDilemma = d;
+        document.getElementById('dilemmaTitle').textContent = d.title;
+        document.getElementById('dilemmaDesc').textContent = d.desc;
+        document.getElementById('dilemmaOptions').innerHTML = d.options.map(function(o, i) {
+            return '<div class="dilemma-opt" onclick="chooseDilemma(' + i + ')"><div class="dilemma-opt-label">' + o.label + '</div><div class="dilemma-opt-effect">' + o.effect + '</div></div>';
+        }).join('');
+        document.getElementById('dilemmaModal').classList.add('open');
+    }
+    function chooseDilemma(idx) {
+        if (!activeDilemma) return;
+        var opt = activeDilemma.options[idx];
+        opt.fn(currentPlayerData);
+        currentPlayerData.capital = Math.min(Math.max(currentPlayerData.capital, 0), 100);
+        currentPlayerData.team = Math.min(Math.max(currentPlayerData.team, 0), 100);
+        currentPlayerData.marketing = Math.min(Math.max(currentPlayerData.marketing, 0), 100);
+        addToHistory('🎭 ' + activeDilemma.title + ' → ' + opt.label);
+        document.getElementById('dilemmaModal').classList.remove('open');
+        activeDilemma = null;
+        updateUI(); updatePlayerInLeaderboard(); checkAllAchievements();
+    }
+
+    // === SYNERGY ===
+    function applySynergy() {
+        var p = currentPlayerData;
+        var logs = [];
+        var b1 = Math.floor(Math.max(p.team - 30, 0) / 10);
+        if (b1 > 0) { p.capital = Math.min(p.capital + b1, 100); logs.push('👥→💰 Команда генерирует +' + b1 + '% капитала'); }
+        var b2 = Math.floor(Math.max(p.team - 40, 0) / 20);
+        if (b2 > 0) { p.marketing = Math.min(p.marketing + b2, 100); logs.push('👥→📢 Команда усиливает маркетинг +' + b2 + '%'); }
+        var b3 = Math.floor(Math.max(p.marketing - 30, 0) / 10);
+        if (b3 > 0) { p.capital = Math.min(p.capital + b3, 100); logs.push('📢→💰 Маркетинг привлекает клиентов +' + b3 + '%'); }
+        if (p.marketing >= 60) { var b4 = Math.floor((p.marketing - 60) / 20) + 1; p.team = Math.min(p.team + b4, 100); logs.push('📢→👥 Бренд привлекает таланты +' + b4 + '%'); }
+        if (p.capital >= 60) { var b5 = Math.floor((p.capital - 60) / 20) + 1; p.team = Math.min(p.team + b5, 100); logs.push('💰→👥 Капитал удерживает команду +' + b5 + '%'); }
+        var avg = (p.capital + p.team + p.marketing) / 3;
+        var maxDiff = Math.max(p.capital, p.team, p.marketing) - Math.min(p.capital, p.team, p.marketing);
+        if (maxDiff <= 15 && avg >= 50) {
+            var bonus = Math.round(avg / 25);
+            p.capital = Math.min(p.capital + bonus, 100); p.team = Math.min(p.team + bonus, 100); p.marketing = Math.min(p.marketing + bonus, 100);
+            logs.push('⚖️ Синергия баланса: все +' + bonus + '%');
+        } else if (maxDiff > 30) {
+            logs.push('⚖️ Разброс ' + maxDiff + '% — синергия не работает в полную силу');
+        }
+        logs.forEach(function(l) { addToHistory(l); });
+    }
+
+    // === UI UPDATE ===
     function updateUI() {
+        // Animate changes
+        ['capital', 'team', 'marketing'].forEach(function(key) {
+            var el = document.getElementById(key + 'Value');
+            if (!el) return;
+            if (currentPlayerData[key] > prevMetrics[key]) { el.classList.add('up'); setTimeout(function() { el.classList.remove('up'); }, 800); }
+            else if (currentPlayerData[key] < prevMetrics[key]) { el.classList.add('down'); setTimeout(function() { el.classList.remove('down'); }, 800); }
+        });
+        prevMetrics = { capital: currentPlayerData.capital, team: currentPlayerData.team, marketing: currentPlayerData.marketing };
+
         document.getElementById('capitalValue').textContent = currentPlayerData.capital;
         document.getElementById('teamValue').textContent = currentPlayerData.team;
         document.getElementById('marketingValue').textContent = currentPlayerData.marketing;
         document.getElementById('monthValue').textContent = currentPlayerData.month;
         document.getElementById('rublesValue').textContent = currentPlayerData.rubles.toLocaleString('ru-RU') + ' ₽';
 
-        // Risk: low when metrics are high. Formula: % chance of bankruptcy ≈ debt vs savings
-        const riskVal = Math.max(0, Math.min(100, Math.round(100 - (currentPlayerData.capital + currentPlayerData.team + currentPlayerData.marketing) / 3 * 0.7)));
-        document.getElementById('riskValue').textContent = riskVal;
-        document.getElementById('riskBar').style.width = riskVal + '%';
-
+        var risk = Math.max(0, Math.min(100, Math.round(100 - (currentPlayerData.capital + currentPlayerData.team + currentPlayerData.marketing) / 3 * 0.7)));
+        document.getElementById('riskValue').textContent = risk;
+        document.getElementById('riskBar').style.width = risk + '%';
         document.getElementById('capitalBar').style.width = currentPlayerData.capital + '%';
         document.getElementById('teamBar').style.width = currentPlayerData.team + '%';
         document.getElementById('marketingBar').style.width = currentPlayerData.marketing + '%';
-        document.getElementById('rublesValue').textContent = currentPlayerData.rubles.toLocaleString('ru-RU') + ' ₽';
 
-        // IPO progress
-        const ipoProgress = Math.min(100, Math.round(Math.min(currentPlayerData.capital, currentPlayerData.team, currentPlayerData.marketing) / 80 * 100));
+        var ipoProgress = Math.min(100, Math.round(Math.min(currentPlayerData.capital, currentPlayerData.team, currentPlayerData.marketing) / 80 * 100));
         document.getElementById('ipoBar').style.width = ipoProgress + '%';
         document.getElementById('ipoPercent').textContent = ipoProgress + '%';
 
-        // VS bar
-        const total = currentPlayerData.capital + competitor.capital;
-        const playerFrac = total > 0 ? (currentPlayerData.capital / total) * 100 : 50;
-        document.getElementById('vsFillPlayer').style.width = playerFrac + '%';
+        var topAI = aiCompetitors.length ? Math.max.apply(null, aiCompetitors.map(function(a) { return a.capital; })) : 50;
+        var total = currentPlayerData.capital + topAI;
+        var frac = total > 0 ? (currentPlayerData.capital / total) * 100 : 50;
+        document.getElementById('vsFillPlayer').style.width = frac + '%';
         document.getElementById('vsPlayerValue').textContent = currentPlayerData.capital + '%';
-        document.getElementById('vsAIValue').textContent = competitor.capital + '%';
+        document.getElementById('vsAIValue').textContent = topAI + '%';
 
-        // Moods
-        const moodFn = v => v >= 80 ? '🤑' : v >= 60 ? '😊' : v >= 40 ? '😐' : v >= 20 ? '😟' : '😭';
+        var moodFn = function(v) { return v >= 80 ? '🤑' : v >= 60 ? '😊' : v >= 40 ? '😐' : v >= 20 ? '😟' : '😭'; };
         document.getElementById('capitalMood').textContent = moodFn(currentPlayerData.capital);
         document.getElementById('teamMood').textContent = moodFn(currentPlayerData.team);
         document.getElementById('marketingMood').textContent = moodFn(currentPlayerData.marketing);
 
+        updateOffice();
+        updateRadar();
         updateChart();
+        checkAllAchievements();
     }
 
     function updateChart() {
-        if (!dynamicsChart) return;
-        chartData.capital.push(currentPlayerData.capital);
-        chartData.team.push(currentPlayerData.team);
-        chartData.marketing.push(currentPlayerData.marketing);
-        chartData.months.push(currentPlayerData.month);
-        if (chartData.months.length > 20) {
-            chartData.capital.shift(); chartData.team.shift();
-            chartData.marketing.shift(); chartData.months.shift();
-        }
-        dynamicsChart.data.datasets[0].data = [...chartData.capital];
-        dynamicsChart.data.datasets[1].data = [...chartData.team];
-        dynamicsChart.data.datasets[2].data = [...chartData.marketing];
-        dynamicsChart.data.labels = chartData.months.map(m => 'М' + m);
-        dynamicsChart.update();
+        try {
+            if (!dynamicsChart) return;
+            chartData.capital.push(currentPlayerData.capital); chartData.team.push(currentPlayerData.team); chartData.marketing.push(currentPlayerData.marketing); chartData.months.push(currentPlayerData.month);
+            if (chartData.months.length > 20) { chartData.capital.shift(); chartData.team.shift(); chartData.marketing.shift(); chartData.months.shift(); }
+            dynamicsChart.data.datasets[0].data = chartData.capital.slice();
+            dynamicsChart.data.datasets[1].data = chartData.team.slice();
+            dynamicsChart.data.datasets[2].data = chartData.marketing.slice();
+            dynamicsChart.data.labels = chartData.months.map(function(m) { return 'М' + m; });
+            dynamicsChart.update();
+        } catch(e) {}
     }
 
     function initChart() {
-        const ctx = document.getElementById('dynamicsChart').getContext('2d');
-        if (dynamicsChart) dynamicsChart.destroy();
-        dynamicsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['М0'],
-                datasets: [
+        try {
+            if (typeof Chart === 'undefined') return;
+            var el = document.getElementById('dynamicsChart'); if (!el) return;
+            var ctx = el.getContext('2d');
+            if (dynamicsChart) { try { dynamicsChart.destroy(); } catch(e){} dynamicsChart = null; }
+            dynamicsChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: ['М0'], datasets: [
                     { label: 'Капитал', data: [50], borderColor: '#00c896', backgroundColor: 'rgba(0,200,150,0.08)', tension: 0.4, fill: true, pointRadius: 2 },
                     { label: 'Команда', data: [50], borderColor: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.08)', tension: 0.4, fill: true, pointRadius: 2 },
                     { label: 'Маркетинг', data: [50], borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.08)', tension: 0.4, fill: true, pointRadius: 2 }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: {
-                    legend: { labels: { color: '#888aaa', font: { size: 10 }, boxWidth: 10 } }
-                },
-                scales: {
-                    x: { ticks: { color: '#888aaa', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-                    y: { min: 0, max: 100, ticks: { color: '#888aaa', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } }
-                }
-            }
-        });
+                ]},
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#888aaa', font: { size: 10 }, boxWidth: 10 } } }, scales: { x: { ticks: { color: '#888aaa', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { min: 0, max: 100, ticks: { color: '#888aaa', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+            });
+        } catch(e) { console.warn('Chart init:', e.message); }
     }
 
     function updateLeaderboard() {
-        const container = document.getElementById('playerList');
-        const participants = [...allPlayers];
-        const aiIdx = participants.findIndex(p => p.name === '🤖 СтартТех');
-        if (aiIdx === -1) participants.push({ name: '🤖 СтартТех', capital: competitor.capital, month: competitor.month, isAI: true });
-        else { participants[aiIdx].capital = competitor.capital; participants[aiIdx].month = competitor.month; }
-        participants.sort((a, b) => b.capital - a.capital);
-
-        container.innerHTML = participants.map((p, i) => {
-            const rank = i === 0 ? '👑' : p.capital >= 80 ? '🦄' : p.capital >= 50 ? '🚀' : p.capital <= 0 ? '💀' : '📈';
-            const isYou = !p.isAI && p.name === currentPlayerName;
-            return `<div class="player-item ${p.isAI ? 'is-ai' : ''} ${isYou ? 'is-you' : ''}">
-                <div class="player-name"><span class="player-rank">${rank}</span>${p.isAI ? '🤖 ' : ''}${p.name}${isYou ? ' <span style="color:var(--accent);font-size:10px">(Я)</span>' : ''}</div>
-                <div class="player-stats">💰${p.capital}% · М${p.month}</div>
-            </div>`;
+        var container = document.getElementById('playerList'); if (!container) return;
+        var participants = allPlayers.slice();
+        aiCompetitors.forEach(function(ai) {
+            participants.push({ name: ai.emoji + ' ' + ai.name, capital: ai.capital, month: ai.month, isAI: true });
+        });
+        participants.sort(function(a, b) { return b.capital - a.capital; });
+        container.innerHTML = participants.map(function(p) {
+            var rank = p.capital >= 80 ? '🦄' : p.capital >= 60 ? '👑' : p.capital >= 40 ? '🚀' : p.capital <= 0 ? '💀' : '📈';
+            var isYou = !p.isAI && p.name === currentPlayerName;
+            return '<div class="player-item ' + (p.isAI ? 'is-ai' : '') + ' ' + (isYou ? 'is-you' : '') + '"><div class="player-name"><span>' + rank + '</span>' + p.name + (isYou ? ' <span style="color:var(--accent);font-size:10px">(Я)</span>' : '') + '</div><div class="player-stats">💰' + p.capital + '% · М' + p.month + '</div></div>';
         }).join('');
     }
 
     function updatePlayerInLeaderboard() {
-        const p = allPlayers.find(p => p.name === currentPlayerName);
+        var p = allPlayers.find(function(p) { return p.name === currentPlayerName; });
         if (p) { p.capital = currentPlayerData.capital; p.month = currentPlayerData.month; }
         updateLeaderboard();
     }
 
     function addToHistory(text) {
-        history.unshift(`М${currentPlayerData.month}: ${text}`);
-        if (history.length > 15) history.pop();
-        document.getElementById('historyList').innerHTML = history.map(h => `<div class="history-item">${h}</div>`).join('');
+        gameHistory.unshift('М' + currentPlayerData.month + ': ' + text);
+        if (gameHistory.length > 15) gameHistory.pop();
+        var el = document.getElementById('historyList'); if (!el) return;
+        el.innerHTML = gameHistory.map(function(h) { return '<div class="history-item">' + h + '</div>'; }).join('');
     }
 
     function applyAction(cost, effect) {
@@ -1458,67 +1847,45 @@
         if (effect.team) currentPlayerData.team = Math.min(currentPlayerData.team + effect.team, 100);
         if (effect.market) currentPlayerData.marketing = Math.min(currentPlayerData.marketing + effect.market, 100);
         updateUI(); updatePlayerInLeaderboard();
-        if (!firstInvestmentDone && (effect.cap || effect.team || effect.market)) { firstInvestmentDone = true; checkAllAchievements(); }
         return true;
     }
 
-    // ==============================
-    // GAME ACTIONS
-    // ==============================
+    // === GAME ACTIONS ===
     function makeMove(action) {
         if (!currentPlayerName || gameEnded) return;
-        switch (action) {
-            case 'hire':
-                if (applyAction(200000, { team: 15 })) addToHistory('👥 Найм: команда +15%');
-                break;
-            case 'advertise':
-                if (applyAction(150000, { market: 15 })) addToHistory('📢 Реклама: маркетинг +15%');
-                break;
-            case 'develop':
-                if (applyAction(300000, { cap: 10, team: 10, market: 10 })) addToHistory('🔬 Разработка: все +10%');
-                break;
-            case 'investor': attractInvestor(); break;
-            case 'credit': takeCredit(); break;
-            case 'repay': repayCredit(); break;
-            case 'hireDevs':
-                if (applyAction(150000, { cap: 5 })) addToHistory('👨‍💻 Разработчики: качество +5%');
-                break;
-            case 'hireMarketers':
-                if (applyAction(100000, { market: 5 })) addToHistory('🎯 Маркетологи: узнаваемость +5%');
-                break;
-            // FIX: менеджеры теперь реально снижают расходы через флаг
-            case 'hireManagers':
-                if (currentPlayerData.rubles < 120000) { addToHistory('❌ Не хватает 120 000 ₽'); break; }
-                currentPlayerData.rubles -= 120000;
-                managerHired = true;
-                addToHistory('💼 Менеджеры наняты: операционные расходы -10%');
-                updateUI(); updatePlayerInLeaderboard();
-                break;
-            case 'endMonth': endMonth(); break;
-        }
+        if (action === 'investor') { attractInvestor(); return; }
+        if (action === 'repay') { repayCredit(); return; }
+        if (action === 'endMonth') { endMonth(); return; }
     }
+
+    var lastInvestorMonth = -3; // кулдаун: нельзя звать инвестора чаще раза в 2 месяца
 
     function attractInvestor() {
-        const chance = Math.floor((currentPlayerData.team + currentPlayerData.marketing + currentPlayerData.capital) / 3);
-        if (Math.random() * 100 <= chance) {
-            const inv = Math.floor(Math.random() * 500000 + 300000);
-            currentPlayerData.rubles += inv;
-            addToHistory('🎉 Инвестор вложил ' + inv.toLocaleString('ru-RU') + ' ₽');
-            investorCount++;
-            checkAllAchievements();
-        } else {
-            currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
-            addToHistory('😔 Инвестор отказал, репутация -10%');
+        // Кулдаун 2 месяца
+        if (currentPlayerData.month - lastInvestorMonth < 2) {
+            addToHistory('⏳ Инвестор ещё не готов к новой встрече (подождите ' + (2 - (currentPlayerData.month - lastInvestorMonth)) + ' мес.)');
+            return;
         }
-        updateUI(); updatePlayerInLeaderboard();
-    }
+        // Шанс = среднее метрик / 1.8 — труднее чем раньше (было / 1.0)
+        var avg = (currentPlayerData.team + currentPlayerData.marketing + currentPlayerData.capital) / 3;
+        var chance = Math.floor(avg / 1.8);
+        lastInvestorMonth = currentPlayerData.month;
 
-    function takeCredit() {
-        if (currentPlayerData.credit_amount > 0) { addToHistory('❌ Уже есть активный кредит'); return; }
-        currentPlayerData.credit_amount = 600000;
-        currentPlayerData.credit_deadline = currentPlayerData.month + 3;
-        currentPlayerData.rubles += 500000;
-        addToHistory('💳 Кредит 500 000 ₽. Вернуть 600 000 ₽ до месяца ' + currentPlayerData.credit_deadline);
+        if (Math.random() * 100 <= chance) {
+            // Сумма зависит от стадии: ранняя игра — меньше денег
+            var base = currentPlayerData.month < 4 ? 100000 : currentPlayerData.month < 8 ? 180000 : 250000;
+            var inv = Math.floor(Math.random() * base + base * 0.5);
+            // Бонус если метрики высокие
+            if (avg >= 70) inv = Math.round(inv * 1.3);
+            currentPlayerData.rubles += inv;
+            addToHistory('🎉 Инвестор вложил ' + inv.toLocaleString('ru-RU') + ' ₽ (шанс был ' + chance + '%)');
+            investorCount++;
+        } else {
+            // Штраф чуть строже: -10% маркетинга И небольшой откат капитала
+            currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
+            currentPlayerData.capital = Math.max(currentPlayerData.capital - 3, 0);
+            addToHistory('😔 Инвестор отказал (шанс был ' + chance + '%). Репутация -10%, капитал -3%');
+        }
         updateUI(); updatePlayerInLeaderboard();
     }
 
@@ -1533,647 +1900,662 @@
         updateUI(); updatePlayerInLeaderboard();
     }
 
-    // FIX: ИИ-конкурент стал умнее — стратегически улучшает самый слабый показатель
-    function updateCompetitor() {
-        // Разные стратегии в зависимости от месяца
-        const aiMonth = competitor.month;
-        let delta;
-        if (aiMonth < 3) { // ранняя игра: агрессивный рост
-            delta = Math.floor(Math.random() * 12) + 2;
-        } else if (competitor.capital < 50) { // догоняет
-            delta = Math.floor(Math.random() * 10);
-        } else { // поддержание лидерства
-            delta = Math.floor(Math.random() * 8) - 1;
-        }
-        competitor.capital = Math.min(Math.max(competitor.capital + delta, 0), 100);
-        competitor.month++;
-
-        const diff = competitor.capital - currentPlayerData.capital;
-        const w = document.getElementById('competitorWarning');
-        if (diff > 20) {
-            w.innerHTML = '⚠️ ИИ-конкурент ОБОГНАЛ! Потеря доли рынка!';
-            w.className = 'competitor-msg danger';
-            currentPlayerData.capital = Math.max(currentPlayerData.capital - 10, 0);
-            currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 10, 0);
-            updateUI();
-        } else if (diff > 10) {
-            w.innerHTML = '⚠️ «СтартТех» дышит в спину! Капитал: ' + competitor.capital + '%';
-            w.className = 'competitor-msg warn';
-        } else if (diff < -10) {
-            w.innerHTML = '🚀 Вы значительно обгоняете ИИ-конкурента!';
-            w.className = 'competitor-msg good';
-        } else {
-            w.innerHTML = '🤖 ИИ-конкурент «СтартТех» — Капитал: ' + competitor.capital + '%';
-            w.className = 'competitor-msg';
-        }
-        updateLeaderboard(); updateUI();
-    }
-
-    function startQuest() {
-        if (activeQuest !== null) return;
-        if (Math.random() > 0.18) return;
-        const names = Object.keys(quests);
-        activeQuest = names[Math.floor(Math.random() * names.length)];
-        questStep = 0;
-        showQuest();
-    }
-
-    function showQuest() {
-        if (!activeQuest) return;
-        const q = quests[activeQuest];
-        document.getElementById('questBlock').style.display = 'block';
-        document.getElementById('questText').innerHTML = `<strong>${q.name}:</strong> ${q.steps[questStep].text}`;
-        const btns = document.getElementById('questButtons');
-        btns.innerHTML = '';
-        if (activeQuest === 'bigClient') {
-            if (questStep === 0) btns.innerHTML = `<button class="btn btn-success" onclick="questChoice('yes')">✅ Подписать контракт</button><button class="btn btn-ghost" onclick="questChoice('no')">❌ Отказать (+10% сейчас)</button>`;
-            else if (questStep < 3) btns.innerHTML = `<button class="btn btn-ghost" onclick="questNext()">📅 Следующий месяц</button>`;
-            else btns.innerHTML = `<button class="btn btn-success" onclick="questNext()">🎉 Забрать +20% капитала</button>`;
-        } else if (activeQuest === 'innovation') {
-            if (questStep === 0) btns.innerHTML = `<button class="btn btn-success" onclick="questChoice('invest')">🔬 Инвестировать 300 000 ₽</button><button class="btn btn-ghost" onclick="questChoice('skip')">❌ Пропустить</button>`;
-            else btns.innerHTML = `<button class="btn btn-ghost" onclick="questNext()">🔍 Узнать результат</button>`;
-        } else if (activeQuest === 'crisis') {
-            btns.innerHTML = `<button class="btn btn-danger" onclick="questChoice('cut')">✂️ Сократить команду</button><button class="btn btn-primary" onclick="questChoice('credit')">🏦 Взять кредит</button>`;
-        }
-    }
-
-    function questChoice(choice) {
-        if (activeQuest === 'bigClient') {
-            if (choice === 'yes') { questStep = 1; addToHistory('✅ Контракт на 3 мес. подписан!'); }
-            else { currentPlayerData.capital = Math.min(currentPlayerData.capital + 10, 100); updateUI(); addToHistory('💰 Контракт отклонён, +10% капитала сразу'); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; }
-        } else if (activeQuest === 'innovation') {
-            if (choice === 'invest') {
-                if (currentPlayerData.rubles >= 300000) { currentPlayerData.rubles -= 300000; questStep = 1; addToHistory('🔬 Инвестиции в инновацию сделаны'); updateUI(); }
-                else { addToHistory('❌ Недостаточно средств для инновации'); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; }
-            } else { addToHistory('😔 Идея отклонена'); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; }
-        } else if (activeQuest === 'crisis') {
-            if (choice === 'cut') { currentPlayerData.team = Math.max(currentPlayerData.team - 15, 0); currentPlayerData.capital = Math.min(currentPlayerData.capital + 20, 100); addToHistory('✂️ Расходы сокращены: команда -15%, капитал +20%'); }
-            else {
-                // FIX: кредит в квесте — единая сумма 400к, не создаёт отдельный кредитный долг
-                currentPlayerData.rubles += 400000;
-                currentPlayerData.capital = Math.min(currentPlayerData.capital + 15, 100);
-                addToHistory('🏦 Антикризисный кредит 400 000 ₽ получен');
-            }
-            activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI();
-        }
-        if (activeQuest !== null) showQuest();
-        updateUI(); updatePlayerInLeaderboard();
-        checkAllAchievements();
-    }
-
-    function questNext() {
-        if (activeQuest === 'bigClient') {
-            if (questStep === 3) {
-                currentPlayerData.capital = Math.min(currentPlayerData.capital + 20, 100);
-                addToHistory('🎉 Контракт выполнен! Капитал +20%');
-                activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI();
-            } else { questStep++; showQuest(); }
-        } else if (activeQuest === 'innovation') {
-            if (questStep === 1) {
-                const success = Math.random() < 0.7;
-                if (success) { currentPlayerData.capital = Math.min(currentPlayerData.capital + 25, 100); currentPlayerData.team = Math.min(currentPlayerData.team + 15, 100); currentPlayerData.marketing = Math.min(currentPlayerData.marketing + 20, 100); addToHistory('🚀 ИННОВАЦИЯ УСПЕШНА! Все показатели выросли!'); }
-                else { addToHistory('😞 Инновация не принесла результата'); }
-                activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI();
-            }
-        }
-        updatePlayerInLeaderboard();
-        checkAllAchievements();
-    }
-
-    function showGameEndModal(isWin) {
-        gameEnded = true;
-        const modal = document.getElementById('gameModal');
-        const box = document.getElementById('gameModalBox');
-        const title = document.getElementById('gameModalTitle');
-        const body = document.getElementById('gameModalBody');
-        modal.style.display = 'flex';
-        if (isWin) {
-            box.className = 'modal-box win';
-            title.className = 'modal-title win';
-            title.innerHTML = '🏆 ПОБЕДА! Выход на IPO!';
-            body.innerHTML = `Вы вывели компанию на IPO за <strong>${currentPlayerData.month}</strong> месяцев.<br>Финальный капитал: <strong>${currentPlayerData.capital}%</strong>`;
-            addToHistory('🏆 ПОБЕДА — ВЫХОД НА IPO!');
-            winCount++;
-            canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.6 }, colors: ['#7c5cfc','#00e5c0','#fbbf24','#ff4d6d'] });
-            setTimeout(() => canvasConfetti({ particleCount: 500, spread: 160, origin: { y: 0.4 } }), 300);
-            checkAllAchievements();
-        } else {
-            box.className = 'modal-box lose';
-            title.className = 'modal-title lose';
-            title.innerHTML = '💀 Банкротство';
-            body.innerHTML = `Компания продержалась <strong>${currentPlayerData.month}</strong> месяцев.<br>Попробуйте снова!`;
-            addToHistory('💀 БАНКРОТСТВО');
-        }
-    }
-
-    function closeModalAndReset() {
-        document.getElementById('gameModal').style.display = 'none';
-        resetGame(); gameEnded = false;
-    }
-
     function endMonth() {
         if (gameEnded) return;
-
-        // Credit overdue
         if (currentPlayerData.credit_amount > 0 && currentPlayerData.month >= currentPlayerData.credit_deadline) {
             currentPlayerData.rubles -= 100000;
             currentPlayerData.marketing = Math.max(currentPlayerData.marketing - 15, 0);
             currentPlayerData.credit_amount = 0;
             addToHistory('⚠️ ПРОСРОЧКА КРЕДИТА! Штраф 100 000 ₽, репутация -15%');
-            updateUI();
         }
-
-        // FIX: менеджеры снижают расходы
-        const discount = managerHired ? 0.9 : 1.0;
-        const cost = Math.round((50000 + currentPlayerData.team * 2000 + currentPlayerData.marketing * 1500) * discount);
+        var discount = managerHired ? 0.9 : 1.0;
+        var cost = Math.round((50000 + currentPlayerData.team * 2000 + currentPlayerData.marketing * 1500) * discount);
         if (currentPlayerData.rubles < cost) { showGameEndModal(false); return; }
         currentPlayerData.rubles -= cost;
 
-        // Random event
-        const e = eventsList[Math.floor(Math.random() * eventsList.length)];
+        var e = eventsList[Math.floor(Math.random() * eventsList.length)];
         currentPlayerData.capital = Math.min(Math.max(currentPlayerData.capital + e.cap, 0), 100);
         currentPlayerData.team = Math.min(Math.max(currentPlayerData.team + e.team, 0), 100);
         currentPlayerData.marketing = Math.min(Math.max(currentPlayerData.marketing + e.market, 0), 100);
-        addToHistory(`${e.text} (💰${e.cap}% 👥${e.team}% 📢${e.market}%)`);
-
-        const evBox = document.getElementById('eventMessage');
+        addToHistory(e.text + ' (💰' + (e.cap >= 0 ? '+' : '') + e.cap + '% 👥' + (e.team >= 0 ? '+' : '') + e.team + '% 📢' + (e.market >= 0 ? '+' : '') + e.market + '%)');
+        var evBox = document.getElementById('eventMessage');
         evBox.textContent = e.text;
         evBox.className = 'event-box ' + (e.positive ? 'positive' : 'negative');
 
         if (e.positive) { positiveEventStreak++; if (positiveEventStreak >= 3) checkAllAchievements(); }
         else { positiveEventStreak = 0; }
+        if (currentPlayerData.capital <= 10) survivedLow = true;
 
-        if (currentPlayerData.capital <= 10 && !survivedLow) survivedLow = true;
-        if (survivedLow && currentPlayerData.capital >= 50) { checkAllAchievements(); survivedLow = false; }
+        applySynergy();
+        updateAICompetitors();
+        checkAndAddNews();
 
-        updateCompetitor();
         currentPlayerData.month++;
         updateUI(); updatePlayerInLeaderboard();
         startQuest();
+        maybeShowDilemma();
 
-        const tips = ['💡 Инвестируй в разработку — окупается!', '💡 Следи за ИИ-конкурентом!', '💡 Кредит помогает, но возвращай вовремя!', '💡 Менеджеры снижают расходы — выгодная инвестиция.', '💡 Маркетинг+Команда = меньше риска банкротства.'];
-        document.getElementById('mascotTip').textContent = tips[Math.floor(Math.random() * tips.length)];
+        var p = currentPlayerData;
+        var maxDiff = Math.max(p.capital, p.team, p.marketing) - Math.min(p.capital, p.team, p.marketing);
+        var tip;
+        if (maxDiff > 25) {
+            var weakest = (p.capital <= p.team && p.capital <= p.marketing) ? 'капитал' : (p.team <= p.marketing ? 'команду' : 'маркетинг');
+            tip = '⚖️ Разброс ' + maxDiff + '%! Подтяни ' + weakest + ' — получишь синергию.';
+        } else if (p.rubles < 300000) {
+            tip = '💸 Деньги на исходе — кредит или инвестор?';
+        } else {
+            var tips = ['💡 Баланс метрик даёт бонус синергии!', '💡 Команда → капитал и маркетинг.', '💡 Маркетинг привлекает таланты.', '💡 Следи за конкурентами!'];
+            tip = tips[Math.floor(Math.random() * tips.length)];
+        }
+        document.getElementById('mascotTip').textContent = tip;
 
-        // FIX: победа проверяется сразу после действия, не только в endMonth — теперь и здесь
-        if (currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80 && currentPlayerData.month >= 6) {
-            showGameEndModal(true);
-        } else if (currentPlayerData.capital <= 0) {
-            showGameEndModal(false);
+        if (p.capital >= 80 && p.team >= 80 && p.marketing >= 80 && p.month >= 6) showGameEndModal(true);
+        else if (p.capital <= 0) showGameEndModal(false);
+    }
+
+    // === QUESTS ===
+    function startQuest() {
+        if (activeQuest !== null || Math.random() > 0.18) return;
+        var names = Object.keys(quests);
+        activeQuest = names[Math.floor(Math.random() * names.length)];
+        questStep = 0;
+        showQuest();
+    }
+    function showQuest() {
+        if (!activeQuest) return;
+        var q = quests[activeQuest];
+        document.getElementById('questBlock').style.display = 'block';
+        document.getElementById('questText').innerHTML = '<strong>' + q.name + ':</strong> ' + q.steps[questStep].text;
+        var btns = document.getElementById('questButtons'); btns.innerHTML = '';
+        if (activeQuest === 'bigClient') {
+            if (questStep === 0) btns.innerHTML = '<button class="btn btn-success" onclick="questChoice(\'yes\')">✅ Подписать</button><button class="btn btn-ghost" onclick="questChoice(\'no\')">❌ Отказать (+10%)</button>';
+            else if (questStep < 3) btns.innerHTML = '<button class="btn btn-ghost" onclick="questNext()">📅 Следующий месяц</button>';
+            else btns.innerHTML = '<button class="btn btn-success" onclick="questNext()">🎉 Забрать +20% капитала</button>';
+        } else if (activeQuest === 'innovation') {
+            if (questStep === 0) btns.innerHTML = '<button class="btn btn-success" onclick="questChoice(\'invest\')">🔬 Инвестировать 300 000 ₽</button><button class="btn btn-ghost" onclick="questChoice(\'skip\')">❌ Пропустить</button>';
+            else btns.innerHTML = '<button class="btn btn-ghost" onclick="questNext()">🔍 Результат</button>';
+        } else if (activeQuest === 'crisis') {
+            btns.innerHTML = '<button class="btn btn-danger" onclick="questChoice(\'cut\')">✂️ Сократить команду</button><button class="btn btn-primary" onclick="questChoice(\'credit\')">🏦 Кредит</button>';
         }
     }
-
-    function resetGame() {
-        currentPlayerData = { capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
-        competitor = { name: 'СтартТех', capital: 50, team: 50, marketing: 50, month: 0 };
-        managerHired = false;
-        activeQuest = null;
-        chartData = { capital: [50], team: [50], marketing: [50], months: [0] };
-        positiveEventStreak = 0; survivedLow = false;
-        document.getElementById('eventMessage').textContent = '🎲 Нажмите «Завершить месяц»';
-        document.getElementById('eventMessage').className = 'event-box';
-        document.getElementById('competitorWarning').innerHTML = '🤖 ИИ-конкурент «СтартТех» рядом с вами';
-        document.getElementById('competitorWarning').className = 'competitor-msg';
-        document.getElementById('questBlock').style.display = 'none';
-        updateUI(); updatePlayerInLeaderboard();
-        addToHistory('🔄 Новая игра');
-        if (dynamicsChart) { dynamicsChart.destroy(); dynamicsChart = null; initChart(); }
+    function questChoice(choice) {
+        if (activeQuest === 'bigClient') {
+            if (choice === 'yes') { questStep = 1; addToHistory('✅ Контракт на 3 мес. подписан!'); showQuest(); }
+            else { currentPlayerData.capital = Math.min(currentPlayerData.capital + 10, 100); updateUI(); addToHistory('💰 +10% капитала'); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; }
+        } else if (activeQuest === 'innovation') {
+            if (choice === 'invest' && currentPlayerData.rubles >= 300000) { currentPlayerData.rubles -= 300000; questStep = 1; addToHistory('🔬 Инвестиции сделаны'); updateUI(); showQuest(); }
+            else { addToHistory('😔 Идея отклонена'); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; }
+        } else if (activeQuest === 'crisis') {
+            if (choice === 'cut') { currentPlayerData.team = Math.max(currentPlayerData.team - 15, 0); currentPlayerData.capital = Math.min(currentPlayerData.capital + 20, 100); addToHistory('✂️ Команда -15%, капитал +20%'); }
+            else { currentPlayerData.rubles += 400000; currentPlayerData.capital = Math.min(currentPlayerData.capital + 15, 100); addToHistory('🏦 Кредит 400 000 ₽'); }
+            activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI();
+        }
+        updatePlayerInLeaderboard(); checkAllAchievements();
+    }
+    function questNext() {
+        if (activeQuest === 'bigClient') {
+            if (questStep === 3) { currentPlayerData.capital = Math.min(currentPlayerData.capital + 20, 100); addToHistory('🎉 Контракт выполнен! +20%'); activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI(); }
+            else { questStep++; showQuest(); }
+        } else if (activeQuest === 'innovation' && questStep === 1) {
+            if (Math.random() < 0.7) { currentPlayerData.capital = Math.min(currentPlayerData.capital + 25, 100); currentPlayerData.team = Math.min(currentPlayerData.team + 15, 100); currentPlayerData.marketing = Math.min(currentPlayerData.marketing + 20, 100); addToHistory('🚀 ИННОВАЦИЯ УСПЕШНА!'); }
+            else { addToHistory('😞 Инновация не принесла результата'); }
+            activeQuest = null; document.getElementById('questBlock').style.display = 'none'; updateUI();
+        }
+        updatePlayerInLeaderboard(); checkAllAchievements();
     }
 
+    // === MODAL / LOGIN / RESET ===
+    function showGameEndModal(isWin) {
+        gameEnded = true;
+        var modal = document.getElementById('gameModal');
+        var box = document.getElementById('gameModalBox');
+        var title = document.getElementById('gameModalTitle');
+        var body = document.getElementById('gameModalBody');
+        modal.style.display = 'flex';
+        var shareBtn = document.getElementById('shareCardBtn');
+        if (isWin) {
+            box.className = 'modal-box win'; title.className = 'modal-title win';
+            title.innerHTML = '🏆 ПОБЕДА! Выход на IPO!';
+            body.innerHTML = 'Вы вывели компанию на IPO за <strong>' + currentPlayerData.month + '</strong> месяцев.<br>Финальный капитал: <strong>' + currentPlayerData.capital + '%</strong>';
+            addToHistory('🏆 ПОБЕДА — ВЫХОД НА IPO!');
+            winCount++;
+            if (shareBtn) shareBtn.style.display = 'block';
+            try { canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } }); } catch(ex) {}
+            checkAllAchievements();
+        } else {
+            box.className = 'modal-box lose'; title.className = 'modal-title lose';
+            title.innerHTML = '💀 Банкротство';
+            body.innerHTML = 'Компания продержалась <strong>' + currentPlayerData.month + '</strong> месяцев.<br>Попробуйте снова!';
+            addToHistory('💀 БАНКРОТСТВО');
+            if (shareBtn) shareBtn.style.display = 'none';
+        }
+    }
+    function closeModalAndReset() { document.getElementById('gameModal').style.display = 'none'; gameEnded = false; resetGame(); }
+    function showHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
+    function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
+
     function login() {
-        const name = document.getElementById('playerNameInput').value.trim();
+        var name = document.getElementById('playerNameInput').value.trim();
         if (!name) { document.getElementById('playerNameInput').focus(); return; }
         currentPlayerName = name;
-        if (!allPlayers.find(p => p.name === name)) allPlayers.push({ name, capital: 50, month: 0 });
+        if (!allPlayers.find(function(p) { return p.name === name; })) allPlayers.push({ name: name, capital: 50, month: 0 });
         loadAchievements(name);
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('gameInterface').style.display = 'block';
         document.getElementById('currentPlayerNameDisplay').textContent = name;
-        initChart(); updateUI(); updateLeaderboard();
+        var cn = document.getElementById('playerCompanyName'); if (cn) cn.textContent = name + ' Inc.';
+        function tryInit(n) {
+            if (typeof Chart !== 'undefined') { initChart(); initRadar(); }
+            else if (n > 0) { setTimeout(function() { tryInit(n-1); }, 300); }
+        }
+        tryInit(10);
+        initAICompetitors();
+        updateUI(); updateLeaderboard();
         addToHistory('✨ Добро пожаловать, ' + name + '!');
         gameEnded = false;
+        setTimeout(startTour, 400);
     }
-
     function logout() {
         document.getElementById('gameInterface').style.display = 'none';
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('playerNameInput').value = '';
         currentPlayerName = null;
+        tourShownThisSession = false;
         if (dynamicsChart) { dynamicsChart.destroy(); dynamicsChart = null; }
+        if (radarChart) { radarChart.destroy(); radarChart = null; }
         gameEnded = false;
     }
-
-    function addFriend() {
-        const name = document.getElementById('newPlayerName').value.trim();
-        if (!name) return;
-        if (allPlayers.find(p => p.name === name)) { addToHistory('❌ Такой игрок уже есть'); return; }
-        allPlayers.push({ name, capital: 50, month: 0 });
-        document.getElementById('newPlayerName').value = '';
-        updateLeaderboard();
-        addToHistory('➕ Добавлен игрок: ' + name);
+    function resetGame() {
+        currentPlayerData = { capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0 };
+        managerHired = false; managerLevel = 0; activeQuest = null; gameHistory = [];
+        chartData = { capital: [50], team: [50], marketing: [50], months: [0] };
+        positiveEventStreak = 0; survivedLow = false; prevMetrics = { capital: 50, team: 50, marketing: 50 };
+        dilemmaQueue = []; activeDilemma = null;
+        document.getElementById('eventMessage').textContent = '🎲 Нажмите «Завершить месяц»';
+        document.getElementById('eventMessage').className = 'event-box';
+        document.getElementById('questBlock').style.display = 'none';
+        var feed = document.getElementById('newsFeed');
+        if (feed) feed.innerHTML = '<div class="news-item"><span class="news-icon">🔄</span><div><div class="news-text"><strong>Новая игра</strong> — начинаем с нуля</div><div class="news-time">Сейчас</div></div></div>';
+        initAICompetitors();
+        updateUI(); updatePlayerInLeaderboard();
+        addToHistory('🔄 Новая игра');
+        if (dynamicsChart) { dynamicsChart.destroy(); dynamicsChart = null; initChart(); }
+        if (radarChart) { radarChart.destroy(); radarChart = null; initRadar(); }
     }
-
+    function addFriend() {
+        var name = document.getElementById('newPlayerName').value.trim();
+        if (!name || allPlayers.find(function(p) { return p.name === name; })) return;
+        allPlayers.push({ name: name, capital: 50, month: 0 });
+        document.getElementById('newPlayerName').value = '';
+        updateLeaderboard(); addToHistory('➕ Добавлен: ' + name);
+    }
     function toggleTheme() {
         document.body.classList.toggle('light');
         document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙 Тёмная' : '☀️ Светлая';
     }
-
     function exportReport() {
-        const status = (currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80 && currentPlayerData.month >= 6) ? 'ПОБЕДА (IPO)' : 'В ПРОЦЕССЕ';
-        const report = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏢 БИЗНЕС-СИМУЛЯТОР: ОТЧЁТ\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📅 Дата: ${new Date().toLocaleString('ru-RU')}\n👤 Игрок: ${currentPlayerName}\n🏆 Статус: ${status}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💰 Капитал: ${currentPlayerData.capital}% (${currentPlayerData.rubles.toLocaleString('ru-RU')} ₽)\n👥 Команда: ${currentPlayerData.team}%\n📢 Маркетинг: ${currentPlayerData.marketing}%\n📅 Месяцев: ${currentPlayerData.month}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏆 Достижения: ${playerAchievements.map(id => achievementsList.find(a => a.id === id)?.icon || '').join(' ') || 'нет'}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        const a = document.createElement('a');
+        var status = (currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80 && currentPlayerData.month >= 6) ? 'ПОБЕДА (IPO)' : 'В ПРОЦЕССЕ';
+        var report = '━━━━━━━━━━━━━━━━━━━━━━\n🏢 БИЗНЕС-СИМУЛЯТОР: ОТЧЁТ\n━━━━━━━━━━━━━━━━━━━━━━\nДата: ' + new Date().toLocaleString('ru-RU') + '\nИгрок: ' + currentPlayerName + '\nСтатус: ' + status + '\nКапитал: ' + currentPlayerData.capital + '% (' + currentPlayerData.rubles.toLocaleString('ru-RU') + ' ₽)\nКоманда: ' + currentPlayerData.team + '%\nМаркетинг: ' + currentPlayerData.marketing + '%\nМесяцев: ' + currentPlayerData.month + '\n━━━━━━━━━━━━━━━━━━━━━━\n';
+        var a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([report], { type: 'text/plain;charset=utf-8' }));
-        a.download = `report_${currentPlayerName}_${Date.now()}.txt`;
+        a.download = 'report_' + currentPlayerName + '.txt';
         a.click();
-        addToHistory('📄 Отчёт экспортирован');
     }
 
-    function showHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
-    function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
-
-    // ==============================
-    // DUEL
-    // ==============================
-    let duelActive = false;
-    let duelPlayers = {
-        player1: { name: '', capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0, finished: false },
-        player2: { name: '', capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0, finished: false }
-    };
-    let currentTurn = 1;
-    let duelHistoryArr = [];
-
-    function startDuel() {
-        const p1Name = document.getElementById('duelPlayer1Name').value.trim();
-        const p2Name = document.getElementById('duelPlayer2Name').value.trim();
-        if (!p1Name || !p2Name) { alert('Введите имена обоих игроков!'); return; }
-        if (p1Name === p2Name) { alert('Имена игроков должны различаться!'); return; }
-        duelPlayers.player1 = { name: p1Name, capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0, finished: false };
-        duelPlayers.player2 = { name: p2Name, capital: 50, rubles: 2500000, team: 50, marketing: 50, month: 0, credit_amount: 0, credit_deadline: 0, finished: false };
-        currentTurn = 1; duelActive = true; duelHistoryArr = ['✨ Дуэль началась!'];
-        document.getElementById('duelSetup').style.display = 'none';
-        document.getElementById('duelGame').style.display = 'block';
-        document.getElementById('duelPlayer1NameDisplay').textContent = p1Name;
-        document.getElementById('duelPlayer2NameDisplay').textContent = p2Name;
-        document.getElementById('currentTurnName').textContent = p1Name;
-        updateDuelUI(); updateDuelHistory();
-        document.getElementById('duelPlayer1Card').classList.add('active');
-        document.getElementById('duelPlayer2Card').classList.remove('active');
+    // iOS Safari polyfill for roundRect
+    function canvasRoundRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
     }
 
-    function updateDuelUI() {
-        document.getElementById('duelPlayer1Capital').textContent = duelPlayers.player1.capital;
-        document.getElementById('duelPlayer1Team').textContent = duelPlayers.player1.team;
-        document.getElementById('duelPlayer1Marketing').textContent = duelPlayers.player1.marketing;
-        document.getElementById('duelPlayer1Month').textContent = duelPlayers.player1.month;
-        document.getElementById('duelPlayer2Capital').textContent = duelPlayers.player2.capital;
-        document.getElementById('duelPlayer2Team').textContent = duelPlayers.player2.team;
-        document.getElementById('duelPlayer2Marketing').textContent = duelPlayers.player2.marketing;
-        document.getElementById('duelPlayer2Month').textContent = duelPlayers.player2.month;
-        if (duelPlayers.player1.finished && duelPlayers.player2.finished) determineWinner();
+    // === RESULT CARD ===
+    function showResultCard() {
+        var modal = document.getElementById('resultCardModal');
+        modal.style.display = 'flex';
+        var canvas = document.getElementById('shareCanvas');
+        var ctx = canvas.getContext('2d');
+        var W = 600, H = 340;
+        var grad = ctx.createLinearGradient(0, 0, W, H);
+        grad.addColorStop(0, '#0a0a14'); grad.addColorStop(1, '#1a1a2e');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+        ctx.strokeStyle = 'rgba(124,92,252,0.4)'; ctx.lineWidth = 1.5;
+        canvasRoundRect(ctx, 4, 4, W-8, H-8, 18); ctx.stroke();
+        ctx.fillStyle = '#7c5cfc'; ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('ПИУ РАНХиГС · БИЗНЕС-СИМУЛЯТОР', 30, 38);
+        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 28px sans-serif';
+        ctx.fillText(currentPlayerName || 'Игрок', 30, 72);
+        var won = currentPlayerData.capital >= 80 && currentPlayerData.team >= 80 && currentPlayerData.marketing >= 80;
+        ctx.fillStyle = '#00c896'; ctx.font = 'bold 15px sans-serif';
+        ctx.fillText(won ? 'ВЫХОД НА IPO!' : 'Месяц ' + currentPlayerData.month, 30, 98);
+        var metrics = [
+            { label: 'КАПИТАЛ', value: currentPlayerData.capital, color: '#00c896', x: 30 },
+            { label: 'КОМАНДА', value: currentPlayerData.team, color: '#38bdf8', x: 220 },
+            { label: 'МАРКЕТИНГ', value: currentPlayerData.marketing, color: '#fbbf24', x: 410 }
+        ];
+        metrics.forEach(function(m) {
+            ctx.fillStyle = 'rgba(255,255,255,0.06)';
+            canvasRoundRect(ctx, m.x, 120, 160, 80, 12); ctx.fill();
+            ctx.fillStyle = m.color; ctx.font = 'bold 36px sans-serif'; ctx.fillText(m.value + '%', m.x + 12, 166);
+            ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '10px sans-serif'; ctx.fillText(m.label, m.x + 12, 188);
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            canvasRoundRect(ctx, m.x + 12, 196, 136, 5, 3); ctx.fill();
+            ctx.fillStyle = m.color;
+            canvasRoundRect(ctx, m.x + 12, 196, Math.max(4, 136 * m.value / 100), 5, 3); ctx.fill();
+        });
+        ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '11px sans-serif';
+        ctx.fillText('Баланс: ' + currentPlayerData.rubles.toLocaleString('ru-RU') + ' ₽', 30, 238);
+        var unlocked = playerAchievements.map(function(id) { var a = achievementsList.find(function(a) { return a.id === id; }); return a ? a.icon : ''; }).join(' ');
+        ctx.fillStyle = '#888aaa'; ctx.font = '12px sans-serif';
+        ctx.fillText('Достижения: ' + (unlocked || 'нет'), 30, 265);
+        ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '10px sans-serif';
+        ctx.fillText('ПИУ РАНХиГС · Обучение служением · ' + new Date().toLocaleDateString('ru-RU'), 30, 310);
+    }
+    function downloadResultCard() {
+        var canvas = document.getElementById('shareCanvas');
+        var a = document.createElement('a');
+        a.download = 'result_' + (currentPlayerName || 'player') + '.png';
+        a.href = canvas.toDataURL('image/png'); a.click();
     }
 
-    function updateDuelHistory() {
-        const c = document.getElementById('duelHistory');
-        c.innerHTML = duelHistoryArr.map(h => `<div>${h}</div>`).join('');
-        c.scrollTop = c.scrollHeight;
-    }
-
-    function addDuelHistory(text) {
-        duelHistoryArr.unshift('📅 ' + text);
-        if (duelHistoryArr.length > 20) duelHistoryArr.pop();
-        updateDuelHistory();
-    }
-
-    function duelApplyAction(player, cost, effect) {
-        if (player.rubles < cost) { addDuelHistory(`${player.name}: ❌ не хватает ${cost.toLocaleString('ru-RU')} ₽`); return false; }
-        player.rubles -= cost;
-        if (effect.cap) player.capital = Math.min(player.capital + effect.cap, 100);
-        if (effect.team) player.team = Math.min(player.team + effect.team, 100);
-        if (effect.market) player.marketing = Math.min(player.marketing + effect.market, 100);
-        return true;
-    }
-
-    function duelMakeMove(action) {
-        if (!duelActive) return;
-        const player = currentTurn === 1 ? duelPlayers.player1 : duelPlayers.player2;
-        if (player.finished) { addDuelHistory(`⚠️ ${player.name} уже завершил игру!`); return; }
-        switch (action) {
-            case 'hire': if (duelApplyAction(player, 200000, { team: 15 })) addDuelHistory(`${player.name}: 👥 Найм (команда +15%)`); break;
-            case 'advertise': if (duelApplyAction(player, 150000, { market: 15 })) addDuelHistory(`${player.name}: 📢 Реклама (маркетинг +15%)`); break;
-            case 'develop': if (duelApplyAction(player, 300000, { cap: 10, team: 10, market: 10 })) addDuelHistory(`${player.name}: 🔬 Разработка (все +10%)`); break;
-            case 'investor': {
-                const chance = Math.floor((player.team + player.marketing + player.capital) / 3);
-                if (Math.random() * 100 <= chance) {
-                    const inv = Math.floor(Math.random() * 500000 + 300000);
-                    player.rubles += inv; addDuelHistory(`${player.name}: 🎉 Инвестор вложил ${inv.toLocaleString('ru-RU')} ₽`);
-                } else { player.marketing = Math.max(player.marketing - 10, 0); addDuelHistory(`${player.name}: 😔 Инвестор отказал`); }
-                break;
-            }
-            case 'credit':
-                if (player.credit_amount > 0) addDuelHistory(`${player.name}: ❌ Уже есть кредит`);
-                else { player.credit_amount = 600000; player.credit_deadline = player.month + 3; player.rubles += 500000; addDuelHistory(`${player.name}: 💳 Кредит 500 000 ₽`); }
-                break;
-            case 'repay':
-                if (player.credit_amount <= 0) addDuelHistory(`${player.name}: нет кредитов`);
-                else if (player.rubles < player.credit_amount) addDuelHistory(`${player.name}: ❌ не хватает денег`);
-                else { player.rubles -= player.credit_amount; player.credit_amount = 0; addDuelHistory(`${player.name}: ✅ Кредит погашен`); }
-                break;
-            case 'endMonth': duelEndMonth(player); break;
-        }
-        updateDuelUI();
-    }
-
-    function duelEndMonth(player) {
-        if (player.credit_amount > 0 && player.month >= player.credit_deadline) {
-            player.rubles -= 100000; player.marketing = Math.max(player.marketing - 15, 0);
-            player.credit_amount = 0; addDuelHistory(`${player.name}: ⚠️ ПРОСРОЧКА! Штраф 100 000 ₽`);
-        }
-        const cost = 50000 + player.team * 2000 + player.marketing * 1500;
-        if (player.rubles < cost) { addDuelHistory(`${player.name}: 💀 БАНКРОТСТВО!`); player.finished = true; switchTurn(); return; }
-        player.rubles -= cost;
-        const e = eventsList[Math.floor(Math.random() * eventsList.length)];
-        player.capital = Math.min(Math.max(player.capital + e.cap, 0), 100);
-        player.team = Math.min(Math.max(player.team + e.team, 0), 100);
-        player.marketing = Math.min(Math.max(player.marketing + e.market, 0), 100);
-        addDuelHistory(`${player.name}: ${e.text}`);
-        document.getElementById('duelEventBox').textContent = e.text;
-        player.month++;
-        if (player.capital >= 80 && player.team >= 80 && player.marketing >= 80 && player.month >= 6) {
-            addDuelHistory(`🏆 ${player.name} достиг IPO!`);
-            canvasConfetti({ particleCount: 200, spread: 120, origin: { y: 0.5 } });
-            player.finished = true;
-        }
-        updateDuelUI(); switchTurn();
-    }
-
-    function switchTurn() {
-        if (!duelActive) return;
-        currentTurn = currentTurn === 1 ? 2 : 1;
-        const next = currentTurn === 1 ? duelPlayers.player1 : duelPlayers.player2;
-        document.getElementById('currentTurnName').textContent = next.name;
-        document.getElementById('duelPlayer1Card').classList.toggle('active', currentTurn === 1);
-        document.getElementById('duelPlayer2Card').classList.toggle('active', currentTurn === 2);
-        addDuelHistory('🔄 Ход: ' + next.name);
-        if (duelPlayers.player1.finished && duelPlayers.player2.finished) determineWinner();
-    }
-
-    function determineWinner() {
-        const p1 = duelPlayers.player1, p2 = duelPlayers.player2;
-        let winner = null;
-        if (p1.capital > p2.capital) winner = p1;
-        else if (p2.capital > p1.capital) winner = p2;
-        else if (p1.month < p2.month) winner = p1;
-        else if (p2.month < p1.month) winner = p2;
-
-        if (winner) {
-            const badge = winner === p1 ? 'duelPlayer1Winner' : 'duelPlayer2Winner';
-            document.getElementById(badge).textContent = '🏆 ПОБЕДИТЕЛЬ!';
-            addDuelHistory(`🏆🏆🏆 ПОБЕДИТЕЛЬ: ${winner.name}!`);
-            canvasConfetti({ particleCount: 400, spread: 120, origin: { y: 0.5 } });
-        } else { addDuelHistory('🤝 НИЧЬЯ!'); }
-        duelActive = false;
-    }
-
-    function endDuel() {
-        if (confirm('Завершить дуэль досрочно?')) {
-            duelPlayers.player1.finished = true;
-            duelPlayers.player2.finished = true;
-            determineWinner();
-        }
-    }
-
-    // ==============================
-    // ADVICE
-    // ==============================
-    const quotes = [
+    // === ADVICE ===
+    var quotes = [
         { text: 'Ваше время ограничено, не тратьте его, живя чужой жизнью.', author: 'Стив Джобс' },
         { text: 'Единственный способ делать великую работу — любить то, что вы делаете.', author: 'Стив Джобс' },
         { text: 'Не бойтесь ошибаться — бойтесь повторять ошибки.', author: 'Теодор Рузвельт' },
         { text: 'Успех — это движение от неудачи к неудаче без потери энтузиазма.', author: 'Уинстон Черчилль' },
         { text: 'Бизнес — это сочетание войны и спорта.', author: 'Андре Моруа' }
     ];
-    const facts = [
-        '90% стартапов закрываются в первые 3 года',
-        'Amazon начинался как книжный магазин в гараже',
-        'Instagram купили за 1 млрд $ всего через 2 года после основания',
-        'Starbucks открыл первую кофейню только в 1971 году',
-        'Apple была основана в гараже с капиталом 1 300 $'
-    ];
-    function refreshQuote() {
-        const q = quotes[Math.floor(Math.random() * quotes.length)];
-        document.getElementById('quoteOfTheDay').innerHTML = `«${q.text}»<br><span class="quote-author">— ${q.author}</span>`;
-    }
-    function refreshFact() {
-        document.getElementById('factOfTheDay').textContent = facts[Math.floor(Math.random() * facts.length)];
-    }
+    var facts = ['90% стартапов закрываются в первые 3 года','Amazon начинался как книжный магазин в гараже','Instagram купили за 1 млрд $ через 2 года после основания','Starbucks открыл первую кофейню в 1971 году','Apple была основана в гараже с капиталом 1 300 $'];
+    function refreshQuote() { var q = quotes[Math.floor(Math.random() * quotes.length)]; document.getElementById('quoteOfTheDay').innerHTML = '«' + q.text + '»<br><span class="quote-author">— ' + q.author + '</span>'; }
+    function refreshFact() { document.getElementById('factOfTheDay').textContent = facts[Math.floor(Math.random() * facts.length)]; }
     function calculateProfit() {
-        const rev = parseFloat(document.getElementById('revenueInput').value) || 0;
-        const exp = parseFloat(document.getElementById('expenseInput').value) || 0;
-        const profit = rev - exp;
-        const el = document.getElementById('profitResult');
+        var rev = parseFloat(document.getElementById('revenueInput').value) || 0;
+        var exp = parseFloat(document.getElementById('expenseInput').value) || 0;
+        var profit = rev - exp;
+        var el = document.getElementById('profitResult');
         el.textContent = (profit >= 0 ? '💰 Прибыль: ' : '📉 Убыток: ') + Math.abs(profit).toLocaleString('ru-RU') + ' ₽';
         el.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
     }
 
-    // ==============================
-    // TASKS
-    // ==============================
+    // === TASKS ===
     function checkTask(num, correct) {
-        const val = parseFloat(document.getElementById('task' + num + 'Answer').value);
-        const res = document.getElementById('task' + num + 'Result');
+        var val = parseFloat(document.getElementById('task' + num + 'Answer').value);
+        var res = document.getElementById('task' + num + 'Result');
         if (isNaN(val)) { res.textContent = '❌ Введите число!'; res.className = 'task-result err'; }
         else if (Math.abs(val - correct) < 0.01) { res.textContent = '✅ Правильно!'; res.className = 'task-result ok'; }
-        else { res.textContent = `❌ Неправильно. Правильный ответ: ${correct.toLocaleString('ru-RU')}`; res.className = 'task-result err'; }
+        else { res.textContent = '❌ Неверно. Правильный ответ: ' + correct.toLocaleString('ru-RU'); res.className = 'task-result err'; }
     }
     function showHint(num) {
-        const hints = { 1:'Прибыль = Выручка − Себестоимость = 85 000 − 60 000', 2:'50 000 + 50 000 × 20% = 50 000 + 10 000', 3:'(300 000 − 200 000) / 200 000 × 100%', 4:'5 / 10 × 100%', 5:'40 / 50 × 100%' };
+        var hints = { 1:'Прибыль = Выручка − Себестоимость = 85 000 − 60 000', 2:'50 000 + 50 000 × 20% = 50 000 + 10 000', 3:'(300 000 − 200 000) / 200 000 × 100%', 4:'5 / 10 × 100%', 5:'40 / 50 × 100%' };
         alert('💡 ' + hints[num]);
     }
 
-    // ==============================
-    // ACTION MODAL
-    // ==============================
-    const actionConfigs = {
-        hire: {
-            title: '👥 Найм сотрудников',
-            desc: 'Наймите от 1 до 5 волн сотрудников за один ход. Каждая волна найма стоит <strong>200 000 ₽</strong> и увеличивает команду на <strong>15%</strong>.',
-            sliderLabel: 'Волны найма',
-            min: 1, max: 5,
-            unitCost: 200000,
-            effectFn: n => ({ text: `Команда +${n*15}%`, cap: 0, team: n*15, market: 0 })
-        },
-        advertise: {
-            title: '📢 Рекламная кампания',
-            desc: 'Запустите от 1 до 5 рекламных кампаний. Каждая кампания стоит <strong>150 000 ₽</strong> и повышает маркетинг на <strong>15%</strong>.',
-            sliderLabel: 'Кампании',
-            min: 1, max: 5,
-            unitCost: 150000,
-            effectFn: n => ({ text: `Маркетинг +${n*15}%`, cap: 0, team: 0, market: n*15 })
-        },
-        develop: {
-            title: '🔬 Разработка продукта',
-            desc: 'Инвестируйте в разработку. Каждый цикл стоит <strong>300 000 ₽</strong> и даёт <strong>+10%</strong> ко всем показателям.',
-            sliderLabel: 'Циклы разработки',
-            min: 1, max: 4,
-            unitCost: 300000,
-            effectFn: n => ({ text: `Все +${n*10}%`, cap: n*10, team: n*10, market: n*10 })
-        },
-        hireDevs: {
-            title: '👨‍💻 Разработчики',
-            desc: 'Нанять специализированных разработчиков. Каждый разработчик стоит <strong>150 000 ₽</strong> и добавляет <strong>+5%</strong> к капиталу.',
-            sliderLabel: 'Разработчиков',
-            min: 1, max: 6,
-            unitCost: 150000,
-            effectFn: n => ({ text: `Капитал +${n*5}%`, cap: n*5, team: 0, market: 0 })
-        },
-        hireMarketers: {
-            title: '🎯 Маркетологи',
-            desc: 'Нанять маркетологов. Каждый специалист стоит <strong>100 000 ₽</strong> и даёт <strong>+5%</strong> к маркетингу.',
-            sliderLabel: 'Маркетологов',
-            min: 1, max: 6,
-            unitCost: 100000,
-            effectFn: n => ({ text: `Маркетинг +${n*5}%`, cap: 0, team: 0, market: n*5 })
-        },
-        hireManagers: {
-            title: '💼 Менеджеры',
-            desc: 'Нанять менеджеров по операциям. Каждый менеджер стоит <strong>120 000 ₽</strong> и снижает операционные расходы на <strong>5%</strong>.',
-            sliderLabel: 'Менеджеров',
-            min: 1, max: 4,
-            unitCost: 120000,
-            effectFn: n => ({ text: `Расходы -${n*5}%`, cap: 0, team: 0, market: 0, managerCount: n })
-        },
-        credit: {
-            title: '💳 Взять кредит',
-            desc: 'Выберите сумму кредита и срок возврата. Итоговая сумма возврата: сумма × 1.2. Просрочка — штраф!',
-            sliderLabel: null // special
-        }
+    // === ACTION MODAL ===
+    var actionConfigs = {
+        hire:         { title: '👥 Найм сотрудников',   desc: 'Каждая волна: <strong>200 000 ₽</strong>, Команда <strong>+15%</strong>', sliderLabel: 'Волны найма', min: 1, max: 5, unitCost: 200000, effectFn: function(n) { return { text: 'Команда +' + (n*15) + '%', team: n*15 }; } },
+        advertise:    { title: '📢 Реклама',             desc: 'Каждая кампания: <strong>150 000 ₽</strong>, Маркетинг <strong>+15%</strong>', sliderLabel: 'Кампании', min: 1, max: 5, unitCost: 150000, effectFn: function(n) { return { text: 'Маркетинг +' + (n*15) + '%', market: n*15 }; } },
+        develop:      { title: '🔬 Разработка',          desc: 'Каждый цикл: <strong>300 000 ₽</strong>, Все показатели <strong>+10%</strong>', sliderLabel: 'Циклы', min: 1, max: 4, unitCost: 300000, effectFn: function(n) { return { text: 'Все +' + (n*10) + '%', cap: n*10, team: n*10, market: n*10 }; } },
+        hireDevs:     { title: '👨‍💻 Разработчики',     desc: 'Каждый: <strong>150 000 ₽</strong>, Капитал <strong>+5%</strong>', sliderLabel: 'Разработчиков', min: 1, max: 6, unitCost: 150000, effectFn: function(n) { return { text: 'Капитал +' + (n*5) + '%', cap: n*5 }; } },
+        hireMarketers:{ title: '🎯 Маркетологи',         desc: 'Каждый: <strong>100 000 ₽</strong>, Маркетинг <strong>+5%</strong>', sliderLabel: 'Маркетологов', min: 1, max: 6, unitCost: 100000, effectFn: function(n) { return { text: 'Маркетинг +' + (n*5) + '%', market: n*5 }; } },
+        hireManagers: { title: '💼 Менеджеры',           desc: 'Каждый: <strong>120 000 ₽</strong>, Снижает операционные расходы на <strong>10%</strong>', sliderLabel: 'Менеджеров', min: 1, max: 4, unitCost: 120000, effectFn: function(n) { return { text: 'Расходы -' + (n*10) + '%', manager: true }; } },
+        credit:       { title: '💳 Взять кредит', desc: 'Выберите сумму и срок. Возврат = сумма × 1.2' }
     };
-
-    let currentActionType = null;
+    var currentActionType = null;
 
     function openActionModal(type) {
         if (!currentPlayerName || gameEnded) return;
         currentActionType = type;
-        const cfg = actionConfigs[type];
+        var cfg = actionConfigs[type];
         document.getElementById('actionModalTitle').textContent = cfg.title;
         document.getElementById('actionModalDesc').innerHTML = cfg.desc || '';
-
         if (type === 'credit') {
             document.getElementById('sliderSection').style.display = 'none';
             document.getElementById('creditSection').style.display = 'block';
             document.getElementById('creditSlider').value = 5;
             document.getElementById('creditTermSlider').value = 3;
-            onCreditSliderChange();
+            onCreditUpdate();
         } else {
             document.getElementById('sliderSection').style.display = 'block';
             document.getElementById('creditSection').style.display = 'none';
-            const slider = document.getElementById('actionSlider');
-            slider.min = cfg.min; slider.max = cfg.max; slider.value = cfg.min;
+            var sl = document.getElementById('actionSlider');
+            sl.min = cfg.min; sl.max = cfg.max; sl.value = cfg.min;
             document.getElementById('sliderLabel').textContent = cfg.sliderLabel;
             document.getElementById('sliderMin').textContent = cfg.min;
             document.getElementById('sliderMax').textContent = cfg.max;
             onSliderChange();
         }
-
         document.getElementById('actionModal').classList.add('open');
     }
+    function closeActionModal() { document.getElementById('actionModal').classList.remove('open'); currentActionType = null; }
 
-    function closeActionModal() {
-        document.getElementById('actionModal').classList.remove('open');
-        currentActionType = null;
+    function previewSynergy(eff) {
+        var sim = { capital: Math.min(currentPlayerData.capital + (eff.cap || 0), 100), team: Math.min(currentPlayerData.team + (eff.team || 0), 100), marketing: Math.min(currentPlayerData.marketing + (eff.market || 0), 100) };
+        var chains = [];
+        var b1 = Math.floor(Math.max(sim.team - 30, 0) / 10); if (b1 > 0) chains.push('👥→💰 Команда генерирует +' + b1 + '% капитала');
+        var b3 = Math.floor(Math.max(sim.marketing - 30, 0) / 10); if (b3 > 0) chains.push('📢→💰 Маркетинг привлекает +' + b3 + '% капитала');
+        if (sim.marketing >= 60) chains.push('📢→👥 Бренд привлекает таланты');
+        if (sim.capital >= 60) chains.push('💰→👥 Капитал удерживает команду');
+        var avg = (sim.capital + sim.team + sim.marketing) / 3;
+        var maxDiff = Math.max(sim.capital, sim.team, sim.marketing) - Math.min(sim.capital, sim.team, sim.marketing);
+        if (maxDiff <= 15 && avg >= 50) chains.push('⚖️ Синергия баланса: все +' + Math.round(avg / 25) + '%');
+        if (maxDiff > 30) chains.push('⚖️ Разброс ' + maxDiff + '% — синергия не работает в полную силу');
+        var preview = document.getElementById('synergyPreview');
+        var list = document.getElementById('synergyPreviewList');
+        if (chains.length > 0) { preview.style.display = 'block'; list.innerHTML = chains.map(function(c) { return '<div style="margin-bottom:3px">→ ' + c + '</div>'; }).join(''); }
+        else { preview.style.display = 'none'; }
     }
 
     function onSliderChange() {
-        const cfg = actionConfigs[currentActionType];
-        if (!cfg) return;
-        const n = parseInt(document.getElementById('actionSlider').value);
+        var cfg = actionConfigs[currentActionType]; if (!cfg || !cfg.effectFn) return;
+        var n = parseInt(document.getElementById('actionSlider').value);
         document.getElementById('sliderVal').textContent = n;
-        const totalCost = cfg.unitCost * n;
-        const eff = cfg.effectFn(n);
+        var totalCost = cfg.unitCost * n;
+        var eff = cfg.effectFn(n);
         document.getElementById('sumCost').textContent = totalCost.toLocaleString('ru-RU') + ' ₽';
         document.getElementById('sumEffect').textContent = eff.text;
-        const after = currentPlayerData.rubles - totalCost;
+        var after = currentPlayerData.rubles - totalCost;
         document.getElementById('balanceAfter').textContent = after.toLocaleString('ru-RU') + ' ₽';
         document.getElementById('balanceAfter').style.color = after < 0 ? 'var(--red)' : 'var(--text)';
-        document.getElementById('actionConfirmBtn').disabled = after < 0 || currentPlayerData.rubles < totalCost;
+        document.getElementById('actionConfirmBtn').disabled = after < 0;
+        previewSynergy(eff);
     }
-
-    function onCreditSliderChange() {
-        const steps = [100000, 200000, 300000, 400000, 500000];
-        const amt = steps[parseInt(document.getElementById('creditSlider').value) - 1];
-        document.getElementById('creditAmtVal').textContent = amt.toLocaleString('ru-RU') + ' ₽';
-        const term = parseInt(document.getElementById('creditTermSlider').value);
-        onCreditTermChange();
-        const repay = Math.round(amt * 1.2);
-        document.getElementById('sumCost').textContent = '0 ₽ сейчас';
-        document.getElementById('sumEffect').textContent = `+${amt.toLocaleString('ru-RU')} ₽ / вернуть ${repay.toLocaleString('ru-RU')} ₽`;
-        const after = currentPlayerData.rubles + amt;
-        document.getElementById('balanceAfter').textContent = after.toLocaleString('ru-RU') + ' ₽';
-        document.getElementById('balanceAfter').style.color = 'var(--green)';
-    }
-
-    function onCreditTermChange() {
-        const term = parseInt(document.getElementById('creditTermSlider').value);
-        document.getElementById('creditTermVal').textContent = term + ' мес.';
-        onCreditSliderChange2();
-    }
-    function onCreditSliderChange2() {
-        const steps = [100000, 200000, 300000, 400000, 500000];
-        const amt = steps[parseInt(document.getElementById('creditSlider').value) - 1];
-        const term = parseInt(document.getElementById('creditTermSlider').value);
-        const repay = Math.round(amt * 1.2);
-        document.getElementById('sumCost').textContent = '0 ₽ сейчас';
-        document.getElementById('sumEffect').textContent = `+${amt.toLocaleString('ru-RU')} ₽ / вернуть ${repay.toLocaleString('ru-RU')} ₽ за ${term} мес.`;
-        const after = currentPlayerData.rubles + amt;
-        document.getElementById('balanceAfter').textContent = after.toLocaleString('ru-RU') + ' ₽';
-        document.getElementById('balanceAfter').style.color = 'var(--green)';
+    function onCreditUpdate() {
+        var steps = [100000, 200000, 300000, 400000, 500000];
+        var amt = steps[parseInt(document.getElementById('creditSlider').value) - 1];
+        var term = parseInt(document.getElementById('creditTermSlider').value);
+        var repay = Math.round(amt * 1.2);
         document.getElementById('creditAmtVal').textContent = amt.toLocaleString('ru-RU') + ' ₽';
         document.getElementById('creditTermVal').textContent = term + ' мес.';
+        document.getElementById('sumCost').textContent = '0 ₽ сейчас';
+        document.getElementById('sumEffect').textContent = '+' + amt.toLocaleString('ru-RU') + ' ₽ / вернуть ' + repay.toLocaleString('ru-RU') + ' ₽ за ' + term + ' мес.';
+        var after = currentPlayerData.rubles + amt;
+        document.getElementById('balanceAfter').textContent = after.toLocaleString('ru-RU') + ' ₽';
+        document.getElementById('balanceAfter').style.color = 'var(--green)';
+        document.getElementById('actionConfirmBtn').disabled = false;
     }
-
-    // Wire up both credit sliders to same handler
-    document.getElementById('creditSlider').addEventListener('input', onCreditSliderChange2);
-    document.getElementById('creditTermSlider').addEventListener('input', onCreditSliderChange2);
+    document.getElementById('actionSlider').addEventListener('input', function() { if (currentActionType) onSliderChange(); });
+    document.getElementById('creditSlider').addEventListener('input', onCreditUpdate);
+    document.getElementById('creditTermSlider').addEventListener('input', onCreditUpdate);
 
     function confirmAction() {
-        const type = currentActionType;
-        const cfg = actionConfigs[type];
-
+        var type = currentActionType; var cfg = actionConfigs[type];
         if (type === 'credit') {
             if (currentPlayerData.credit_amount > 0) { alert('Уже есть активный кредит!'); closeActionModal(); return; }
-            const steps = [100000, 200000, 300000, 400000, 500000];
-            const amt = steps[parseInt(document.getElementById('creditSlider').value) - 1];
-            const term = parseInt(document.getElementById('creditTermSlider').value);
-            const repay = Math.round(amt * 1.2);
-            currentPlayerData.credit_amount = repay;
+            var steps = [100000, 200000, 300000, 400000, 500000];
+            var amt = steps[parseInt(document.getElementById('creditSlider').value) - 1];
+            var term = parseInt(document.getElementById('creditTermSlider').value);
+            currentPlayerData.credit_amount = Math.round(amt * 1.2);
             currentPlayerData.credit_deadline = currentPlayerData.month + term;
             currentPlayerData.rubles += amt;
-            addToHistory(`💳 Кредит ${amt.toLocaleString('ru-RU')} ₽ на ${term} мес. Вернуть: ${repay.toLocaleString('ru-RU')} ₽`);
-            updateUI(); updatePlayerInLeaderboard();
-            closeActionModal(); return;
+            addToHistory('💳 Кредит ' + amt.toLocaleString('ru-RU') + ' ₽ на ' + term + ' мес.');
+            updateUI(); updatePlayerInLeaderboard(); closeActionModal(); return;
         }
-
-        const n = parseInt(document.getElementById('actionSlider').value);
-        const totalCost = cfg.unitCost * n;
-        const eff = cfg.effectFn(n);
-
+        var n = parseInt(document.getElementById('actionSlider').value);
+        var totalCost = cfg.unitCost * n;
+        var eff = cfg.effectFn(n);
         if (currentPlayerData.rubles < totalCost) { addToHistory('❌ Недостаточно средств'); closeActionModal(); return; }
         currentPlayerData.rubles -= totalCost;
         if (eff.cap) currentPlayerData.capital = Math.min(currentPlayerData.capital + eff.cap, 100);
         if (eff.team) currentPlayerData.team = Math.min(currentPlayerData.team + eff.team, 100);
         if (eff.market) currentPlayerData.marketing = Math.min(currentPlayerData.marketing + eff.market, 100);
-        if (eff.managerCount) managerHired = true;
-
-        const icons = { hire:'👥', advertise:'📢', develop:'🔬', hireDevs:'👨‍💻', hireMarketers:'🎯', hireManagers:'💼' };
-        addToHistory(`${icons[type]||''} ${cfg.title.split(' ').slice(1).join(' ')} ×${n}: ${eff.text} (${totalCost.toLocaleString('ru-RU')} ₽)`);
-        updateUI(); updatePlayerInLeaderboard();
-
-        if (!firstInvestmentDone) { firstInvestmentDone = true; checkAllAchievements(); }
-        closeActionModal();
+        if (eff.manager) managerHired = true;
+        addToHistory((cfg.title || type) + ' ×' + n + ': ' + eff.text + ' (' + totalCost.toLocaleString('ru-RU') + ' ₽)');
+        updateUI(); updatePlayerInLeaderboard(); closeActionModal();
     }
 
-    // Init
+    // === DUEL ===
+    var duelActive = false;
+    var duelPlayers = {
+        player1: { name:'', capital:50, rubles:2500000, team:50, marketing:50, month:0, credit_amount:0, credit_deadline:0, finished:false },
+        player2: { name:'', capital:50, rubles:2500000, team:50, marketing:50, month:0, credit_amount:0, credit_deadline:0, finished:false }
+    };
+    var currentTurn = 1;
+    var duelHistoryArr = [];
+
+    function startDuel() {
+        var p1 = document.getElementById('duelPlayer1Name').value.trim();
+        var p2 = document.getElementById('duelPlayer2Name').value.trim();
+        if (!p1 || !p2 || p1 === p2) { alert('Введите разные имена!'); return; }
+        duelPlayers.player1 = { name:p1, capital:50, rubles:2500000, team:50, marketing:50, month:0, credit_amount:0, credit_deadline:0, finished:false };
+        duelPlayers.player2 = { name:p2, capital:50, rubles:2500000, team:50, marketing:50, month:0, credit_amount:0, credit_deadline:0, finished:false };
+        currentTurn = 1; duelActive = true; duelHistoryArr = ['✨ Дуэль началась!'];
+        document.getElementById('duelSetup').style.display = 'none';
+        document.getElementById('duelGame').style.display = 'block';
+        document.getElementById('duelPlayer1NameDisplay').textContent = p1;
+        document.getElementById('duelPlayer2NameDisplay').textContent = p2;
+        document.getElementById('currentTurnName').textContent = p1;
+        updateDuelUI(); updateDuelHistory();
+        document.getElementById('duelPlayer1Card').classList.add('active');
+        document.getElementById('duelPlayer2Card').classList.remove('active');
+    }
+    function updateDuelUI() {
+        ['Capital','Team','Marketing','Month'].forEach(function(k) {
+            var lk = k.toLowerCase();
+            document.getElementById('duelPlayer1' + k).textContent = duelPlayers.player1[lk];
+            document.getElementById('duelPlayer2' + k).textContent = duelPlayers.player2[lk];
+        });
+    }
+    function updateDuelHistory() {
+        var c = document.getElementById('duelHistory');
+        c.innerHTML = duelHistoryArr.map(function(h) { return '<div>' + h + '</div>'; }).join('');
+        c.scrollTop = c.scrollHeight;
+    }
+    function addDuelHistory(text) { duelHistoryArr.unshift(text); if (duelHistoryArr.length > 20) duelHistoryArr.pop(); updateDuelHistory(); }
+    function duelMakeMove(action) {
+        if (!duelActive) return;
+        var player = currentTurn === 1 ? duelPlayers.player1 : duelPlayers.player2;
+        if (player.finished) return;
+        if (action === 'endMonth') { duelEndMonth(player); return; }
+        var moves = {
+            hire:      function() { if (player.rubles >= 200000) { player.rubles -= 200000; player.team = Math.min(player.team + 15, 100); addDuelHistory(player.name + ': 👥 Найм'); } },
+            advertise: function() { if (player.rubles >= 150000) { player.rubles -= 150000; player.marketing = Math.min(player.marketing + 15, 100); addDuelHistory(player.name + ': 📢 Реклама'); } },
+            develop:   function() { if (player.rubles >= 300000) { player.rubles -= 300000; player.capital = Math.min(player.capital + 10, 100); player.team = Math.min(player.team + 10, 100); player.marketing = Math.min(player.marketing + 10, 100); addDuelHistory(player.name + ': 🔬 Разработка'); } },
+            investor:  function() { var ch = Math.floor((player.team + player.marketing + player.capital) / 3); if (Math.random() * 100 <= ch) { var inv = Math.floor(Math.random() * 500000 + 300000); player.rubles += inv; addDuelHistory(player.name + ': 🎉 Инвестор +' + inv.toLocaleString('ru-RU')); } else { player.marketing = Math.max(player.marketing - 10, 0); addDuelHistory(player.name + ': 😔 Инвестор отказал'); } },
+            credit:    function() { if (!player.credit_amount) { player.credit_amount = 600000; player.credit_deadline = player.month + 3; player.rubles += 500000; addDuelHistory(player.name + ': 💳 Кредит'); } },
+            repay:     function() { if (player.credit_amount && player.rubles >= player.credit_amount) { player.rubles -= player.credit_amount; player.credit_amount = 0; addDuelHistory(player.name + ': ✅ Кредит погашен'); } }
+        };
+        if (moves[action]) moves[action]();
+        updateDuelUI();
+    }
+    function duelEndMonth(player) {
+        var cost = 50000 + player.team * 2000 + player.marketing * 1500;
+        if (player.rubles < cost) { addDuelHistory(player.name + ': 💀 БАНКРОТСТВО!'); player.finished = true; switchTurn(); return; }
+        player.rubles -= cost;
+        var e = eventsList[Math.floor(Math.random() * eventsList.length)];
+        player.capital = Math.min(Math.max(player.capital + e.cap, 0), 100);
+        player.team = Math.min(Math.max(player.team + e.team, 0), 100);
+        player.marketing = Math.min(Math.max(player.marketing + e.market, 0), 100);
+        addDuelHistory(player.name + ': ' + e.text);
+        document.getElementById('duelEventBox').textContent = e.text;
+        player.month++;
+        if (player.capital >= 80 && player.team >= 80 && player.marketing >= 80 && player.month >= 6) {
+            addDuelHistory('🏆 ' + player.name + ' достиг IPO!');
+            try { canvasConfetti({ particleCount: 200, spread: 120, origin: { y: 0.5 } }); } catch(ex) {}
+            player.finished = true;
+        }
+        updateDuelUI(); switchTurn();
+    }
+    function switchTurn() {
+        if (!duelActive) return;
+        if (duelPlayers.player1.finished && duelPlayers.player2.finished) { determineWinner(); return; }
+        currentTurn = currentTurn === 1 ? 2 : 1;
+        var next = currentTurn === 1 ? duelPlayers.player1 : duelPlayers.player2;
+        document.getElementById('currentTurnName').textContent = next.name;
+        document.getElementById('duelPlayer1Card').classList.toggle('active', currentTurn === 1);
+        document.getElementById('duelPlayer2Card').classList.toggle('active', currentTurn === 2);
+        addDuelHistory('🔄 Ход: ' + next.name);
+    }
+    function determineWinner() {
+        var p1 = duelPlayers.player1, p2 = duelPlayers.player2;
+        var winner = p1.capital > p2.capital ? p1 : p2.capital > p1.capital ? p2 : (p1.month < p2.month ? p1 : p2.month < p1.month ? p2 : null);
+        if (winner) {
+            document.getElementById(winner === p1 ? 'duelPlayer1Winner' : 'duelPlayer2Winner').textContent = '🏆 ПОБЕДИТЕЛЬ!';
+            addDuelHistory('🏆 ' + winner.name + ' победил!');
+            try { canvasConfetti({ particleCount: 400, spread: 120, origin: { y: 0.5 } }); } catch(ex) {}
+        } else { addDuelHistory('🤝 НИЧЬЯ!'); }
+        duelActive = false;
+    }
+    function endDuel() {
+        if (confirm('Завершить дуэль?')) { duelPlayers.player1.finished = true; duelPlayers.player2.finished = true; determineWinner(); }
+    }
+
+    // === ONBOARDING TOUR ===
+    var tourSteps = [
+        {
+            target: null, // центр экрана
+            title: '👋 Добро пожаловать!',
+            text: 'Это Бизнес-симулятор ПИУ РАНХиГС. Твоя цель — вывести стартап на IPO. Давай быстро покажем как всё работает!',
+            arrow: null
+        },
+        {
+            target: '.stats-grid',
+            title: '📊 Три главные метрики',
+            text: 'Капитал 💰, Команда 👥 и Маркетинг 📢. Нужно довести каждую до 80%+. Они влияют друг на друга — держи баланс!',
+            arrow: 'arrow-bottom'
+        },
+        {
+            target: '.ipo-bar-wrap',
+            title: '🚀 Прогресс к IPO',
+            text: 'Эта шкала показывает насколько ты близко к победе. Достигни 80% по всем трём метрикам — и IPO твоё!',
+            arrow: 'arrow-bottom'
+        },
+        {
+            target: '.vs-section',
+            title: '🤖 Следи за конкурентами',
+            text: 'Три ИИ-конкурента развиваются параллельно. Если кто-то обгонит тебя на 20%+ — потеряешь долю рынка!',
+            arrow: 'arrow-bottom'
+        },
+        {
+            target: '.action-grid',
+            title: '🎮 Кнопки действий',
+            text: 'Нажми на любую кнопку — откроется окно с настройкой. Выбери количество и посмотри цепочку синергий до подтверждения.',
+            arrow: 'arrow-top'
+        },
+        {
+            target: '.action-btn.a-end',
+            title: '⏩ Завершить месяц',
+            text: 'После всех действий нажми "Завершить месяц". Спишутся расходы, произойдёт случайное событие и сработают синергии.',
+            arrow: 'arrow-top'
+        },
+        {
+            target: '.mascot-card',
+            title: '🦊 Лисёнок-советник',
+            text: 'После каждого месяца лисёнок даёт подсказку — что улучшить. Следуй советам и путь к IPO станет короче!',
+            arrow: 'arrow-top'
+        }
+    ];
+    var tourStep = 0;
+    var tourActive = false;
+    var tourShownThisSession = false;
+
+    function startTour() {
+        if (tourShownThisSession) return;
+        tourShownThisSession = true;
+        tourActive = true;
+        tourStep = 0;
+        document.getElementById('tourOverlay').style.display = 'block';
+        renderTourStep();
+    }
+
+    function renderTourStep() {
+        var step = tourSteps[tourStep];
+        var overlay = document.getElementById('tourOverlay');
+        var highlight = document.getElementById('tourHighlight');
+        var bubble = document.getElementById('tourBubble');
+
+        document.getElementById('tourStepNum').textContent = 'Шаг ' + (tourStep + 1) + ' из ' + tourSteps.length;
+        document.getElementById('tourStepTitle').textContent = step.title;
+        document.getElementById('tourStepText').textContent = step.text;
+        document.getElementById('tourNextBtn').textContent = tourStep === tourSteps.length - 1 ? '🎮 Играть!' : 'Далее →';
+
+        // Dots
+        var dots = document.getElementById('tourDots');
+        dots.innerHTML = tourSteps.map(function(_, i) {
+            return '<div class="tour-dot ' + (i === tourStep ? 'active' : '') + '"></div>';
+        }).join('');
+
+        // Position highlight and bubble
+        if (step.target) {
+            var el = document.querySelector(step.target);
+            if (el) {
+                var rect = el.getBoundingClientRect();
+                var pad = 8;
+                highlight.style.display = 'block';
+                highlight.style.left = (rect.left - pad) + 'px';
+                highlight.style.top = (rect.top - pad) + 'px';
+                highlight.style.width = (rect.width + pad * 2) + 'px';
+                highlight.style.height = (rect.height + pad * 2) + 'px';
+
+                // Position bubble above or below
+                bubble.className = 'tour-bubble ' + (step.arrow || '');
+                var bubbleW = 280;
+                var bLeft = Math.max(10, Math.min(rect.left, window.innerWidth - bubbleW - 10));
+
+                if (step.arrow === 'arrow-bottom') {
+                    // bubble above element
+                    bubble.style.top = (rect.top - pad - 10 - 160) + 'px';
+                    bubble.style.left = bLeft + 'px';
+                    bubble.style.bottom = 'auto';
+                } else {
+                    // bubble below element
+                    bubble.style.top = (rect.bottom + pad + 14) + 'px';
+                    bubble.style.left = bLeft + 'px';
+                    bubble.style.bottom = 'auto';
+                }
+                // Scroll element into view
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } else {
+            // Center of screen
+            highlight.style.display = 'none';
+            bubble.className = 'tour-bubble';
+            bubble.style.top = '50%';
+            bubble.style.left = '50%';
+            bubble.style.transform = 'translate(-50%, -50%)';
+            bubble.style.bottom = 'auto';
+        }
+        if (step.target) bubble.style.transform = '';
+    }
+
+    function tourNext() {
+        tourStep++;
+        if (tourStep >= tourSteps.length) {
+            tourSkip();
+        } else {
+            renderTourStep();
+        }
+    }
+
+    function tourSkip() {
+        tourActive = false;
+        document.getElementById('tourOverlay').style.display = 'none';
+    }
+
+    // === INIT — ждём полной загрузки страницы и скриптов ===
     updateBookDisplay();
     updateAchievementsUI();
+    // Инициализируем графики только после загрузки Chart.js
+    window.addEventListener('load', function() {
+        // если Chart.js ещё не загружен — пробуем через 500мс
+        function tryInitCharts(attempts) {
+            if (typeof Chart !== 'undefined') {
+                initChart();
+                initRadar();
+            } else if (attempts > 0) {
+                setTimeout(function() { tryInitCharts(attempts - 1); }, 300);
+            }
+        }
+        tryInitCharts(10);
+    });
     </script>
 </body>
 </html>
