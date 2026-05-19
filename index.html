@@ -563,6 +563,95 @@
         .stat-value.up { color: var(--green) !important; }
         .stat-value.down { color: var(--red) !important; }
 
+        /* ONBOARDING RULES SCREEN */
+        #rulesOnboarding {
+            display: none; position: fixed; inset: 0;
+            background: var(--bg); z-index: 8000;
+            overflow-y: auto;
+        }
+        #rulesOnboarding.active { display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px 40px; }
+        .rob-inner {
+            width: 100%; max-width: 640px;
+        }
+        .rob-header {
+            text-align: center; padding: 32px 0 24px;
+        }
+        .rob-emoji { font-size: 56px; display: block; margin-bottom: 12px; animation: float 3s ease-in-out infinite; }
+        .rob-title {
+            font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 6px;
+        }
+        .rob-sub { font-size: 13px; color: var(--muted); }
+        .rob-name-tag {
+            display: inline-block; background: rgba(124,92,252,0.15);
+            border: 1px solid rgba(124,92,252,0.3); border-radius: 99px;
+            padding: 4px 14px; font-size: 13px; font-weight: 600;
+            color: var(--accent); margin-top: 8px;
+        }
+        .rob-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        @media(max-width:500px){ .rob-cards { grid-template-columns: 1fr; } }
+        .rob-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 18px;
+            position: relative; overflow: hidden;
+        }
+        .rob-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 3px; height: 100%;
+        }
+        .rob-card.c1::before { background: var(--accent); }
+        .rob-card.c2::before { background: var(--green); }
+        .rob-card.c3::before { background: var(--yellow); }
+        .rob-card.c4::before { background: var(--red); }
+        .rob-card-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+        .rob-card-title { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+        .rob-card-text { font-size: 12px; color: var(--muted); line-height: 1.6; }
+        .rob-card-text strong { color: var(--text); }
+        .rob-actions-row {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 18px; margin-bottom: 16px;
+        }
+        .rob-actions-title {
+            font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700;
+            color: var(--accent); text-transform: uppercase; letter-spacing: .06em;
+            margin-bottom: 12px;
+        }
+        .rob-action-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        @media(max-width:500px){ .rob-action-list { grid-template-columns: 1fr; } }
+        .rob-action-item {
+            display: flex; align-items: flex-start; gap: 8px;
+            background: var(--card2); border-radius: 8px; padding: 8px 10px;
+        }
+        .rob-action-icon { font-size: 18px; flex-shrink: 0; }
+        .rob-action-body { font-size: 11px; }
+        .rob-action-name { font-weight: 700; color: var(--text); }
+        .rob-action-desc { color: var(--muted); margin-top: 2px; line-height: 1.4; }
+        .rob-synergy {
+            background: rgba(124,92,252,0.1); border: 1px solid rgba(124,92,252,0.25);
+            border-radius: var(--radius); padding: 14px 18px; margin-bottom: 16px;
+            font-size: 12px; color: var(--muted); line-height: 1.7;
+        }
+        .rob-synergy-title {
+            font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700;
+            color: var(--accent); text-transform: uppercase; letter-spacing: .06em;
+            margin-bottom: 8px;
+        }
+        .rob-cta {
+            text-align: center; padding: 8px 0 16px;
+        }
+        .rob-cta-btn {
+            font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), #9070ff);
+            color: white; border: none; border-radius: 16px;
+            padding: 18px 48px; cursor: pointer; width: 100%;
+            box-shadow: 0 4px 24px rgba(124,92,252,0.4);
+            transition: all 0.2s; letter-spacing: .02em;
+        }
+        .rob-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(124,92,252,0.5); }
+        .rob-cta-sub { font-size: 11px; color: var(--muted); margin-top: 10px; }
+
         /* ONBOARDING TOUR */
         #tourOverlay {
             position: fixed; inset: 0; z-index: 9999;
@@ -612,6 +701,130 @@
             transition: background 0.2s;
         }
         #tourNextBtn:hover { background: #9070ff; }
+
+        /* INDUSTRY SELECTOR */
+        .industry-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 16px 0; }
+        @media(max-width:480px){ .industry-grid { grid-template-columns: 1fr 1fr; } }
+        .industry-card {
+            background: var(--card2); border: 2px solid var(--border);
+            border-radius: var(--radius); padding: 14px 10px; text-align: center;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .industry-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .industry-card.selected { border-color: var(--accent); background: rgba(124,92,252,0.12); box-shadow: 0 0 16px rgba(124,92,252,0.3); }
+        .industry-icon { font-size: 32px; display: block; margin-bottom: 6px; }
+        .industry-name { font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+        .industry-hint { font-size: 10px; color: var(--muted); line-height: 1.4; }
+        .industry-bonus { font-size: 10px; color: var(--accent); font-weight: 600; margin-top: 4px; }
+
+        /* TERM TOAST */
+        .term-toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: var(--card); border: 1px solid rgba(0,229,192,0.4);
+            border-radius: 14px; padding: 12px 18px; max-width: 340px; width: 90%;
+            z-index: 5000; animation: slideUpFade 0.4s cubic-bezier(0.34,1.2,0.64,1);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+        @keyframes slideUpFade { from{transform:translateX(-50%) translateY(20px);opacity:0} to{transform:translateX(-50%) translateY(0);opacity:1} }
+        .term-toast-header {
+            font-family: 'Unbounded', sans-serif; font-size: 9px; font-weight: 700;
+            color: var(--accent2); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 5px;
+        }
+        .term-toast-term { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+        .term-toast-def { font-size: 11px; color: var(--muted); line-height: 1.5; }
+        .term-toast-example { font-size: 10px; color: var(--accent); margin-top: 4px; font-style: italic; }
+
+        /* DEBRIEF MODAL */
+        .debrief-box {
+            background: var(--card); border: 1px solid var(--green);
+            border-radius: 24px; padding: 32px; max-width: 540px; width: 92%;
+            animation: modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            max-height: 88vh; overflow-y: auto;
+        }
+        .debrief-title {
+            font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 900;
+            color: var(--green); margin-bottom: 4px;
+        }
+        .debrief-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+        .debrief-strategy {
+            background: rgba(124,92,252,0.12); border: 1px solid rgba(124,92,252,0.3);
+            border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
+        }
+        .debrief-strategy-name {
+            font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 800;
+            color: var(--accent); margin-bottom: 6px;
+        }
+        .debrief-strategy-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+        .debrief-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+        .debrief-stat { background: var(--card2); border-radius: 10px; padding: 10px; text-align: center; }
+        .debrief-stat-val { font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 900; }
+        .debrief-stat-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing:.04em; margin-top: 2px; }
+        .debrief-terms {
+            background: var(--card2); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
+        }
+        .debrief-terms-title {
+            font-family: 'Unbounded', sans-serif; font-size: 9px; font-weight: 700;
+            color: var(--yellow); text-transform: uppercase; letter-spacing:.06em; margin-bottom: 10px;
+        }
+        .debrief-term-item { margin-bottom: 8px; font-size: 12px; line-height: 1.5; }
+        .debrief-term-item strong { color: var(--text); }
+        .debrief-term-item span { color: var(--muted); }
+
+        /* INDUSTRY BADGE in top bar */
+        .industry-badge {
+            display: flex; align-items: center; gap: 5px;
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: 99px; padding: 4px 10px; font-size: 12px;
+        }
+
+        /* MONEY WIDGET */
+        .money-widget {
+            display: flex; align-items: center; justify-content: space-between;
+            background: linear-gradient(135deg, rgba(0,200,150,0.12), rgba(0,200,150,0.04));
+            border: 1.5px solid rgba(0,200,150,0.3);
+            border-radius: var(--radius-sm); padding: 12px 18px;
+            margin-bottom: 14px; transition: all 0.4s;
+        }
+        .money-widget.low {
+            background: linear-gradient(135deg, rgba(255,77,109,0.18), rgba(255,77,109,0.06));
+            border-color: var(--red);
+            animation: moneyPulse 1s ease-in-out infinite;
+        }
+        .money-widget.critical {
+            background: rgba(255,77,109,0.25);
+            border-color: var(--red);
+            animation: moneyPulse 0.5s ease-in-out infinite;
+        }
+        @keyframes moneyPulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,77,109,0.4)} 50%{box-shadow:0 0 0 8px rgba(255,77,109,0)} }
+        .money-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing:.04em; }
+        .money-amount {
+            font-family: 'Unbounded', sans-serif; font-size: 22px; font-weight: 900;
+            color: var(--green); transition: color 0.3s;
+        }
+        .money-widget.low .money-amount,
+        .money-widget.critical .money-amount { color: var(--red); }
+        .money-warn { font-size: 11px; font-weight: 700; color: var(--red); display: none; }
+        .money-widget.low .money-warn,
+        .money-widget.critical .money-warn { display: block; }
+        .credit-badge {
+            font-size: 10px; background: rgba(255,77,109,0.15); color: var(--red);
+            border: 1px solid rgba(255,77,109,0.3); border-radius: 99px; padding: 2px 8px;
+            font-weight: 600; display: none;
+        }
+
+        /* COMPETITOR TOOLTIP */
+        .competitor-chip { position: relative; cursor: help; }
+        .competitor-tip {
+            display: none; position: absolute; bottom: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%);
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 10px; padding: 10px 12px; width: 220px;
+            font-size: 11px; color: var(--muted); line-height: 1.5;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 100; text-align: left;
+            pointer-events: none;
+        }
+        .competitor-tip strong { color: var(--text); display: block; margin-bottom: 4px; }
+        .competitor-chip:hover .competitor-tip { display: block; }
 
         /* TOAST */
         .achievement-toast {
@@ -838,6 +1051,7 @@
                             <div class="player-dot"></div>
                             <span id="currentPlayerNameDisplay" style="font-weight:600;font-size:13px"></span>
                         </div>
+                        <div class="industry-badge" id="industryBadgeTop">💻 IT-стартап</div>
                         <button class="btn btn-ghost" onclick="toggleTheme()" id="themeBtn">🌙 Тема</button>
                         <button class="btn btn-ghost" onclick="showHelpModal()">❓ Помощь</button>
                         <button class="btn btn-ghost" onclick="exportReport()">📄 Экспорт</button>
@@ -851,12 +1065,22 @@
                         <div class="card" style="margin-bottom:16px">
                             <div class="card-title">📊 Показатели компании</div>
 
-                            <div class="stats-grid">
+                            <!-- MONEY WIDGET - prominent -->
+                            <div class="money-widget" id="moneyWidget">
+                                <div>
+                                    <div class="money-label">💵 Текущий баланс</div>
+                                    <div class="money-amount" id="rublesValue">2 500 000 ₽</div>
+                                    <div class="money-warn" id="moneyWarn">⚠️ КРИТИЧЕСКИ МАЛО ДЕНЕГ!</div>
+                                </div>
+                                <div style="text-align:right">
+                                    <div class="credit-badge" id="creditBadge">Кредит активен</div>
+                                    <div style="font-size:10px;color:var(--muted);margin-top:4px" id="operCost"></div>
+                                </div>
+                            </div>
                                 <div class="stat-card capital">
                                     <div class="stat-label">💰 Капитал <span class="mood" id="capitalMood">😐</span></div>
                                     <div class="stat-value"><span id="capitalValue">50</span><small>%</small></div>
                                     <div class="progress-track"><div class="progress-fill capital" id="capitalBar" style="width:50%"></div></div>
-                                    <div class="stat-sub" id="rublesValue">2 500 000 ₽</div>
                                 </div>
                                 <div class="stat-card team">
                                     <div class="stat-label">👥 Команда <span class="mood" id="teamMood">😐</span></div>
@@ -919,40 +1143,35 @@
                         <div class="card">
                             <div class="action-label">Действия — нажмите, чтобы настроить</div>
                             <div class="action-grid">
-                                <button class="action-btn" onclick="openActionModal('hire')">
-                                    <span class="a-icon">👥</span>
-                                    <span>Найм</span>
-                                    <span class="a-cost">от 200 000 ₽</span>
+                                <button class="action-btn" onclick="openActionModal('hireDevs')">
+                                    <span class="a-icon">👨‍💻</span>
+                                    <span>Разработчики</span>
+                                    <span class="a-cost">от 150 000 ₽ · кап +5%</span>
                                 </button>
                                 <button class="action-btn" onclick="openActionModal('advertise')">
                                     <span class="a-icon">📢</span>
                                     <span>Реклама</span>
-                                    <span class="a-cost">от 150 000 ₽</span>
+                                    <span class="a-cost">от 150 000 ₽ · мкт +15%</span>
                                 </button>
                                 <button class="action-btn" onclick="openActionModal('develop')">
                                     <span class="a-icon">🔬</span>
                                     <span>Разработка</span>
-                                    <span class="a-cost">от 300 000 ₽</span>
+                                    <span class="a-cost">от 300 000 ₽ · все +10%</span>
                                 </button>
                                 <button class="action-btn" onclick="makeMove('investor')">
                                     <span class="a-icon">💰</span>
                                     <span>Инвестор</span>
                                     <span class="a-cost">шанс = среднее метрик</span>
                                 </button>
-                                <button class="action-btn" onclick="openActionModal('hireDevs')">
-                                    <span class="a-icon">👨‍💻</span>
-                                    <span>Разработчики</span>
-                                    <span class="a-cost">от 150 000 ₽</span>
-                                </button>
                                 <button class="action-btn" onclick="openActionModal('hireMarketers')">
                                     <span class="a-icon">🎯</span>
                                     <span>Маркетологи</span>
-                                    <span class="a-cost">от 100 000 ₽</span>
+                                    <span class="a-cost">от 100 000 ₽ · уник. эффект</span>
                                 </button>
                                 <button class="action-btn" onclick="openActionModal('hireManagers')">
                                     <span class="a-icon">💼</span>
                                     <span>Менеджеры</span>
-                                    <span class="a-cost">от 120 000 ₽</span>
+                                    <span class="a-cost">от 120 000 ₽ · расходы↓</span>
                                 </button>
                                 <button class="action-btn" onclick="openActionModal('credit')">
                                     <span class="a-icon">💳</span>
@@ -964,7 +1183,7 @@
                                     <span>Погасить</span>
                                     <span class="a-cost">кредит</span>
                                 </button>
-                                <button class="action-btn a-end" onclick="makeMove('endMonth')">
+                                <button class="action-btn a-end" onclick="makeMove('endMonth')" style="grid-column:span 2">
                                     <span class="a-icon">⏩</span>
                                     <span>Завершить месяц</span>
                                     <span class="a-cost" style="color:rgba(0,26,20,0.6)">закончить ход</span>
@@ -1326,6 +1545,174 @@
         </div>
     </div>
 
+    <!-- DEBRIEF MODAL -->
+    <div id="debriefModal" class="modal-overlay" style="display:none">
+        <div class="debrief-box">
+            <div class="debrief-title">🏆 Разбор вашей стратегии</div>
+            <div class="debrief-sub" id="debriefSub"></div>
+            <div class="debrief-stats" id="debriefStats"></div>
+            <div class="debrief-strategy" id="debriefStrategy"></div>
+            <div class="debrief-terms" id="debriefTerms"></div>
+            <button class="btn btn-primary btn-lg btn-full" onclick="document.getElementById('debriefModal').style.display='none'; document.getElementById('gameModal').style.display='flex'">
+                📊 Посмотреть итоги
+            </button>
+        </div>
+    </div>
+
+    <!-- RULES ONBOARDING SCREEN -->
+    <div id="rulesOnboarding">
+        <div class="rob-inner">
+            <div class="rob-header">
+                <span class="rob-emoji">🏢</span>
+                <div class="rob-title">БИЗНЕС-СИМУЛЯТОР</div>
+                <div class="rob-sub">Прочитай правила — это займёт 1 минуту</div>
+                <div class="rob-name-tag" id="robNameTag">👋 Привет, Игрок!</div>
+            </div>
+
+            <div class="rob-cards">
+                <div class="rob-card c1">
+                    <span class="rob-card-icon">🎯</span>
+                    <div class="rob-card-title">Цель игры</div>
+                    <div class="rob-card-text">Вывести стартап на <strong>IPO</strong>. Для этого нужно довести <strong>все три метрики до 80%+</strong> минимум за 6 месяцев.</div>
+                </div>
+                <div class="rob-card c2">
+                    <span class="rob-card-icon">📊</span>
+                    <div class="rob-card-title">Три метрики</div>
+                    <div class="rob-card-text"><strong>💰 Капитал</strong> — прибыль компании<br><strong>👥 Команда</strong> — сила сотрудников<br><strong>📢 Маркетинг</strong> — охват клиентов</div>
+                </div>
+                <div class="rob-card c3">
+                    <span class="rob-card-icon">⚖️</span>
+                    <div class="rob-card-title">Синергия</div>
+                    <div class="rob-card-text">Метрики <strong>влияют друг на друга</strong>. Держи их в балансе — получишь бонус каждый месяц. Перекос = упущенная выгода.</div>
+                </div>
+                <div class="rob-card c4">
+                    <span class="rob-card-icon">💀</span>
+                    <div class="rob-card-title">Банкротство</div>
+                    <div class="rob-card-text">Каждый месяц списываются <strong>операционные расходы</strong>. Если денег не хватит — игра заканчивается.</div>
+                </div>
+            </div>
+
+            <div class="rob-actions-row">
+                <div class="rob-actions-title">🎮 Что делают кнопки</div>
+                <div class="rob-action-list">
+                    <div class="rob-action-item">
+                        <span class="rob-action-icon">👨‍💻</span>
+                        <div class="rob-action-body">
+                            <div class="rob-action-name">Разработчики</div>
+                            <div class="rob-action-desc">Улучшают продукт → Капитал +5% за каждого</div>
+                        </div>
+                    </div>
+                    <div class="rob-action-item">
+                        <span class="rob-action-icon">📢</span>
+                        <div class="rob-action-body">
+                            <div class="rob-action-name">Реклама</div>
+                            <div class="rob-action-desc">Кампании в СМИ → Маркетинг +15% за каждую</div>
+                        </div>
+                    </div>
+                    <div class="rob-action-item">
+                        <span class="rob-action-icon">🎯</span>
+                        <div class="rob-action-body">
+                            <div class="rob-action-name">Маркетологи</div>
+                            <div class="rob-action-desc">Конвертируют маркетинг в Капитал + Команда +3%</div>
+                        </div>
+                    </div>
+                    <div class="rob-action-item">
+                        <span class="rob-action-icon">💼</span>
+                        <div class="rob-action-body">
+                            <div class="rob-action-name">Менеджеры</div>
+                            <div class="rob-action-desc">Снижают ежемесячные расходы на 10%</div>
+                        </div>
+                    </div>
+                    <div class="rob-action-item">
+                        <span class="rob-action-icon">🔬</span>
+                        <div class="rob-action-body">
+                            <div class="rob-action-name">Разработка</div>
+                            <div class="rob-action-desc">Дорого, но все три метрики +10% сразу</div>
+                        </div>
+                    </div>
+                    <div class="rob-action-item">
+                        <span class="rob-action-icon">💰</span>
+                        <div class="rob-action-body">
+                            <div class="rob-action-name">Инвестор</div>
+                            <div class="rob-action-desc">Шанс = среднее метрик. Раз в 2 мес. Кулдаун!</div>
+                        </div>
+                    </div>
+                    <div class="rob-action-item">
+                        <span class="rob-action-icon">💳</span>
+                        <div class="rob-action-body">
+                            <div class="rob-action-name">Кредит</div>
+                            <div class="rob-action-desc">Быстрые деньги, но вернуть ×1.2 за срок</div>
+                        </div>
+                    </div>
+                    <div class="rob-action-item">
+                        <span class="rob-action-icon">⏩</span>
+                        <div class="rob-action-body">
+                            <div class="rob-action-name">Завершить месяц</div>
+                            <div class="rob-action-desc">Спишет расходы, случится событие, сработают синергии</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rob-synergy">
+                <div class="rob-synergy-title">⚡ Как работает синергия</div>
+                👥 Команда &gt; 30% → пассивный доход (+Капитал каждый месяц)<br>
+                📢 Маркетинг &gt; 30% → привлекает клиентов (+Капитал)<br>
+                📢 Маркетинг &gt; 60% → бренд привлекает таланты (+Команда)<br>
+                💰 Капитал &gt; 60% → можешь платить больше (+Команда)<br>
+                ⚖️ Разброс &lt; 15% → <strong style="color:var(--accent)">бонус синергии всем метрикам!</strong>
+            </div>
+
+            <div class="rob-actions-row" style="margin-bottom:16px">
+                <div class="rob-actions-title">🏭 Выбери свою отрасль</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Отрасль влияет на стартовые условия и уникальные события</div>
+                <div class="industry-grid" id="industryGrid">
+                    <div class="industry-card selected" onclick="selectIndustry('it')" data-id="it">
+                        <span class="industry-icon">💻</span>
+                        <div class="industry-name">IT-стартап</div>
+                        <div class="industry-hint">Высокая маржа, быстрый рост</div>
+                        <div class="industry-bonus">Разработка −20% дешевле</div>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('retail')" data-id="retail">
+                        <span class="industry-icon">🛍️</span>
+                        <div class="industry-name">Ритейл</div>
+                        <div class="industry-hint">Большой рынок, высокая конкуренция</div>
+                        <div class="industry-bonus">Реклама даёт +20% эффект</div>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('food')" data-id="food">
+                        <span class="industry-icon">🍕</span>
+                        <div class="industry-name">Ресторан</div>
+                        <div class="industry-hint">Стабильный спрос, сезонность</div>
+                        <div class="industry-bonus">Старт: Команда +10%</div>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('edu')" data-id="edu">
+                        <span class="industry-icon">🎓</span>
+                        <div class="industry-name">EdTech</div>
+                        <div class="industry-hint">Низкие расходы, медленный рост</div>
+                        <div class="industry-bonus">Операционные расходы −15%</div>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('med')" data-id="med">
+                        <span class="industry-icon">🏥</span>
+                        <div class="industry-name">Медтех</div>
+                        <div class="industry-hint">Высокий барьер входа, доверие</div>
+                        <div class="industry-bonus">Инвестор даёт +30% больше</div>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('green')" data-id="green">
+                        <span class="industry-icon">🌱</span>
+                        <div class="industry-name">GreenTech</div>
+                        <div class="industry-hint">Тренд ESG, господдержка</div>
+                        <div class="industry-bonus">Синергия баланса +2%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rob-cta">
+                <button class="rob-cta-btn" onclick="startGame()">🚀 Всё понял — начать игру!</button>
+                <div class="rob-cta-sub">После этого появятся интерактивные подсказки по интерфейсу</div>
+            </div>
+        </div>
+    </div>
+
     <!-- ONBOARDING TOUR -->
     <div id="tourOverlay">
         <div id="tourBackdrop"></div>
@@ -1649,8 +2036,23 @@
     }
     function updateAICompetitorsUI() {
         var row = document.getElementById('aiCompetitorsRow'); if (!row) return;
+        var strategyDesc = {
+            aggressive: 'Агрессивная стратегия: быстро растёт в первые месяцы. Если обгонит вас на 20%+ — снижает ваш капитал и маркетинг на 10%. Инвестируйте в разработку, чтобы не отстать.',
+            balanced:   'Стабильная стратегия: равномерно растёт каждый месяц. Опасен в долгих партиях. Следите за шкалой «Вы vs ИИ».',
+            marketing:  'Маркетинговый фокус: растёт рывками через месяц. Особенно опасен если ваш маркетинг низкий — переманивает ваших клиентов. Инвестируйте в маркетологов.'
+        };
         row.innerHTML = aiCompetitors.map(function(ai) {
-            return '<div class="competitor-chip" title="' + ai.strategy + '"><div class="chip-dot" style="background:' + ai.color + '"></div><span>' + ai.emoji + ' ' + ai.name + ': ' + ai.capital + '%</span></div>';
+            var diff = ai.capital - currentPlayerData.capital;
+            var threat = diff > 15 ? '🔴 Опасен' : diff > 5 ? '🟡 Догоняет' : '🟢 Отстаёт';
+            return '<div class="competitor-chip" title="">' +
+                '<div class="chip-dot" style="background:' + ai.color + '"></div>' +
+                '<span>' + ai.emoji + ' ' + ai.name + ': ' + ai.capital + '%</span>' +
+                '<div class="competitor-tip">' +
+                    '<strong>' + ai.emoji + ' ' + ai.name + ' · ' + threat + '</strong>' +
+                    strategyDesc[ai.strategy] +
+                    '<div style="margin-top:6px;color:var(--accent);font-weight:600">Разрыв с вами: ' + (diff >= 0 ? '+' : '') + diff + '%</div>' +
+                '</div>' +
+            '</div>';
         }).join('');
         updateLeaderboard();
     }
@@ -1720,9 +2122,9 @@
         var avg = (p.capital + p.team + p.marketing) / 3;
         var maxDiff = Math.max(p.capital, p.team, p.marketing) - Math.min(p.capital, p.team, p.marketing);
         if (maxDiff <= 15 && avg >= 50) {
-            var bonus = Math.round(avg / 25);
+            var bonus = Math.round(avg / 25) + getIndustrySynergyBonus();
             p.capital = Math.min(p.capital + bonus, 100); p.team = Math.min(p.team + bonus, 100); p.marketing = Math.min(p.marketing + bonus, 100);
-            logs.push('⚖️ Синергия баланса: все +' + bonus + '%');
+            logs.push('⚖️ Синергия баланса: все +' + bonus + '%' + (getIndustrySynergyBonus() > 0 ? ' (бонус ' + industries[currentIndustry].name + ')' : ''));
         } else if (maxDiff > 30) {
             logs.push('⚖️ Разброс ' + maxDiff + '% — синергия не работает в полную силу');
         }
@@ -1745,6 +2147,33 @@
         document.getElementById('marketingValue').textContent = currentPlayerData.marketing;
         document.getElementById('monthValue').textContent = currentPlayerData.month;
         document.getElementById('rublesValue').textContent = currentPlayerData.rubles.toLocaleString('ru-RU') + ' ₽';
+
+        // Money widget alarm
+        var mw = document.getElementById('moneyWidget');
+        var warnEl = document.getElementById('moneyWarn');
+        var discount = managerHired ? 0.9 : 1.0;
+        var nextCost = Math.round((50000 + currentPlayerData.team * 2000 + currentPlayerData.marketing * 1500) * discount);
+        var operEl = document.getElementById('operCost');
+        if (operEl) operEl.textContent = 'Расходы след. мес: ' + nextCost.toLocaleString('ru-RU') + ' ₽';
+        if (currentPlayerData.rubles < nextCost) {
+            mw.className = 'money-widget critical';
+            warnEl.textContent = '🚨 ДЕНЕГ НЕ ХВАТИТ НА СЛЕДУЮЩИЙ МЕС!';
+        } else if (currentPlayerData.rubles < nextCost * 2) {
+            mw.className = 'money-widget low';
+            warnEl.textContent = '⚠️ Мало денег! Возьмите кредит или ищите инвестора';
+        } else {
+            mw.className = 'money-widget';
+        }
+        // Credit badge
+        var cb = document.getElementById('creditBadge');
+        if (cb) {
+            if (currentPlayerData.credit_amount > 0) {
+                cb.style.display = 'block';
+                cb.textContent = 'Долг: ' + currentPlayerData.credit_amount.toLocaleString('ru-RU') + ' ₽ (до м.' + currentPlayerData.credit_deadline + ')';
+            } else {
+                cb.style.display = 'none';
+            }
+        }
 
         var risk = Math.max(0, Math.min(100, Math.round(100 - (currentPlayerData.capital + currentPlayerData.team + currentPlayerData.marketing) / 3 * 0.7)));
         document.getElementById('riskValue').textContent = risk;
@@ -1846,9 +2275,9 @@
     // === GAME ACTIONS ===
     function makeMove(action) {
         if (!currentPlayerName || gameEnded) return;
-        if (action === 'investor') { attractInvestor(); return; }
+        if (action === 'investor') { showTermToast('investor'); attractInvestor(); return; }
         if (action === 'repay') { repayCredit(); return; }
-        if (action === 'endMonth') { endMonth(); return; }
+        if (action === 'endMonth') { showTermToast('endMonth'); endMonth(); return; }
     }
 
     var lastInvestorMonth = -3; // кулдаун: нельзя звать инвестора чаще раза в 2 месяца
@@ -1865,11 +2294,10 @@
         lastInvestorMonth = currentPlayerData.month;
 
         if (Math.random() * 100 <= chance) {
-            // Сумма зависит от стадии: ранняя игра — меньше денег
-            var base = currentPlayerData.month < 4 ? 100000 : currentPlayerData.month < 8 ? 180000 : 250000;
-            var inv = Math.floor(Math.random() * base + base * 0.5);
-            // Бонус если метрики высокие
+            var base2 = currentPlayerData.month < 4 ? 100000 : currentPlayerData.month < 8 ? 180000 : 250000;
+            var inv = Math.floor(Math.random() * base2 + base2 * 0.5);
             if (avg >= 70) inv = Math.round(inv * 1.3);
+            inv = Math.round(inv * getIndustryInvestorBonus());
             currentPlayerData.rubles += inv;
             addToHistory('🎉 Инвестор вложил ' + inv.toLocaleString('ru-RU') + ' ₽ (шанс был ' + chance + '%)');
             investorCount++;
@@ -1901,9 +2329,8 @@
             currentPlayerData.credit_amount = 0;
             addToHistory('⚠️ ПРОСРОЧКА КРЕДИТА! Штраф 100 000 ₽, репутация -15%');
         }
-        var discount = managerHired ? 0.9 : 1.0;
+        var discount = (managerHired ? 0.9 : 1.0) * getIndustryOperDiscount();
         var cost = Math.round((50000 + currentPlayerData.team * 2000 + currentPlayerData.marketing * 1500) * discount);
-        if (currentPlayerData.rubles < cost) { showGameEndModal(false); return; }
         currentPlayerData.rubles -= cost;
 
         var e = eventsList[Math.floor(Math.random() * eventsList.length)];
@@ -2015,10 +2442,35 @@
             if (shareBtn) shareBtn.style.display = 'block';
             try { canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } }); } catch(ex) {}
             checkAllAchievements();
+            // Show strategy debrief after short delay
+            setTimeout(analyzeStrategy, 1200);
         } else {
             box.className = 'modal-box lose'; title.className = 'modal-title lose';
             title.innerHTML = '💀 Банкротство';
-            body.innerHTML = 'Компания продержалась <strong>' + currentPlayerData.month + '</strong> месяцев.<br>Попробуйте снова!';
+            // === АНАЛИЗ ПРОИГРЫША ===
+            var p = currentPlayerData;
+            var reasons = [];
+            var advice = [];
+
+            if (p.rubles <= 0) { reasons.push('💸 Деньги закончились — операционные расходы превысили доходы'); advice.push('Следите за балансом: нанимайте менеджеров чтобы снизить расходы'); }
+            if (p.capital < 40) { reasons.push('💰 Капитал был слишком низким (' + p.capital + '%) — мало прибыли'); advice.push('Используйте «Разработку» — она даёт +10% всем метрикам сразу'); }
+            if (p.team < 40) { reasons.push('👥 Слабая команда (' + p.team + '%) не генерировала доход'); advice.push('Нанимайте разработчиков раньше — они дают синергию капиталу'); }
+            if (p.marketing < 40) { reasons.push('📢 Низкий маркетинг (' + p.marketing + '%) — мало клиентов, мало выручки'); advice.push('Запускайте рекламные кампании с первых месяцев'); }
+            var maxDiff = Math.max(p.capital, p.team, p.marketing) - Math.min(p.capital, p.team, p.marketing);
+            if (maxDiff > 30) { reasons.push('⚖️ Сильный дисбаланс метрик (' + maxDiff + '%) — синергия не работала'); advice.push('Держите все три метрики близко друг к другу — это даёт бонус каждый месяц'); }
+            if (p.credit_amount > 0) { reasons.push('💳 Непогашенный кредит (' + p.credit_amount.toLocaleString('ru-RU') + ' ₽) съел ресурсы'); advice.push('Берите кредит только если уверены что вернёте за срок'); }
+            if (reasons.length === 0) { reasons.push('📉 Серия случайных негативных событий опустила капитал до нуля'); advice.push('Держите финансовую подушку — минимум 2 месяца расходов в запасе'); }
+
+            var analysisHtml = '<div style="margin:12px 0 8px;font-family:Unbounded,sans-serif;font-size:11px;color:var(--red);text-transform:uppercase;letter-spacing:.06em">📊 Анализ провала</div>';
+            analysisHtml += '<div style="font-size:12px;color:var(--muted);line-height:1.7">';
+            reasons.forEach(function(r) { analysisHtml += '<div style="margin-bottom:4px">→ ' + r + '</div>'; });
+            analysisHtml += '</div>';
+            analysisHtml += '<div style="margin:12px 0 8px;font-family:Unbounded,sans-serif;font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:.06em">💡 Что делать в следующий раз</div>';
+            analysisHtml += '<div style="font-size:12px;color:var(--muted);line-height:1.7">';
+            advice.forEach(function(a) { analysisHtml += '<div style="margin-bottom:4px">✓ ' + a + '</div>'; });
+            analysisHtml += '</div>';
+
+            body.innerHTML = 'Компания продержалась <strong>' + p.month + '</strong> месяцев.' + analysisHtml;
             addToHistory('💀 БАНКРОТСТВО');
             if (shareBtn) shareBtn.style.display = 'none';
         }
@@ -2033,10 +2485,19 @@
         currentPlayerName = name;
         if (!allPlayers.find(function(p) { return p.name === name; })) allPlayers.push({ name: name, capital: 50, month: 0 });
         loadAchievements(name);
+        // Show rules screen first
         document.getElementById('loginScreen').style.display = 'none';
+        var rob = document.getElementById('rulesOnboarding');
+        rob.classList.add('active');
+        var tag = document.getElementById('robNameTag');
+        if (tag) tag.textContent = '👋 Привет, ' + name + '!';
+    }
+
+    function startGame() {
+        document.getElementById('rulesOnboarding').classList.remove('active');
         document.getElementById('gameInterface').style.display = 'block';
-        document.getElementById('currentPlayerNameDisplay').textContent = name;
-        var cn = document.getElementById('playerCompanyName'); if (cn) cn.textContent = name + ' Inc.';
+        document.getElementById('currentPlayerNameDisplay').textContent = currentPlayerName;
+        var cn = document.getElementById('playerCompanyName'); if (cn) cn.textContent = currentPlayerName + ' Inc.';
         function tryInit(n) {
             if (typeof Chart !== 'undefined') { initChart(); initRadar(); }
             else if (n > 0) { setTimeout(function() { tryInit(n-1); }, 300); }
@@ -2044,12 +2505,14 @@
         tryInit(10);
         initAICompetitors();
         updateUI(); updateLeaderboard();
-        addToHistory('✨ Добро пожаловать, ' + name + '!');
+        addToHistory('✨ Добро пожаловать, ' + currentPlayerName + '!');
         gameEnded = false;
-        setTimeout(startTour, 400);
+        applyIndustryStart();
+        setTimeout(startTour, 600);
     }
     function logout() {
         document.getElementById('gameInterface').style.display = 'none';
+        document.getElementById('rulesOnboarding').classList.remove('active');
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('playerNameInput').value = '';
         currentPlayerName = null;
@@ -2195,10 +2658,21 @@
     // === ACTION MODAL ===
     var actionConfigs = {
         hire:         { title: '👥 Найм сотрудников',   desc: 'Каждая волна: <strong>200 000 ₽</strong>, Команда <strong>+15%</strong>', sliderLabel: 'Волны найма', min: 1, max: 5, unitCost: 200000, effectFn: function(n) { return { text: 'Команда +' + (n*15) + '%', team: n*15 }; } },
-        advertise:    { title: '📢 Реклама',             desc: 'Каждая кампания: <strong>150 000 ₽</strong>, Маркетинг <strong>+15%</strong>', sliderLabel: 'Кампании', min: 1, max: 5, unitCost: 150000, effectFn: function(n) { return { text: 'Маркетинг +' + (n*15) + '%', market: n*15 }; } },
-        develop:      { title: '🔬 Разработка',          desc: 'Каждый цикл: <strong>300 000 ₽</strong>, Все показатели <strong>+10%</strong>', sliderLabel: 'Циклы', min: 1, max: 4, unitCost: 300000, effectFn: function(n) { return { text: 'Все +' + (n*10) + '%', cap: n*10, team: n*10, market: n*10 }; } },
+        advertise:    { title: '📢 Реклама', desc: 'Каждая кампания: <strong>150 000 ₽</strong>. Ритейл: +20% к эффекту!', sliderLabel: 'Кампании', min: 1, max: 5, unitCost: 150000,
+            effectFn: function(n) { var bonus = Math.round(n * 15 * getIndustryAdvertiseBonus()); return { text: 'Маркетинг +' + bonus + '%' + (getIndustryAdvertiseBonus() > 1 ? ' 🛍️ бонус!' : ''), market: bonus }; } },
+        develop:      { title: '🔬 Разработка', desc: 'Все показатели <strong>+10%</strong>. IT-стартап: цена −20%!', sliderLabel: 'Циклы', min: 1, max: 4,
+            unitCost: 300000,
+            effectFn: function(n) { return { text: 'Все +' + (n*10) + '%', cap: n*10, team: n*10, market: n*10 }; } },
         hireDevs:     { title: '👨‍💻 Разработчики',     desc: 'Каждый: <strong>150 000 ₽</strong>, Капитал <strong>+5%</strong>', sliderLabel: 'Разработчиков', min: 1, max: 6, unitCost: 150000, effectFn: function(n) { return { text: 'Капитал +' + (n*5) + '%', cap: n*5 }; } },
-        hireMarketers:{ title: '🎯 Маркетологи',         desc: 'Каждый: <strong>100 000 ₽</strong>, Маркетинг <strong>+5%</strong>', sliderLabel: 'Маркетологов', min: 1, max: 6, unitCost: 100000, effectFn: function(n) { return { text: 'Маркетинг +' + (n*5) + '%', market: n*5 }; } },
+        hireMarketers:{ title: '🎯 Маркетологи',
+            desc: 'Маркетологи — не реклама! Они строят <strong>воронку продаж</strong>: конвертируют интерес в клиентов и запускают сарафанное радио. Каждый маркетолог: <strong>100 000 ₽</strong> → конверсия: Маркетинг <strong>→ Капитал +3%</strong> за каждые 10% маркетинга, плюс Команда <strong>+3%</strong> (репутация привлекает таланты).',
+            sliderLabel: 'Маркетологов', min: 1, max: 6, unitCost: 100000,
+            effectFn: function(n) {
+                var conversionBonus = Math.floor(currentPlayerData.marketing / 10) * 3 * n;
+                var teamBonus = 3 * n;
+                return { text: 'Капитал +' + conversionBonus + '% (из маркетинга), Команда +' + teamBonus + '%', cap: conversionBonus, team: teamBonus, market: 0 };
+            }
+        },
         hireManagers: { title: '💼 Менеджеры',           desc: 'Каждый: <strong>120 000 ₽</strong>, Снижает операционные расходы на <strong>10%</strong>', sliderLabel: 'Менеджеров', min: 1, max: 4, unitCost: 120000, effectFn: function(n) { return { text: 'Расходы -' + (n*10) + '%', manager: true }; } },
         credit:       { title: '💳 Взять кредит', desc: 'Выберите сумму и срок. Возврат = сумма × 1.2' }
     };
@@ -2251,7 +2725,8 @@
         var cfg = actionConfigs[currentActionType]; if (!cfg || !cfg.effectFn) return;
         var n = parseInt(document.getElementById('actionSlider').value);
         document.getElementById('sliderVal').textContent = n;
-        var totalCost = cfg.unitCost * n;
+        var realUnitCost = (currentActionType === 'develop') ? Math.round(cfg.unitCost * getIndustryDevelopDiscount()) : cfg.unitCost;
+        var totalCost = realUnitCost * n;
         var eff = cfg.effectFn(n);
         document.getElementById('sumCost').textContent = totalCost.toLocaleString('ru-RU') + ' ₽';
         document.getElementById('sumEffect').textContent = eff.text;
@@ -2290,10 +2765,13 @@
             currentPlayerData.credit_deadline = currentPlayerData.month + term;
             currentPlayerData.rubles += amt;
             addToHistory('💳 Кредит ' + amt.toLocaleString('ru-RU') + ' ₽ на ' + term + ' мес.');
-            updateUI(); updatePlayerInLeaderboard(); closeActionModal(); return;
+            updateUI(); updatePlayerInLeaderboard();
+            showTermToast('credit');
+            closeActionModal(); return;
         }
         var n = parseInt(document.getElementById('actionSlider').value);
-        var totalCost = cfg.unitCost * n;
+        var realUnitCost = (type === 'develop') ? Math.round(cfg.unitCost * getIndustryDevelopDiscount()) : cfg.unitCost;
+        var totalCost = realUnitCost * n;
         var eff = cfg.effectFn(n);
         if (currentPlayerData.rubles < totalCost) { addToHistory('❌ Недостаточно средств'); closeActionModal(); return; }
         currentPlayerData.rubles -= totalCost;
@@ -2302,7 +2780,9 @@
         if (eff.market) currentPlayerData.marketing = Math.min(currentPlayerData.marketing + eff.market, 100);
         if (eff.manager) managerHired = true;
         addToHistory((cfg.title || type) + ' ×' + n + ': ' + eff.text + ' (' + totalCost.toLocaleString('ru-RU') + ' ₽)');
-        updateUI(); updatePlayerInLeaderboard(); closeActionModal();
+        updateUI(); updatePlayerInLeaderboard();
+        showTermToast(type);
+        closeActionModal();
     }
 
     // === DUEL ===
@@ -2507,6 +2987,172 @@
         tourActive = false;
         document.getElementById('tourOverlay').classList.remove('active');
         document.getElementById('tourHighlight').style.display = 'none';
+    }
+
+    // === INDUSTRIES ===
+    var industries = {
+        it:     { name: 'IT-стартап',  icon: '💻', developDiscount: 0.8, advertiseBonus: 1.0, startTeam: 0,  operDiscount: 1.0,  investorBonus: 1.0, synergyBonus: 0 },
+        retail: { name: 'Ритейл',      icon: '🛍️', developDiscount: 1.0, advertiseBonus: 1.2, startTeam: 0,  operDiscount: 1.0,  investorBonus: 1.0, synergyBonus: 0 },
+        food:   { name: 'Ресторан',    icon: '🍕', developDiscount: 1.0, advertiseBonus: 1.0, startTeam: 10, operDiscount: 1.0,  investorBonus: 1.0, synergyBonus: 0 },
+        edu:    { name: 'EdTech',      icon: '🎓', developDiscount: 1.0, advertiseBonus: 1.0, startTeam: 0,  operDiscount: 0.85, investorBonus: 1.0, synergyBonus: 0 },
+        med:    { name: 'Медтех',      icon: '🏥', developDiscount: 1.0, advertiseBonus: 1.0, startTeam: 0,  operDiscount: 1.0,  investorBonus: 1.3, synergyBonus: 0 },
+        green:  { name: 'GreenTech',   icon: '🌱', developDiscount: 1.0, advertiseBonus: 1.0, startTeam: 0,  operDiscount: 1.0,  investorBonus: 1.0, synergyBonus: 2 }
+    };
+    var currentIndustry = 'it';
+
+    function selectIndustry(id) {
+        currentIndustry = id;
+        document.querySelectorAll('.industry-card').forEach(function(c) {
+            c.classList.toggle('selected', c.getAttribute('data-id') === id);
+        });
+    }
+
+    function applyIndustryStart() {
+        var ind = industries[currentIndustry];
+        if (!ind) return;
+        if (ind.startTeam) currentPlayerData.team = Math.min(currentPlayerData.team + ind.startTeam, 100);
+        // EdTech: cheaper operations — applied via flag
+        var badge = document.getElementById('industryBadgeTop');
+        if (badge) badge.textContent = ind.icon + ' ' + ind.name;
+        addToHistory('🏭 Отрасль выбрана: ' + ind.icon + ' ' + ind.name);
+    }
+
+    function getIndustryOperDiscount() {
+        var ind = industries[currentIndustry];
+        return ind ? ind.operDiscount : 1.0;
+    }
+    function getIndustryDevelopDiscount() {
+        var ind = industries[currentIndustry];
+        return ind ? ind.developDiscount : 1.0;
+    }
+    function getIndustryAdvertiseBonus() {
+        var ind = industries[currentIndustry];
+        return ind ? ind.advertiseBonus : 1.0;
+    }
+    function getIndustryInvestorBonus() {
+        var ind = industries[currentIndustry];
+        return ind ? ind.investorBonus : 1.0;
+    }
+    function getIndustrySynergyBonus() {
+        var ind = industries[currentIndustry];
+        return ind ? ind.synergyBonus : 0;
+    }
+
+    // === BUSINESS TERMS ===
+    var actionTerms = {
+        hire:         { term: 'Рекрутинг (Recruitment)', def: 'Процесс поиска и привлечения квалифицированных сотрудников в компанию.', example: 'В реальном бизнесе: Google тратит ~50 000$ на найм одного инженера' },
+        advertise:    { term: 'CAC — стоимость привлечения клиента', def: 'Customer Acquisition Cost — сколько денег компания тратит, чтобы привлечь одного нового клиента через маркетинг.', example: 'Чем ниже CAC при высоком LTV — тем эффективнее бизнес' },
+        develop:      { term: 'R&D — Исследования и разработка', def: 'Research & Development — инвестиции в создание новых продуктов. Повышает конкурентоспособность.', example: 'Apple тратит ~$26 млрд в год на R&D' },
+        hireDevs:     { term: 'Продуктовая разработка', def: 'Найм специалистов для улучшения продукта повышает его ценность и капитализацию компании.', example: 'Стартапы на ранней стадии тратят 60-70% бюджета на разработчиков' },
+        hireMarketers:{ term: 'Конверсия (Conversion Rate)', def: 'Процент потенциальных клиентов, которые совершают целевое действие. Маркетологи строят воронку продаж.', example: 'Средняя конверсия в e-commerce: 2-3%. Хорошая — 5%+' },
+        hireManagers: { term: 'Операционная эффективность', def: 'Способность компании получать максимальный результат при минимальных затратах. Менеджеры оптимизируют процессы.', example: 'Toyota снизила операционные затраты на 30% через систему Lean' },
+        investor:     { term: 'Венчурное финансирование', def: 'Вложение капитала в стартап в обмен на долю. Инвестор берёт на себя риск ради высокой доходности.', example: 'Uber привлёк $200 тыс. в 2010 году. Сейчас стоит $90 млрд' },
+        credit:       { term: 'Долговое финансирование', def: 'Получение средств в долг под обязательство вернуть с процентами. В отличие от инвестора — не теряешь долю.', example: 'Большинство малых бизнесов используют кредиты для первоначального роста' },
+        develop_synergy: { term: 'Синергетический эффект', def: 'Когда совместное действие нескольких факторов даёт результат больше, чем сумма отдельных эффектов.', example: '1+1=3 в бизнесе: сильная команда + хороший маркетинг = кратный рост капитала' },
+        endMonth:     { term: 'Операционный цикл', def: 'Период от вложения ресурсов до получения прибыли. Каждый месяц — один операционный цикл вашего стартапа.', example: 'Amazon сократил операционный цикл с недель до часов через логистику' }
+    };
+
+    var termQueue = [];
+    var termTimer = null;
+
+    function showTermToast(actionKey) {
+        var t = actionTerms[actionKey]; if (!t) return;
+        // Показывать не каждый раз — 60% шанс, но первые 3 действия всегда
+        if (termQueue.length >= 3 && Math.random() > 0.6) return;
+        termQueue.push(actionKey);
+        if (termTimer) { clearTimeout(termTimer); var old = document.querySelector('.term-toast'); if (old) old.remove(); }
+        var toast = document.createElement('div');
+        toast.className = 'term-toast';
+        toast.innerHTML = '<div class="term-toast-header">📚 Бизнес-термин</div>' +
+            '<div class="term-toast-term">' + t.term + '</div>' +
+            '<div class="term-toast-def">' + t.def + '</div>' +
+            '<div class="term-toast-example">💡 ' + t.example + '</div>';
+        document.body.appendChild(toast);
+        termTimer = setTimeout(function() { if (toast.parentNode) toast.remove(); }, 5000);
+    }
+
+    // === DEBRIEF ===
+    function analyzeStrategy() {
+        var p = currentPlayerData;
+        var actions = p._actionLog || {};
+        var totalActions = Object.values ? Object.values(actions).reduce(function(a,b){return a+b;},0) : 0;
+
+        // Определяем стратегию по соотношению действий
+        var strategies = [
+            {
+                name: '🚀 Агрессивный рост',
+                cond: function() { return p.capital >= 85 && p.month <= 9; },
+                desc: 'Вы действовали быстро и агрессивно, концентрируясь на капитале. Это стратегия "growth hacking" — максимальный рост за минимальное время.',
+                terms: ['ROI', 'Growth Hacking', 'Burn Rate']
+            },
+            {
+                name: '⚖️ Сбалансированное развитие',
+                cond: function() { var d = Math.max(p.capital,p.team,p.marketing)-Math.min(p.capital,p.team,p.marketing); return d < 15; },
+                desc: 'Вы развивали все направления равномерно. Это "sustainable growth" — устойчивый рост, при котором компания не перегревается.',
+                terms: ['Sustainable Growth', 'Balanced Scorecard', 'KPI']
+            },
+            {
+                name: '📢 Маркетинговая экспансия',
+                cond: function() { return p.marketing >= p.capital && p.marketing >= p.team; },
+                desc: 'Вы сделали ставку на маркетинг и узнаваемость. Это стратегия "market penetration" — захват доли рынка через продвижение.',
+                terms: ['Market Penetration', 'Brand Equity', 'CAC vs LTV']
+            },
+            {
+                name: '👥 Команда как актив',
+                cond: function() { return p.team >= p.capital && p.team >= p.marketing; },
+                desc: 'Вы инвестировали в людей. Human Capital — главный актив современных компаний. Сильная команда создаёт устойчивое конкурентное преимущество.',
+                terms: ['Human Capital', 'Employer Brand', 'Retention Rate']
+            },
+            {
+                name: '💡 Инновационная стратегия',
+                cond: function() { return true; },
+                desc: 'Вы нашли свой путь к IPO, комбинируя разные подходы. В реальном бизнесе не существует единственно правильной стратегии.',
+                terms: ['Blue Ocean Strategy', 'Pivot', 'Product-Market Fit']
+            }
+        ];
+
+        var strategy = strategies.find(function(s) { return s.cond(); }) || strategies[strategies.length-1];
+
+        // Термины для дебрифинга
+        var termDefs = {
+            'ROI': 'Return on Investment — возврат на инвестиции. Показывает эффективность каждого вложенного рубля',
+            'Growth Hacking': 'Быстрый рост с минимальными ресурсами через эксперименты и нестандартные решения',
+            'Burn Rate': 'Скорость расходования денег. Если Burn Rate высокий — деньги кончатся быстро',
+            'Sustainable Growth': 'Рост, который компания может поддерживать без ущерба для стабильности',
+            'Balanced Scorecard': 'Система управления, учитывающая финансы, клиентов, процессы и развитие одновременно',
+            'KPI': 'Key Performance Indicators — ключевые показатели эффективности',
+            'Market Penetration': 'Стратегия увеличения доли на существующем рынке',
+            'Brand Equity': 'Ценность бренда — насколько клиенты доверяют и готовы платить больше',
+            'CAC vs LTV': 'Стоимость привлечения клиента vs его пожизненная ценность. LTV > CAC = здоровый бизнес',
+            'Human Capital': 'Знания, навыки и опыт сотрудников как нематериальный актив компании',
+            'Employer Brand': 'Репутация компании как работодателя — привлекает лучших специалистов',
+            'Retention Rate': 'Процент сотрудников, остающихся в компании. Высокий = устойчивость',
+            'Blue Ocean Strategy': 'Создание нового рынка без конкурентов вместо борьбы на существующем',
+            'Pivot': 'Кардинальное изменение бизнес-модели при сохранении накопленных ресурсов',
+            'Product-Market Fit': 'Момент, когда продукт точно соответствует потребностям рынка'
+        };
+
+        // Render debrief
+        var ind = industries[currentIndustry] || industries.it;
+        document.getElementById('debriefSub').textContent = ind.icon + ' ' + ind.name + ' · ' + p.month + ' месяцев · ' + currentPlayerName;
+
+        document.getElementById('debriefStats').innerHTML =
+            '<div class="debrief-stat"><div class="debrief-stat-val" style="color:var(--green)">' + p.capital + '%</div><div class="debrief-stat-lbl">Капитал</div></div>' +
+            '<div class="debrief-stat"><div class="debrief-stat-val" style="color:var(--blue)">' + p.team + '%</div><div class="debrief-stat-lbl">Команда</div></div>' +
+            '<div class="debrief-stat"><div class="debrief-stat-val" style="color:var(--yellow)">' + p.marketing + '%</div><div class="debrief-stat-lbl">Маркетинг</div></div>';
+
+        document.getElementById('debriefStrategy').innerHTML =
+            '<div class="debrief-strategy-name">' + strategy.name + '</div>' +
+            '<div class="debrief-strategy-desc">' + strategy.desc + '</div>';
+
+        var termsHtml = '<div class="debrief-terms-title">📖 Термины вашей стратегии</div>';
+        strategy.terms.forEach(function(term) {
+            if (termDefs[term]) {
+                termsHtml += '<div class="debrief-term-item"><strong>' + term + '</strong> — <span>' + termDefs[term] + '</span></div>';
+            }
+        });
+        document.getElementById('debriefTerms').innerHTML = termsHtml;
+        document.getElementById('debriefModal').style.display = 'flex';
     }
 
     // === INIT — ждём полной загрузки страницы и скриптов ===
